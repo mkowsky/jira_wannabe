@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String username) {
+    public Optional<User> findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
