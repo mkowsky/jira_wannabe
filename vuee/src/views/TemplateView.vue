@@ -14,6 +14,10 @@
 
 
         </table>
+
+        <button @click="logout">LOGOUT</button>
+
+
     </div>
     
 </template>
@@ -34,6 +38,10 @@
                 console.log('button clicked');
 
             },
+            logout(){
+                this.$store.dispatch('auth/logout');
+                this.$router.push('/');
+            }
         },
         mounted(){
 
@@ -47,7 +55,12 @@
 </script>
 
 <style scoped>
-#containter {
+
+
+
+
+
+    #containter {
 
     position: absolute;
     top: 0;
@@ -109,4 +122,6 @@
     text-align: center;
     color: lightpink;
 }
+
+
 </style>

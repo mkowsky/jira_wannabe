@@ -2,6 +2,8 @@
   <div id="app">
     <div id="test">Welcome to Jira-wannabe-demo-app</div>
     <p><router-link to="/test">TEMPLATE-VIEW</router-link></p>
+    <p><router-link to="/login">LOGIN</router-link></p>
+    <p><router-link to="/home">home</router-link></p>
     <router-view />
   </div>
 

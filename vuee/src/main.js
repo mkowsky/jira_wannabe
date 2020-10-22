@@ -2,8 +2,18 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 import routes from './router'
+import store from './store'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faLock } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faUser, faLock)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
+
+
 
 
 var router = new VueRouter({
@@ -12,5 +22,6 @@ var router = new VueRouter({
 
 new Vue({
   router: router,
+  store: store,
   render: h => h(App),
 }).$mount('#app')

@@ -49,23 +49,39 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+            System.out.println(loginRequest.getUsername());
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        if(!(userRepository.existsByUsername(loginRequest.getUsername()))){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Username is invalid."));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        } else {
+            User user = userRepository.findByUsername(loginRequest.getUsername());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            if(!(encoder.matches(loginRequest.getPassword(), user.getPassword()))){
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Bad password."));
+            } else {
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                List<String> roles = userDetails.getAuthorities().stream()
+                        .map(item -> item.getAuthority())
+                        .collect(Collectors.toList());
+
+                return ResponseEntity.ok(new JwtResponse(jwt,
+                        userDetails.getId(),
+                        userDetails.getUsername(),
+                        userDetails.getEmail(),
+                        roles));
+            }
+        }
     }
 
     @PostMapping("/signup")
