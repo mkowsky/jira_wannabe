@@ -2,6 +2,10 @@
     <div id="container">
         <div>WELCOME HOME</div>
         <button @click="logout">LOGOUT</button>
+
+        <div id="tasks-container">
+
+        </div>
     </div>
 </template>
 
@@ -27,5 +31,13 @@
     width: 100%;
     background: #BDBBB6;
 }
+    #tasks-container{
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 1200px;
+        height: 800px;
+        background: ghostwhite;
+    }
 
 </style>

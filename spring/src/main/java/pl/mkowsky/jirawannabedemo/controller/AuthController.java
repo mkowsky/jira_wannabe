@@ -58,6 +58,8 @@ public class AuthController {
 
         } else {
             User user = userRepository.findByUsername(loginRequest.getUsername());
+            System.out.println(user.getEmail());
+
 
             if(!(encoder.matches(loginRequest.getPassword(), user.getPassword()))){
                 return ResponseEntity
@@ -75,6 +77,9 @@ public class AuthController {
                         .map(item -> item.getAuthority())
                         .collect(Collectors.toList());
 
+                System.out.println(userDetails.getUsername());
+                System.out.println(userDetails.getEmail());
+                System.out.println(userDetails.getPassword());
                 return ResponseEntity.ok(new JwtResponse(jwt,
                         userDetails.getId(),
                         userDetails.getUsername(),

@@ -1,6 +1,7 @@
 package pl.mkowsky.jirawannabedemo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ public class TemplateController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('PROJECT_MANAGER') or hasRole('ADMIN')")
     @RequestMapping(value = "/test")
     List<User> listAllUsers(){
         System.out.println("Inside listAllUsers");
