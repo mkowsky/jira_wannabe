@@ -1,5 +1,9 @@
 package pl.mkowsky.jirawannabedemo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,12 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "task")
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String taskID;
 
@@ -24,17 +28,32 @@ public class Task {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
     private EState state;
+
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private User taskManager;
 
-    @ManyToMany(mappedBy = "currentTasks")
-    private List<User> users = new ArrayList<>();
 
-    public Task(){
 
+    @ManyToMany(mappedBy = "userstasks")
+    private List<User> users = new ArrayList<User>();
+
+    public Task() {
+
+    }
+
+    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, List<User> users) {
+        this.taskID = taskID;
+        this.name = name;
+        this.createdDate = createdDate;
+        this.expireDate = expireDate;
+        this.description = description;
+        this.state = state;
+        this.taskManager = taskManager;
+        this.users = users;
     }
 
     public User getTaskManager() {
@@ -53,11 +72,11 @@ public class Task {
         this.users = users;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -108,7 +127,6 @@ public class Task {
     public void setState(EState state) {
         this.state = state;
     }
-
 
 
 }

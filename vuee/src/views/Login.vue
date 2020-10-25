@@ -1,9 +1,7 @@
 <template>
     <div id="container">
-        <div id="outer-circle">
-            <div id="img-wrapper"><img src="../assets/logo.png" style="width: 100%; height: 100%"></div>
-            <div id="circle-title">JIRA-WANNABE</div>
-        </div>
+
+        <Logo id="outer-circle"></Logo>
 
         <div class="login-box">
             <div class="input-wrapper">
@@ -42,9 +40,11 @@
     //TODO: error na polu to ramka inputu zmienia kolor?
     //import axios from 'axios';
     import User from '../model/user';
+    import Logo from "@/components/Logo";
 
     export default {
         name: "Login",
+        components: {Logo},
         data() {
             return {
                 disabled: true,
@@ -129,34 +129,10 @@
         top: 5%;
         left: 50%;
         transform: translateX(-50%);
-        background: lightpink;
-        border-radius: 50%;
-        height: 300px;
-        width: 300px;
-        box-shadow: 0 0 0 10px black;
         z-index: 300;
     }
 
-    #circle-title {
-        font-size: 18px;
-        font-weight: lighter;
-        font-family: 'Courier New', Courier, monospace;
-        letter-spacing: 1px;
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 30px;
 
-    }
-
-    #img-wrapper {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 200px;
-        height: 200px;
-    }
 
     .login-box {
         position: absolute;

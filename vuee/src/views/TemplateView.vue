@@ -1,19 +1,11 @@
 <template>
     <div id="containter">
+
+
+        <Logo style="position: absolute; top: 20%; left: 30%" v-bind:font-size="30"></Logo>
         <h3 style="color: whitesmoke">HELLO FROM TEMPLATE VIEW</h3>
-        <button @click="buttonClicked">LIST ALL USERS</button>
-        <table class="users">
-            <tr>
-                <th v-for="cell in cellUsers" v-bind:key="cell">{{cell}}</th>
-            </tr>
-            <tr v-for="appUser in appUsers" v-bind:key="appUser.id">
-                <td>{{appUser.id}}</td>
-                <td>{{appUser.username}}</td>
-                <td>{{appUser.email}}</td>
-            </tr>
 
 
-        </table>
 
         <button @click="logout">LOGOUT</button>
 
@@ -24,13 +16,16 @@
 
 <script>
     import axios from 'axios';
+    import Logo from "@/components/Logo";
 
     export default {
         name: "TemplateView",
+        components: {Logo},
+        Components: {},
         data() {
             return {
                 appUsers: [],
-                cellUsers: ['User ID', 'Username', 'Email']
+                cellTable: ['User ID', 'Username', 'Email']
             }
         },
         methods: {

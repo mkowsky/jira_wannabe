@@ -1,5 +1,9 @@
 package pl.mkowsky.jirawannabedemo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String username;
 
@@ -25,19 +29,18 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "taskManager")
     private List<Task> tasks;
 
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(name = "user_task",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id")
-    )
-    private List<Task> currentTasks = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users_tasks",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "task_id") })
+    private List<Task> userstasks = new ArrayList<Task>();
 
     public User(){
 
@@ -50,12 +53,12 @@ public class User {
     }
 
     public void addTask(Task task){
-        currentTasks.add(task);
+        userstasks.add(task);
         task.getUsers().add(this);
     }
 
     public void removeTask(Task task){
-        currentTasks.remove(task);
+        userstasks.remove(task);
         task.getUsers().remove(this);
     }
 
@@ -67,19 +70,19 @@ public class User {
         this.tasks = tasks;
     }
 
-    public List<Task> getCurrentTasks() {
-        return currentTasks;
+    public List<Task> getUserstasks() {
+        return userstasks;
     }
 
-    public void setCurrentTasks(List<Task> currentTasks) {
-        this.currentTasks = currentTasks;
+    public void setUserstasks(List<Task> userstasks) {
+        this.userstasks = userstasks;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
