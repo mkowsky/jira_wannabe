@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/users")
+@RequestMapping("/us")
 public class TemplateController {
 
     private UserService userService;

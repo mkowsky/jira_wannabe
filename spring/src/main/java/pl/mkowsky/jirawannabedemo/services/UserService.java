@@ -13,5 +13,7 @@ public interface UserService {
     User getUserById(Long userID);
     User findByUsername(String username);
     void save(User user);
+    String generateRandomName();
+    String generateRandomSurname();
 
 }

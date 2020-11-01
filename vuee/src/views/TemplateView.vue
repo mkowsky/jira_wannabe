@@ -33,10 +33,7 @@
                 console.log('button clicked');
 
             },
-            logout(){
-                this.$store.dispatch('auth/logout');
-                this.$router.push('/');
-            }
+
         },
         mounted(){
 

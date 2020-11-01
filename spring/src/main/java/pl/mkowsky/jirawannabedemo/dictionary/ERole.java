@@ -1,4 +1,4 @@
-package pl.mkowsky.jirawannabedemo.model;
+package pl.mkowsky.jirawannabedemo.dictionary;
 
 public enum ERole {
 

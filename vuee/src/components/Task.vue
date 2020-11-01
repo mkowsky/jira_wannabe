@@ -1,6 +1,6 @@
 <template>
     <div id="cont">
-        <div class="content-black">
+        <div class="content-black" @click="taskItemClicked">
             <div id="title">{{title}}</div>
             <div id="description">{{description}}</div>
             <div id="wrapper">
@@ -32,9 +32,11 @@
                 type: String,
                 required: true,
             },
-            state: {
-                type: String,
-                required: true,
+
+        },
+        methods:{
+            taskItemClicked(){
+                this.$emit('task-item-clicked')
             }
         }
     }
@@ -100,11 +102,11 @@
     }
 
     #wrapper {
-        position: fixed;
+        position: relative;
+        top: 55%;
         display: inline-flex;
-        bottom: 10px;
-        left: 20px;
-        text-align: center;
+        left: -30%;
+
     }
 
     #projectManager {

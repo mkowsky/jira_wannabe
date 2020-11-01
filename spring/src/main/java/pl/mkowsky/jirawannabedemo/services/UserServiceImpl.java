@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -43,5 +43,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public String generateRandomName() {
+        String[] names = {"Mark", "Josh", "Marry", "Joshua", "David", "Jonny", "Abraham", "Nathan", "Martin", "Samuel", "King",
+                "Terry", "Rob", "Jack", "Anny", "Linda", "Danny", "Stephan", "Roger", "George", "Gerrard", "Juliet", "Ola",
+                "Alice", "Victoria", "Rick"};
+        int random = (int) (Math.random() * (25 - 0)) + 0;
+        return names[random];
+    }
+
+
+    @Override
+    public String generateRandomSurname() {
+        String[] surnames = {
+                "Smith", "Groben", "Daniels", "Bark", "Ferry", "Cage",
+                "Lincoln", "Abramov", "Luther", "Davis", "Jackson", "Roberts",
+                "Taylor", "Kuba", "Shultz", "Nord", "Marks", "Michael", "Nate"
+        };
+        int random = (int) (Math.random() * (18 - 0)) + 0;
+        return surnames[random];
+
     }
 }

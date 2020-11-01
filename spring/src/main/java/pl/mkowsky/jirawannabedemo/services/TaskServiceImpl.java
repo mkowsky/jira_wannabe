@@ -2,17 +2,15 @@ package pl.mkowsky.jirawannabedemo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.mkowsky.jirawannabedemo.TaskDTO;
-import pl.mkowsky.jirawannabedemo.model.EState;
+import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.repository.TaskRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 
 @Service
@@ -51,19 +49,41 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void createNewTask(TaskDTO taskDTO) {
+        List<User> taskUsers = new ArrayList<>();
+        for (int i = 0; i < taskDTO.getTaskUsers().length; i++) {
+            taskUsers.add(userRepository.findUserById(taskDTO.getTaskUsers()[i]));
+        }
 
         Task newTask = new Task(generateTaskID(),
-                taskDTO.getName(),
+                taskDTO.getTaskTitle(),
                 new Date(),
-                new Date(new Date().getTime() + (604800000)),
-                taskDTO.getDescription(),
-                EState.TASK_CREATED,
+                taskDTO.getTaskDeadline(),
+                taskDTO.getTaskDescription(),
+                taskDTO.getState(),
                 userService.getUserById(taskDTO.getTaskManagerID()),
-                null
+                null,
+                taskDTO.getDepartment(),
+                taskDTO.getTaskPriority()
         );
 
         save(newTask);
 
+
+        for (int j = 0; j < taskUsers.size(); j++) {
+            taskUsers.get(j).addTask(newTask);
+            userService.save(taskUsers.get(j));
+        }
+
+    }
+
+    @Override
+    public void deleteTask(Long taskID) {
+        Task task = taskRepository.getTaskById(taskID);
+        for (int i = 0; i < task.getUsers().size(); i++) {
+            task.getUsers().get(i).removeTask(task);
+        }
+
+        remove(task);
     }
 
     String generateTaskID() {

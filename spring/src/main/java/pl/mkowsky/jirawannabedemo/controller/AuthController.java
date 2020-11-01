@@ -12,13 +12,14 @@ import pl.mkowsky.jirawannabedemo.JwtResponse;
 import pl.mkowsky.jirawannabedemo.LoginRequest;
 import pl.mkowsky.jirawannabedemo.MessageResponse;
 import pl.mkowsky.jirawannabedemo.SignupRequest;
-import pl.mkowsky.jirawannabedemo.model.ERole;
+import pl.mkowsky.jirawannabedemo.dictionary.ERole;
 import pl.mkowsky.jirawannabedemo.model.Role;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.repository.RoleRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 import pl.mkowsky.jirawannabedemo.security.jwt.JwtUtils;
 import pl.mkowsky.jirawannabedemo.security.services.UserDetailsImpl;
+import pl.mkowsky.jirawannabedemo.services.UserService;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -46,6 +47,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -84,7 +88,9 @@ public class AuthController {
                         userDetails.getId(),
                         userDetails.getUsername(),
                         userDetails.getEmail(),
-                        roles));
+                        roles,
+                        user.getFirstName(),
+                        user.getLastName()));
             }
         }
     }
@@ -106,7 +112,9 @@ public class AuthController {
         // Create new user's account
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+                encoder.encode(signUpRequest.getPassword()),
+                userService.generateRandomName(),
+                userService.generateRandomSurname());
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();

@@ -1,5 +1,7 @@
 package pl.mkowsky.jirawannabedemo.model;
 
+import pl.mkowsky.jirawannabedemo.dictionary.ERole;
+
 import javax.persistence.*;
 
 @Entity

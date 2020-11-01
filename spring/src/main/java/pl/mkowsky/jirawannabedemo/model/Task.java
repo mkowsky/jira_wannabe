@@ -1,14 +1,12 @@
 package pl.mkowsky.jirawannabedemo.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import pl.mkowsky.jirawannabedemo.dictionary.EDepartment;
+import pl.mkowsky.jirawannabedemo.dictionary.EState;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "task")
@@ -37,15 +35,20 @@ public class Task {
     private User taskManager;
 
 
-
     @ManyToMany(mappedBy = "userstasks")
     private List<User> users = new ArrayList<User>();
+
+    @Enumerated(EnumType.STRING)
+    private EDepartment department;
+
+    private int taskPriority;
 
     public Task() {
 
     }
 
-    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, List<User> users) {
+    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, List<User> users
+            , EDepartment department, int taskPriority) {
         this.taskID = taskID;
         this.name = name;
         this.createdDate = createdDate;
@@ -54,6 +57,8 @@ public class Task {
         this.state = state;
         this.taskManager = taskManager;
         this.users = users;
+        this.department = department;
+        this.taskPriority = taskPriority;
     }
 
     public User getTaskManager() {
@@ -128,5 +133,19 @@ public class Task {
         this.state = state;
     }
 
+    public EDepartment getDepartment() {
+        return department;
+    }
 
+    public void setDepartment(EDepartment department) {
+        this.department = department;
+    }
+
+    public int getTaskPriority() {
+        return taskPriority;
+    }
+
+    public void setTaskPriority(int taskPriority) {
+        this.taskPriority = taskPriority;
+    }
 }

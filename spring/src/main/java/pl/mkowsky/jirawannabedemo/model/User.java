@@ -42,6 +42,11 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "task_id") })
     private List<Task> userstasks = new ArrayList<Task>();
 
+
+    private String firstName;
+    private String lastName;
+
+
     public User(){
 
     }
@@ -52,14 +57,38 @@ public class User {
         this.password = password;
     }
 
+    public User(String username, String email, String password, String firstName, String lastName) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public void addTask(Task task){
         userstasks.add(task);
-        task.getUsers().add(this);
+        //task.getUsers().add(this);
     }
 
     public void removeTask(Task task){
         userstasks.remove(task);
-        task.getUsers().remove(this);
+        //task.getUsers().remove(this);
     }
 
     public List<Task> getTasks() {

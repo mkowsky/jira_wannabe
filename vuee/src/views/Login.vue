@@ -71,7 +71,7 @@
                 this.$store.dispatch('auth/login', user).then(
                     response => {
                         console.log(response.status);
-                        this.$router.push('/home');
+                        this.$router.push('/board');
                     },
                     error => {
                         this.message = error.response.data.message;

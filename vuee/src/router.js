@@ -2,7 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import TemplateView from "@/views/TemplateView";
 import Login from "@/views/Login";
-import Home from "@/views/Home";
+import Board from "@/views/Board";
+import TaskManagement from "@/views/TaskManagement";
 
 
 Vue.use(Router);
@@ -23,6 +24,37 @@ function guardMyroute(to, from, next) {
     }
 }
 
+function checkIfModerator(to, from, next){
+    var isAuthenticated = false;
+    var isModerator = false;
+
+    if(localStorage.getItem('user')){
+        isAuthenticated = true;
+        let user = JSON.parse(localStorage.getItem('user'));
+        if(user.roles.includes('ROLE_PROJECT_MANAGER')){
+            console.log('admin');
+            isModerator = true;
+        } else {
+            console.log('nie admin');
+            isModerator = false;
+        }
+    } else {
+        isAuthenticated = false;
+        isModerator = false;
+        console.log('do loginu');
+        next('/login');
+        return;
+    }
+
+    if (isAuthenticated && isModerator){
+        next()
+    } else {
+        next('/accesDenied');
+        console.log('blok');
+    }
+
+}
+
 const routes = [
 
     {
@@ -33,9 +65,9 @@ const routes = [
         }
     },
     {
-        path: '/home',
+        path: '/board',
         beforeEnter: guardMyroute,
-        component: Home,
+        component: Board,
         meta: {
             guest: false
         }
@@ -44,6 +76,11 @@ const routes = [
         path: '/test',
         component: TemplateView,
     },
+    {
+        path: '/task-management',
+        component: TaskManagement,
+        beforeEnter: checkIfModerator
+    }
 
 ]
 
