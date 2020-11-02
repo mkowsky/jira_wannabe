@@ -3,17 +3,28 @@
         <div class="page-title">PROFILE</div>
         <div>welcome form profile page</div>
         <side-navigation-bar/>
-
-        <div class="profile-box"></div>
+        <Modal @close-modal="klik" v-show="modalVisible"><template slot="body"></template></Modal>
     </div>
 
 </template>
 
 <script>
     import SideNavigationBar from "@/components/SideNavigationBar";
+    import Modal from "@/components/Modal";
     export default {
         name: "Profile",
-        components: {SideNavigationBar}
+        components: {Modal, SideNavigationBar},
+        data(){
+            return{
+                modalVisible: true
+            }
+        },
+        methods:{
+            klik(){
+                this.modalVisible = false;
+                console.log('kliklikl');
+            }
+        }
     }
 </script>
 
@@ -35,4 +46,5 @@
         height: 800px;
         background: gray;
     }
+
 </style>

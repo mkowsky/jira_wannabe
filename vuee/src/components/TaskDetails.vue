@@ -33,12 +33,20 @@
 
                 <div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>
                 <div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>
-                <div >{{comment.comment}}<font-awesome-icon icon="window-close" class="comment-delete" v-if="sprawdz(comment.user.id)" @click="deleteComment(comment.id)"></font-awesome-icon></div>
+                <div >{{comment.comment}}<font-awesome-icon icon="window-close" class="comment-delete" v-if="sprawdz(comment.user.id)" @click="startDeletionProcess(comment.id)"></font-awesome-icon></div>
             </div>
         </div>
 
 
+    <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
+        <template slot="header">Usuń komentarz</template>
+        <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
+        <template slot="footer">
+            <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
+            <button @click="deleteCommentModal=false">NO</button>
+        </template>
 
+    </Modal>
 
     </div>
 </template>
@@ -46,10 +54,12 @@
 <script>
 
     import axios from "axios";
+    import Modal from "@/components/Modal";
 
 
     export default {
         name: "TaskDetails",
+        components: {Modal},
         props: {
             taskID: {
                 required: true,
@@ -57,6 +67,8 @@
         },
         data() {
             return {
+                deleteCommentModal: false,
+                currentCommentID: 0,
                currentUserID: "",
                 comments: [],
                 currentTask: [],
@@ -65,6 +77,21 @@
             }
         },
         methods: {
+            deleteComment(){
+                console.log(this.currentCommentID);
+                axios.post('http://localhost:8080/comments/delete-comment', null, {
+                    params: {
+                        commentID: this.currentCommentID
+                    }
+                }).then(response => {
+                    this.deleteCommentModal = false;
+                    console.log(response.status);
+                    axios.get('http://localhost:8080/comments/get-comments-for-task/' + this.taskID).then(response => {
+                        this.comments = response.data
+
+                    })
+                })
+            },
             submitNewComment() {
                 axios.post('http://localhost:8080/comments/new-comment', {
                     userID: this.currentUserID,
@@ -81,14 +108,15 @@
 
                     })
                 })
-
+                this.commentValue = "";
 
             },
             sprawdz: function(value){
                 return (this.currentUserID === value)
             },
-            deleteComment(value){
-                console.log(value);
+            startDeletionProcess(value){
+                this.currentCommentID = value;
+                this.deleteCommentModal = true;
             }
         },
         created() {
