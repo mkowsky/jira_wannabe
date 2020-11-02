@@ -25,14 +25,14 @@ function guardMyroute(to, from, next) {
     }
 }
 
-function checkIfModerator(to, from, next){
+function checkIfModerator(to, from, next) {
     var isAuthenticated = false;
     var isModerator = false;
 
-    if(localStorage.getItem('user')){
+    if (localStorage.getItem('user')) {
         isAuthenticated = true;
         let user = JSON.parse(localStorage.getItem('user'));
-        if(user.roles.includes('ROLE_PROJECT_MANAGER')){
+        if (user.roles.includes('ROLE_PROJECT_MANAGER')) {
             console.log('admin');
             isModerator = true;
         } else {
@@ -47,7 +47,7 @@ function checkIfModerator(to, from, next){
         return;
     }
 
-    if (isAuthenticated && isModerator){
+    if (isAuthenticated && isModerator) {
         next()
     } else {
         next('/accesDenied');
@@ -85,6 +85,12 @@ const routes = [
     {
         path: '/profile',
         component: Profile
+    },
+    {
+        name: 'profileDetails',
+        path: '/profile/:userID',
+        component: Profile,
+
     }
 
 ]

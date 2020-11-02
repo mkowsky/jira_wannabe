@@ -1,17 +1,17 @@
-package pl.mkowsky.jirawannabedemo;
+package pl.mkowsky.jirawannabedemo.dto;
 
-public class PersonalData {
+public class PersonalDataDTO {
 
 
     Long id;
     private String firstName;
     private String lastName;
 
-    public PersonalData(){
+    public PersonalDataDTO(){
 
     }
 
-    public PersonalData(Long id, String firstName, String lastName) {
+    public PersonalDataDTO(Long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

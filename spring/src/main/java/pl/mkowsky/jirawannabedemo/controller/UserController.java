@@ -2,11 +2,8 @@ package pl.mkowsky.jirawannabedemo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.mkowsky.jirawannabedemo.PersonalData;
+import org.springframework.web.bind.annotation.*;
+import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.services.UserService;
 
@@ -26,17 +23,23 @@ public class UserController {
     }
 
     @GetMapping(value = "/get-names")
-    List<PersonalData> listAllUserNames(){
+    List<PersonalDataDTO> listAllUserNames(){
         List<User> list = userService.getAllusers();
-        List<PersonalData> template =  new ArrayList<>();
+        List<PersonalDataDTO> template =  new ArrayList<>();
         for(int i = 0 ;  i < list.size(); i++){
-            PersonalData temp = new PersonalData(
+            PersonalDataDTO temp = new PersonalDataDTO(
                     list.get(i).getId(),
                     list.get(i).getFirstName(),
                     list.get(i).getLastName());
                     template.add(temp);
         }
         return template;
+    }
+
+    @GetMapping(value = "/get-user-personal-data/{userID}")
+    PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
+        User user = userService.getUserById(userID);
+        return new PersonalDataDTO(userID, user.getFirstName(), user.getLastName());
     }
 
 }

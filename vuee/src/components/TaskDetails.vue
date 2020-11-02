@@ -17,10 +17,13 @@
             <div class="bold">{{currentTask.expireDate}}</div>
         </div>
         <div class="template">manager
-            <div class="bold">{{currentTask.taskManager.username}}</div>
+            <div class="bold" style="cursor: pointer" @click="navigateToUserProfile(currentTask.taskManager.id)">{{currentTask.taskManager.username}}</div>
         </div>
         <div class="template">users
-            <div class="bold" v-for="user in currentTask.users" :key="user.id">{{user.firstName}} {{user.lastName}}
+            <div class="bold" style="cursor: pointer" v-for="user in currentTask.users"
+                 :key="user.id"
+                 @click="navigateToUserProfile(user.id)">
+                {{user.firstName}} {{user.lastName}}
             </div>
         </div>
 
@@ -33,20 +36,23 @@
 
                 <div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>
                 <div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>
-                <div >{{comment.comment}}<font-awesome-icon icon="window-close" class="comment-delete" v-if="sprawdz(comment.user.id)" @click="startDeletionProcess(comment.id)"></font-awesome-icon></div>
+                <div>{{comment.comment}}
+                    <font-awesome-icon icon="window-close" class="comment-delete" v-if="sprawdz(comment.user.id)"
+                                       @click="startDeletionProcess(comment.id)"></font-awesome-icon>
+                </div>
             </div>
         </div>
 
 
-    <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
-        <template slot="header">Usuń komentarz</template>
-        <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
-        <template slot="footer">
-            <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
-            <button @click="deleteCommentModal=false">NO</button>
-        </template>
+        <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
+            <template slot="header">Usuń komentarz</template>
+            <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
+            <template slot="footer">
+                <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
+                <button @click="deleteCommentModal=false">NO</button>
+            </template>
 
-    </Modal>
+        </Modal>
 
     </div>
 </template>
@@ -69,7 +75,7 @@
             return {
                 deleteCommentModal: false,
                 currentCommentID: 0,
-               currentUserID: "",
+                currentUserID: "",
                 comments: [],
                 currentTask: [],
                 commentValue: "",
@@ -77,7 +83,11 @@
             }
         },
         methods: {
-            deleteComment(){
+            navigateToUserProfile(value) {
+                console.log(value);
+                this.$router.push({ name: 'profileDetails', params: { userID: value } })
+            },
+            deleteComment() {
                 console.log(this.currentCommentID);
                 axios.post('http://localhost:8080/comments/delete-comment', null, {
                     params: {
@@ -111,17 +121,17 @@
                 this.commentValue = "";
 
             },
-            sprawdz: function(value){
+            sprawdz: function (value) {
                 return (this.currentUserID === value)
             },
-            startDeletionProcess(value){
+            startDeletionProcess(value) {
                 this.currentCommentID = value;
                 this.deleteCommentModal = true;
             }
         },
         created() {
             let user = JSON.parse(localStorage.getItem('user'));
-            this.currentUserID= user.id
+            this.currentUserID = user.id
             axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                 this.currentTask = response.data;
                 this.comments = this.currentTask.comments;
@@ -129,9 +139,7 @@
 
             })
         },
-        computed: {
-
-        }
+        computed: {}
     }
 </script>
 
@@ -146,11 +154,13 @@
         font-weight: bold;
         margin-bottom: 20px;
     }
-    .comment-delete{
+
+    .comment-delete {
         margin-left: 10px;
 
     }
-    .comment-delete:hover{
+
+    .comment-delete:hover {
         color: crimson;
         cursor: pointer;
     }
