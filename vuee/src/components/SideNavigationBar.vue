@@ -20,9 +20,9 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/board" class="router-nav">
+                    <router-link to="/profile" class="router-nav">
                         <font-awesome-icon icon="user" class="icon-nav"/>
-                        Board
+                        Profile
                     </router-link>
                 </li>
                 <li>

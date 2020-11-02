@@ -11,8 +11,7 @@
     <groupId>pl.mkowsky</groupId>
     <artifactId>jira-wannabe-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <taskTitle>jira-wannabe-demo</taskTitle>
-    <taskDescription>Demo project for Spring Boot</taskDescription>
+
 
     <properties>
         <java.version>11</java.version>
@@ -27,10 +26,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>

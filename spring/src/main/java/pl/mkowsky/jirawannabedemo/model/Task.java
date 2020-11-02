@@ -43,6 +43,12 @@ public class Task {
 
     private int taskPriority;
 
+    @OneToMany(mappedBy = "task",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    //@JoinColumn(name = "task_id")
+    private List<Comment> comments;
+
     public Task() {
 
     }
@@ -59,6 +65,22 @@ public class Task {
         this.users = users;
         this.department = department;
         this.taskPriority = taskPriority;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void removeTask(Comment comment) {
+        comments.remove(comment);
     }
 
     public User getTaskManager() {

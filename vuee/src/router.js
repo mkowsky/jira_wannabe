@@ -4,6 +4,7 @@ import TemplateView from "@/views/TemplateView";
 import Login from "@/views/Login";
 import Board from "@/views/Board";
 import TaskManagement from "@/views/TaskManagement";
+import Profile from "@/views/Profile";
 
 
 Vue.use(Router);
@@ -80,6 +81,10 @@ const routes = [
         path: '/task-management',
         component: TaskManagement,
         beforeEnter: checkIfModerator
+    },
+    {
+        path: '/profile',
+        component: Profile
     }
 
 ]
