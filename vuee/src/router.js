@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import TemplateView from "@/views/TemplateView";
+
 import Login from "@/views/Login";
 import Board from "@/views/Board";
 import TaskManagement from "@/views/TaskManagement";
 import Profile from "@/views/Profile";
+
 
 
 Vue.use(Router);
@@ -73,10 +74,7 @@ const routes = [
             guest: false
         }
     },
-    {
-        path: '/test',
-        component: TemplateView,
-    },
+
     {
         path: '/task-management',
         component: TaskManagement,
@@ -91,7 +89,8 @@ const routes = [
         path: '/profile/:userID',
         component: Profile,
 
-    }
+    },
+
 
 ]
 

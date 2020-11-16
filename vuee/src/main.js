@@ -10,6 +10,23 @@ import { faWindowClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueMoment from 'vue-moment';
 
+import Vuetify from 'vuetify';
+Vue.use(Vuetify);
+import vuetify from './plugins/vuetify';
+
+
+
+
+// import { BootstrapVue} from 'bootstrap-vue'
+// import { BCollapse } from 'bootstrap-vue'
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
+// Vue.component('b-collapse', BCollapse)
+// Vue.use(BootstrapVue);
+
+
+
+
 library.add(faUser, faLock, faWindowClose)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -25,5 +42,6 @@ var router = new VueRouter({
 new Vue({
   router: router,
   store: store,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')

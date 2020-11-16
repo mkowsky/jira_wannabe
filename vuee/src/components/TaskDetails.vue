@@ -1,6 +1,8 @@
 <template>
-    <div id="wrap">
+    <div id="wrap" class="xd">
+
         <div style="font-size: 30px;">HELLO FROM TASK DETAILS</div>
+        <b-collapse></b-collapse>
         <div class="template">title
             <div class="bold">{{currentTask.name}}</div>
         </div>
@@ -144,6 +146,10 @@
 </script>
 
 <style scoped>
+    .xd{
+        position: absolute;
+        left: 50%;
+    }
 
     .template {
         font-size: 22px;

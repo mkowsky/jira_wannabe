@@ -1,10 +1,12 @@
 <template>
     <div id="container">
 
-        <div class="page-title">BOARD</div>
-        <div>WELCOME</div>
-        <div>{{user.firstName}} {{user.lastName}}</div>
-        <button @click="logout">LOGOUT</button>
+        <div class="page-title">BOARD
+            <div>{{user.firstName}} {{user.lastName}}</div>
+            <v-btn @click="logout">LOGOUT</v-btn>
+        </div>
+
+
 
 
         <side-navigation-bar/>
@@ -179,8 +181,8 @@
         position: absolute;
         left: 10%;
         top: 2%;
-        font-size: 30px;
         letter-spacing: 2px;
+        margin-bottom: 40px;
 
     }
 
