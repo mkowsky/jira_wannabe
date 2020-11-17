@@ -10,6 +10,7 @@ import { faWindowClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueMoment from 'vue-moment';
 
+
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import vuetify from './plugins/vuetify';

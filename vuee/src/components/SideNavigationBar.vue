@@ -76,11 +76,12 @@
     .sidenav {
 
         height: 100%;
-        width: 160px;
+        width:  10%;
         position: fixed;
         top: 0;
         left: 0;
         background-color: #111;
+
 
 
     }

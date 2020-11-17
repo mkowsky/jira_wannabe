@@ -1,73 +1,116 @@
 <template>
-    <div id="wrap" class="xd">
+    <div class="task-details-container">
+        <font-awesome-icon icon="window-close" class="icon-nav" @click="closeTaskDetails"/>
+        <div class="task-details-flex-container">
 
-        <div style="font-size: 30px;">HELLO FROM TASK DETAILS</div>
-        <b-collapse></b-collapse>
-        <div class="template">title
-            <div class="bold">{{currentTask.name}}</div>
-        </div>
-        <div class="template">description
-            <div class="bold">{{currentTask.description}}</div>
-        </div>
-        <div class="template">department
-            <div class="bold">{{currentTask.department}}</div>
-        </div>
-        <div class="template">status
-            <div class="bold">{{currentTask.state}}</div>
-        </div>
-        <div class="template">deadline
-            <div class="bold">{{currentTask.expireDate}}</div>
-        </div>
-        <div class="template">manager
-            <div class="bold" style="cursor: pointer" @click="navigateToUserProfile(currentTask.taskManager.id)">{{currentTask.taskManager.username}}</div>
-        </div>
-        <div class="template">users
-            <div class="bold" style="cursor: pointer" v-for="user in currentTask.users"
-                 :key="user.id"
-                 @click="navigateToUserProfile(user.id)">
-                {{user.firstName}} {{user.lastName}}
-            </div>
-        </div>
+            <div class="general-task-info">
+                <div class="pm-display">
+                    <div class="pm-name-lighter">PROJECT MANAGER</div>
+                    <div class="circle-avatar"></div>
+                    <div class="pm-name"
+                         @click="navigateToUserProfile(currentTask.taskManager.id)">Mateusz Pietrzykowski
+                    </div>
+                </div>
+                <div class="content">
 
-
-        <div>
-            <input type="text" placeholder="Write comment" v-model="commentValue" style="margin-bottom: 20px;"/>
-            <button @click="submitNewComment">SUBMIT</button>
-            <div>Current comments: {{currentTask.comments.length}}</div>
-            <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">
-
-                <div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>
-                <div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>
-                <div>{{comment.comment}}
-                    <font-awesome-icon icon="window-close" class="comment-delete" v-if="sprawdz(comment.user.id)"
-                                       @click="startDeletionProcess(comment.id)"></font-awesome-icon>
+                    <div class="task-title">{{currentTask.name}}</div>
+                    <div class="task-rest">Deadline {{currentTask.expireDate}}</div>
+                    <div class="task-rest"> Status {{currentTask.state}}</div>
+                    <div class="task-rest">Department {{currentTask.department}}</div>
                 </div>
             </div>
+
+            <div class="task-description">
+              <expansion-panel :panelTitle="'Task description'">
+                  <template slot="content">
+                      {{currentTask.description}}
+                  </template>
+              </expansion-panel>
+            </div>
+
+            <div class="task-description">
+              <expansion-panel :panelTitle="'Task timeline'">
+                  <template slot="content">History content</template>
+              </expansion-panel>
+            </div>
+
+            <div class="task-description">
+             <expansion-panel :panelTitle="'Current task users'">
+                 <template slot="content">
+                     <div class="task-users-wrapper">
+                         <user-card v-for="user in currentTask.users"
+                                    :key="user.id"
+                                    :nickname="user.firstName +' '+ user.lastName"
+                                    :position="'Developer'"
+                                    :user-id="user.id"
+                                    @navigate-to-profile="navigateTo($event)"/>
+                     </div>
+                 </template>
+             </expansion-panel>
+
+
+
+            </div>
+            <div class="task-description">
+                <expansion-panel :panelTitle="'Comments'">
+                    <template slot="content">
+                        <div>
+                            <v-text-field
+                                    label="Write a comment"
+                                    solo
+                                    v-model="commentValue"
+                            ></v-text-field>
+                            <v-btn
+                                    elevation="2"
+                                    rounded
+                                    x-large
+                                    @click="submitNewComment"
+                            >SUBMIT</v-btn>
+                            <div>Current comments: {{currentTask.comments.length}}</div>
+                            <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">
+
+                                <div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>
+                                <div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>
+                                <div>{{comment.comment}}
+                                    <font-awesome-icon icon="window-close" class="comment-delete"
+                                                       v-if="sprawdz(comment.user.id)"
+                                                       @click="startDeletionProcess(comment.id)"></font-awesome-icon>
+                                </div>
+                            </div>
+
+                        </div>
+                    </template>
+                </expansion-panel>
+            </div>
+
+
+            <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
+                <template slot="header">Usuń komentarz</template>
+                <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
+                <template slot="footer">
+                    <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
+                    <button @click="deleteCommentModal=false">NO</button>
+                </template>
+
+            </Modal>
         </div>
 
-
-        <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
-            <template slot="header">Usuń komentarz</template>
-            <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
-            <template slot="footer">
-                <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
-                <button @click="deleteCommentModal=false">NO</button>
-            </template>
-
-        </Modal>
-
     </div>
+
+
 </template>
 
 <script>
 
     import axios from "axios";
+    import UserCard from "@/components/UserCard";
     import Modal from "@/components/Modal";
+    import ExpansionPanel from "@/components/ExpansionPanel";
 
 
     export default {
         name: "TaskDetails",
-        components: {Modal},
+        components: {ExpansionPanel, UserCard, Modal},
         props: {
             taskID: {
                 required: true,
@@ -85,9 +128,18 @@
             }
         },
         methods: {
+            closeTaskDetails() {
+                console.log('close');
+                this.$emit('close-task-details');
+            },
+            navigateTo(value) {
+                value.userID
+                console.log(';l')
+                console.log(value);
+            },
             navigateToUserProfile(value) {
                 console.log(value);
-                this.$router.push({ name: 'profileDetails', params: { userID: value } })
+                this.$router.push({name: 'profileDetails', params: {userID: value}})
             },
             deleteComment() {
                 console.log(this.currentCommentID);
@@ -145,30 +197,108 @@
     }
 </script>
 
-<style scoped>
-    .xd{
+<style scoped lang="scss">
+    .task-details-container {
+        height: 100vh;
+    }
+
+
+    .icon-nav {
         position: absolute;
-        left: 50%;
-    }
-
-    .template {
-        font-size: 22px;
-
-    }
-
-    .bold {
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-
-    .comment-delete {
-        margin-left: 10px;
-
-    }
-
-    .comment-delete:hover {
-        color: crimson;
+        left: 95%;
+        top: 1%;
         cursor: pointer;
+        font-size: 40px;
     }
+
+    .icon-nav:hover {
+        color: lightpink;
+    }
+
+    .task-details-flex-container {
+        margin-top: 5%;
+        background: gray;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+
+    .general-task-info {
+        background: black;
+        width: 70%;
+        height: 400px;
+        display: flex;
+    }
+
+    .pm-display {
+        background: lightpink;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 35%;
+    }
+
+    .circle-avatar {
+        border-radius: 50%;
+        height: 60%;
+        width: 60%;
+        background: white;
+        box-shadow: 0 0 10px 10px black;
+    }
+
+    .pm-name {
+        cursor: pointer;
+        font-weight: 300;
+        font-size: 24px;
+        letter-spacing: 2px;
+        color: white;
+
+        &:hover {
+            color: black;
+        }
+    }
+
+    .pm-name-lighter {
+        font-weight: 300;
+        font-size: 20px;
+        letter-spacing: 2px;
+
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+
+        .task-title {
+            color: white;
+            font-size: 48px;
+            font-weight: 200;
+            letter-spacing: 3px;
+        }
+
+        .task-rest {
+            color: white;
+            font-size: 24px;
+            font-weight: 200;
+            letter-spacing: 3px;
+        }
+
+    }
+
+
+    .task-description {
+        width: 70%;
+
+    }
+
+    .task-users-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
 
 </style>

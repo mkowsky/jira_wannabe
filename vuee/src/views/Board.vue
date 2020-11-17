@@ -1,7 +1,7 @@
 <template>
-    <div id="container">
+    <div id="container" class="board-container">
 
-        <div class="page-title">BOARD
+        <div class="page-title" v-if="taskContainerVisible">BOARD
             <div>{{user.firstName}} {{user.lastName}}</div>
             <v-btn @click="logout">LOGOUT</v-btn>
         </div>
@@ -11,9 +11,10 @@
 
         <side-navigation-bar/>
         <div v-if="!taskContainerVisible">
-            <button @click="taskContainerVisible = true">CLOSE</button>
+
             <TaskDetails
                     v-bind:task-i-d="currentTaskID"
+                    @close-task-details="taskContainerVisible = true"
                     />
         </div>
 
@@ -171,9 +172,14 @@
 </script>
 
 <style scoped>
+
+
     * {
         box-sizing: border-box;
-
+    }
+    .board-container{
+        margin-left: 10%;
+        height: 100%;
 
     }
 

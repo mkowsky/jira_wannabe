@@ -57,6 +57,7 @@
         overflow-x: auto;
         display: flex;
         flex-direction: column;
+        z-index: 100;
     }
 
     .modal-header,

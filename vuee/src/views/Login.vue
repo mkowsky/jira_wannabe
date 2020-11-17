@@ -1,4 +1,5 @@
 <template>
+
     <div id="container">
 
         <Logo id="outer-circle"></Logo>
@@ -7,7 +8,7 @@
             <div class="input-wrapper">
                 <div v-if="emailError" class="input-error">{{emailError}}</div>
                 <font-awesome-icon icon="user" class="icon"/>
-                <input class="input-field"
+                <input class="my-input-field"
                        type="text"
                        placeholder="Email"
                        v-model="email">
@@ -17,7 +18,7 @@
             <div class="input-wrapper">
                 <div v-if="passwordError" class="input-error">{{passwordError}}</div>
                 <font-awesome-icon icon="lock" class="icon"/>
-                <input class="input-field"
+                <input class="my-input-field"
                        type="password"
                        placeholder="Password"
                        v-model="password">
@@ -37,6 +38,7 @@
 
 
 <script>
+
     //TODO: error na polu to ramka inputu zmienia kolor?
     //import axios from 'axios';
     import User from '../model/user';
@@ -231,7 +233,9 @@
 
     }
 
-    .input-field {
+    .my-input-field {
+
+        background: white;
         height: 30px;
         font-family: 'Courier New', Courier, monospace;
         font-size: 20px;
@@ -239,7 +243,7 @@
         width: 300px;
         padding: 5px;
         text-align: center;
-        outline: none;
+
     }
 
 </style>
