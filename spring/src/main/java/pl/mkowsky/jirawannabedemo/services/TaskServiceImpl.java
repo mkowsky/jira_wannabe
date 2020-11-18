@@ -19,12 +19,14 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     private UserService userService;
     private UserRepository userRepository;
+    private TaskStatusService taskStatusService;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository, TaskStatusService taskStatusService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.taskStatusService = taskStatusService;
     }
 
     @Override
@@ -66,13 +68,16 @@ public class TaskServiceImpl implements TaskService {
                 taskDTO.getTaskPriority()
         );
 
+
         save(newTask);
+        taskStatusService.newTaskCreated(newTask);
 
 
         for (int j = 0; j < taskUsers.size(); j++) {
             taskUsers.get(j).addTask(newTask);
             userService.save(taskUsers.get(j));
         }
+
 
     }
 

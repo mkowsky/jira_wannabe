@@ -25,12 +25,6 @@
                         Profile
                     </router-link>
                 </li>
-                <li>
-                    <router-link to="/board" class="router-nav">
-                        <font-awesome-icon icon="user" class="icon-nav"/>
-                        Board
-                    </router-link>
-                </li>
                 <li v-if="showModeratorBoard">
                     <router-link to="/task-management" class="router-nav">
                         <font-awesome-icon icon="user" class="icon-nav"/>

@@ -10,35 +10,17 @@
         <div id="taskCreate" v-show="createTaskVisible">
 
 
-            <div class="input-wrapper">
-                <select v-model="task.taskPriority">
-                    <option disabled value="">CHOSE PRIORITY</option>
-                    <option v-for="index in 4" :key="index" v-text="index"/>
-                </select>
-            </div>
-
-            <div class="input-wrapper">
-                <select v-model="task.department">
-                    <option disabled value="">CHOSE DEPARMENT</option>
-                    <option v-for="department of departments" :key="department.name" v-text="department.name"/>
-                </select>
-            </div>
-
-
-            <div class="input-wrapper">
-                <input placeholder="Title" v-model="task.taskTitle" ref="taskTitle"/>
-            </div>
-
-            <div class="input-wrapper">
-                <input placeholder="Description" v-model="task.taskDescription"/>
-            </div>
-
-            <div class="input-wrapper">
+            <v-select solo dense label="Chose Department" :items="departments" item-text="name" item-value="name"
+                      v-model="task.department"></v-select>
+            <v-select solo dense label="Chose Priority" :items="priorities" item-text="value" item-value="value"
+                      v-model="task.taskPriority"></v-select>
+            <v-text-field solo label="Title" v-model="task.taskTitle" ref="taskTitle"></v-text-field>
+            <v-textarea solo label="Task description" v-model="task.taskDescription"></v-textarea>
+            <div>
                 <label>TASK STATE</label>
-                <select disabled="true">
-                    <option>TO_DO</option>
-                </select>
+                <v-select solo dense label="TO_DO" disabled></v-select>
             </div>
+
 
             <div class="input-wrapper">
                 <datepicker placeholder="Deadline"
@@ -67,7 +49,7 @@
                 </div>
             </div>
 
-            <button @click="createTask" class="button" :disabled="isConfirmButtonDisabled">CONFIRM</button>
+            <v-btn @click="createTask" :disabled="isConfirmButtonDisabled">CONFIRM</v-btn>
             <button @click="clear">CLEAR</button>
         </div>
 
@@ -75,7 +57,8 @@
         <div id="editTask" v-show="!createTaskVisible">
             <div style=" position: absolute; left: 20%; top: 30%; width: 400px">
                 <Autocomplete :items="tasks" :filterby="'name'" :grid-display="true"
-                              :placehold="'Search fot task with name...'" @grid-item-clicked="openTaskDetails" :key="render"
+                              :placehold="'Search fot task with name...'" @grid-item-clicked="openTaskDetails"
+                              :key="render"
                               style="position: absolute; left: 50%; transform: translateX(-50%); top: 20%"></Autocomplete>
             </div>
         </div>
@@ -132,6 +115,12 @@
                     {name: 'MARKETING'},
                     {name: 'DATABASE'},
                     {name: 'ECOMMERCE'},
+                ],
+                priorities: [
+                    {value: 1},
+                    {value: 2},
+                    {value: 3},
+                    {value: 4},
                 ],
                 times: [
                     {name: '1 DAY'},
@@ -240,7 +229,6 @@
             });
             axios.get('http://localhost:8080/users/get-names').then(response => {
                 for (let i = 1; i < response.data.length; i++) {
-                    console.log(i + 'push');
                     this.users.push({
                         id: response.data[i].id,
                         firstName: response.data[i].firstName,

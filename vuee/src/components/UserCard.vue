@@ -24,7 +24,7 @@
     export default {
         name: "UserCard",
         props: {
-            userID: {
+            userid: {
                 type: Number,
                 require: true,
             },
@@ -41,9 +41,9 @@
         },
         methods: {
             navigateToUserProfile() {
-                this.$emit('navigate-to-profile', this.userID);
+                this.$emit('navigate-to-profile', this.userid);
             }
-        }
+        },
     }
 </script>
 

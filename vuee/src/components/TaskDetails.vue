@@ -30,7 +30,16 @@
 
             <div class="task-description">
                 <expansion-panel :panelTitle="'Task timeline'">
-                    <template slot="content">History content</template>
+                    <template slot="content">
+
+                        <v-timeline dense>
+                        <v-timeline-item v-for="change in taskChanges" :key="change.id">
+                            <div>{{change.changeDate | moment("DD/MM/YYYY HH:mm")}}</div>
+                            <div>{{change.changeDescription}}</div>
+                        </v-timeline-item>
+                        </v-timeline>
+
+                    </template>
                 </expansion-panel>
             </div>
 
@@ -42,7 +51,7 @@
                                        :key="user.id"
                                        :nickname="user.firstName +' '+ user.lastName"
                                        :position="'Developer'"
-                                       :user-id="user.id"
+                                       v-bind:userid="user.id"
                                        @navigate-to-profile="navigateTo($event)"/>
                         </div>
                     </template>
@@ -67,16 +76,15 @@
                             >SUBMIT
                             </v-btn>
 
-
-                            <v-timeline dense>
-                                <v-timeline-item v-for="comment in comments" :key="comment.id">
-                                    <comment :comment-date="comment.commentDate"
+                             <div style="margin-top: 20px;">
+                                 <div  v-for="comment in comments" :key="comment.id" style="margin-bottom: 10px;">
+                                     <comment
+                                             :comment-date="comment.commentDate"
                                              :comment-content="comment.comment"
                                              :comment-username="comment.user.username"/>
-                                </v-timeline-item>
-                            </v-timeline>
+                                 </div>
 
-
+                             </div>
                             <!--<div>Current comments: {{currentTask.comments.length}}</div>-->
                             <!--<div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">-->
 
@@ -136,6 +144,7 @@
                 comments: [],
                 currentTask: [],
                 commentValue: "",
+                taskChanges: [],
 
             }
         },
@@ -145,9 +154,7 @@
                 this.$emit('close-task-details');
             },
             navigateTo(value) {
-                value.userID
-                console.log(';l')
-                console.log(value);
+                this.$router.push({name: 'profileDetails', params: {userID: value}})
             },
             navigateToUserProfile(value) {
                 console.log(value);
@@ -202,6 +209,8 @@
             axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                 this.currentTask = response.data;
                     this.comments = this.currentTask.comments;
+                    this.taskChanges = this.currentTask.taskChanges;
+                    console.log(this.taskChanges);
                     this.comments.reverse();
                 console.log(this.comments);
             })
@@ -230,7 +239,6 @@
 
     .task-details-flex-container {
         margin-top: 5%;
-        background: gray;
         height: 100%;
         display: flex;
         flex-direction: column;

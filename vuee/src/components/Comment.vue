@@ -3,7 +3,6 @@
     <v-card outlined shaped class="content">
         <v-card-subtitle>{{commentUsername}} {{wysiwetlDate}}</v-card-subtitle>
         <v-card-text>{{commentContent}}</v-card-text>
-        <v-btn @click="calculate">cl</v-btn>
     </v-card>
 </template>
 
@@ -28,13 +27,13 @@
             calculate() {
                 var time = Date.parse(this.commentDate)
                 var timeNow = Date.now();
-                var howLong = timeNow - time + 200;
+                var howLong = timeNow - time + 300;
                 var date = new Date(howLong);
                 console.log(howLong)
                 var minutes = date.getMinutes();
                 var godziny = date.getHours();
 
-                if(minutes < 60) this.wysiwetlDate = minutes + ' min temu';
+                if(godziny < 2) this.wysiwetlDate = minutes + ' min temu';
                 else this.wysiwetlDate = godziny + ' godz temu';
                 // this.wysiwetlDate = minutes;
             },
