@@ -1,0 +1,52 @@
+<template>
+    <v-stepper
+            v-model="e6"
+            vertical
+    >
+        <v-stepper-step
+                :complete="e6 > 1"
+                step="1"
+                editable>
+            Select an app
+            <small>Summarize if needed</small>
+        </v-stepper-step>
+
+        <v-stepper-content step="1">
+            <v-btn
+                    color="primary"
+                    @click="e6 = 2"
+            >CONFIRM</v-btn>
+        </v-stepper-content>
+
+        <v-stepper-step
+                :complete="e6 > 2"
+                step="2"
+        >
+            Configure analytics for this app
+        </v-stepper-step>
+
+        <v-stepper-content step="2">
+            <v-btn
+                    color="primary"
+                    @click="e6 = 3"
+            >CONFIRM</v-btn>
+        </v-stepper-content>
+
+
+    </v-stepper>
+</template>
+
+<script>
+    export default {
+        name: "TaskCreation",
+        data(){
+            return{
+                e6: 1,
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

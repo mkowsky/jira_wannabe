@@ -9,7 +9,6 @@
 
         <div id="taskCreate" v-show="createTaskVisible">
 
-
             <v-select solo dense label="Chose Department" :items="departments" item-text="name" item-value="name"
                       v-model="task.department"></v-select>
             <v-select solo dense label="Chose Priority" :items="priorities" item-text="value" item-value="value"

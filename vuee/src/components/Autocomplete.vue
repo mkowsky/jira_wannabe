@@ -61,14 +61,14 @@
         },
         data() {
             return {
-                visible: false,
+                isDialogVisible: false,
                 query: "",
 
             }
         },
         methods: {
             toggleVisible() {
-                this.visible = !this.visible
+                this.visible = !this.isDialogVisible
             },
             gridItemClicked(index, item) {
                 this.$emit('grid-item-clicked', item);

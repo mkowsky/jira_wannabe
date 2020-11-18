@@ -28,7 +28,8 @@
                           :key="task.id"
                           v-bind:title="task.name"
                           v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.username"
+                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                          v-bind:priority="task.taskPriority"
                           class="gap"
                           @task-item-clicked="taskItemClicked(task.id)"/>
 
@@ -40,7 +41,8 @@
                           :key="task.id"
                           v-bind:title="task.name"
                           v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.username"
+                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                          v-bind:priority="task.taskPriority"
                           class="gap"
                           @task-item-clicked="taskItemClicked(task.id)"/>
 
@@ -52,7 +54,8 @@
                           :key="task.id"
                           v-bind:title="task.name"
                           v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.username"
+                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                          v-bind:priority="task.taskPriority"
                           class="gap"
                           @task-item-clicked="taskItemClicked(task.id)"/>
 
@@ -64,7 +67,8 @@
                           :key="task.id"
                           v-bind:title="task.name"
                           v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.username"
+                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                          v-bind:priority="task.taskPriority"
                           class="gap"
                           @task-item-clicked="taskItemClicked(task.id)"/>
 

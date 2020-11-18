@@ -1,19 +1,34 @@
 <template>
-    <div id="cont">
-        <div class="content-black" @click="taskItemClicked">
-            <div id="title">{{title}}</div>
-            <div id="description">{{description}}</div>
-            <div id="wrapper">
-                <div class="circle">
-                    <font-awesome-icon icon="user" class="task-icon"/>
-                </div>
-                <div id="projectManager">{{projectManager}}</div>
+    <v-card dark @click="taskItemClicked">
+        <v-card-title>{{title}}</v-card-title>
+        <v-card-subtitle>Subtitle</v-card-subtitle>
+        <v-card-text>{{description}}</v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+            <v-avatar color="grey" size="36" style="margin-right: 10px;"></v-avatar>
+            {{projectManager}}
+        </v-card-actions>
+        <v-card-actions style="padding: 0;">
+            <div v-bind:style="{width: 100+ '%', height: 10 + 'px', background: color}"></div>
+        </v-card-actions>
+    </v-card>
 
-            </div>
+    <!---->
+    <!--<div id="cont">-->
+    <!--<div class="content-black" @click="taskItemClicked">-->
+    <!--<div id="title">{{title}}</div>-->
+    <!--<div id="description">{{description}}</div>-->
+    <!--<div id="wrapper">-->
+    <!--<div class="circle">-->
+    <!--<font-awesome-icon icon="user" class="task-icon"/>-->
+    <!--</div>-->
+    <!--<div id="projectManager">{{projectManager}}</div>-->
 
-        </div>
+    <!--</div>-->
 
-    </div>
+    <!--</div>-->
+
+    <!--</div>-->
 </template>
 
 <script>
@@ -32,13 +47,40 @@
                 type: String,
                 required: true,
             },
+            priority: {
+                type: Number,
+            }
 
         },
-        methods:{
-            taskItemClicked(){
+        data() {
+            return {
+                color: 'crimson'
+            }
+        },
+        methods: {
+            checkPriority() {
+                switch (this.priority) {
+                    case 1:
+                        this.color =  'green';
+                        break;
+                    case 2:
+                        this.color = 'orange'
+                        break;
+                    case 3:
+                        this.color = 'gold';
+                        break;
+                    case 4:
+                        this.color = 'crimson';
+                        break;
+                }
+            },
+            taskItemClicked() {
                 this.$emit('task-item-clicked')
             }
-        }
+        },
+        created() {
+            this.checkPriority();
+        },
     }
 </script>
 

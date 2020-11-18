@@ -33,10 +33,10 @@
                     <template slot="content">
 
                         <v-timeline dense>
-                        <v-timeline-item v-for="change in taskChanges" :key="change.id">
-                            <div>{{change.changeDate | moment("DD/MM/YYYY HH:mm")}}</div>
-                            <div>{{change.changeDescription}}</div>
-                        </v-timeline-item>
+                            <v-timeline-item v-for="change in taskChanges" :key="change.id">
+                                <div>{{change.changeDate | moment("DD/MM/YYYY HH:mm")}}</div>
+                                <div>{{change.changeDescription}}</div>
+                            </v-timeline-item>
                         </v-timeline>
 
                     </template>
@@ -76,42 +76,27 @@
                             >SUBMIT
                             </v-btn>
 
-                             <div style="margin-top: 20px;">
-                                 <div  v-for="comment in comments" :key="comment.id" style="margin-bottom: 10px;">
-                                     <comment
-                                             :comment-date="comment.commentDate"
-                                             :comment-content="comment.comment"
-                                             :comment-username="comment.user.username"/>
-                                 </div>
+                            <div style="margin-top: 20px;">
+                                <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 10px;">
 
-                             </div>
-                            <!--<div>Current comments: {{currentTask.comments.length}}</div>-->
-                            <!--<div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">-->
+                                    <comment
+                                            :comment-date="comment.commentDate"
+                                            :comment-content="comment.comment"
+                                            :comment-username="comment.user.firstName + ' ' + comment.user.lastName"
+                                            :delete-icon-visible="checkIfThisIsLoggedUserComment(comment.user.id)"
+                                            @delete-comment="deleteComment(comment.id)"/>
 
-                            <!--<div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>-->
-                            <!--<div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>-->
-                            <!--<div>{{comment.comment}}-->
-                            <!--<font-awesome-icon icon="window-close" class="comment-delete"-->
-                            <!--v-if="sprawdz(comment.user.id)"-->
-                            <!--@click="startDeletionProcess(comment.id)"></font-awesome-icon>-->
-                            <!--</div>-->
-                            <!--</div>-->
+                                </div>
 
+                            </div>
                         </div>
                     </template>
                 </expansion-panel>
             </div>
 
 
-            <Modal v-show="deleteCommentModal" @close-modal="deleteCommentModal=false">
-                <template slot="header">Usuń komentarz</template>
-                <template slot="body">Jesteś pewny ze chcesz usunac komentarz?</template>
-                <template slot="footer">
-                    <button @click="deleteComment()" style="margin-right: 50px;">YES</button>
-                    <button @click="deleteCommentModal=false">NO</button>
-                </template>
-
-            </Modal>
+            <!--<Modal :dialog="deleteCommentModal" @modal-cancel="deleteCommentModal = false" @modal-agree="deleteComment">-->
+            <!--</Modal>-->
         </div>
 
     </div>
@@ -123,14 +108,14 @@
 
     import axios from "axios";
     import UserCard from "@/components/UserCard";
-    import Modal from "@/components/Modal";
+    //import Modal from "@/components/Modal";
     import ExpansionPanel from "@/components/ExpansionPanel";
     import Comment from "@/components/Comment";
 
 
     export default {
         name: "TaskDetails",
-        components: {Comment, ExpansionPanel, UserCard, Modal},
+        components: {Comment, ExpansionPanel, UserCard, },
         props: {
             taskID: {
                 required: true,
@@ -138,8 +123,6 @@
         },
         data() {
             return {
-                deleteCommentModal: false,
-                currentCommentID: 0,
                 currentUserID: "",
                 comments: [],
                 currentTask: [],
@@ -159,21 +142,6 @@
             navigateToUserProfile(value) {
                 console.log(value);
                 this.$router.push({name: 'profileDetails', params: {userID: value}})
-            },
-            deleteComment() {
-                console.log(this.currentCommentID);
-                axios.post('http://localhost:8080/comments/delete-comment', null, {
-                    params: {
-                        commentID: this.currentCommentID
-                    }
-                }).then(response => {
-                    this.deleteCommentModal = false;
-                    console.log(response.status);
-                    axios.get('http://localhost:8080/comments/get-comments-for-task/' + this.taskID).then(response => {
-                        this.comments = response.data
-
-                    })
-                })
             },
             submitNewComment() {
                 axios.post('http://localhost:8080/comments/new-comment', {
@@ -195,23 +163,33 @@
                 this.commentValue = "";
 
             },
-            sprawdz: function (value) {
+            checkIfThisIsLoggedUserComment: function (value) {
                 return (this.currentUserID === value)
             },
-            startDeletionProcess(value) {
-                this.currentCommentID = value;
-                this.deleteCommentModal = true;
-            }
+            deleteComment(commentToDeleteID) {
+                axios.post('http://localhost:8080/comments/delete-comment', null, {
+                    params: {
+                        commentID: commentToDeleteID
+                    }
+                }).then(response => {
+                    this.deleteCommentModal = false;
+                    console.log(response.status);
+                    axios.get('http://localhost:8080/comments/get-comments-for-task/' + this.taskID).then(response => {
+                        this.comments = response.data
+
+                    })
+                })
+            },
         },
         created() {
             let user = JSON.parse(localStorage.getItem('user'));
             this.currentUserID = user.id
             axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                 this.currentTask = response.data;
-                    this.comments = this.currentTask.comments;
-                    this.taskChanges = this.currentTask.taskChanges;
-                    console.log(this.taskChanges);
-                    this.comments.reverse();
+                this.comments = this.currentTask.comments;
+                this.taskChanges = this.currentTask.taskChanges;
+                console.log(this.taskChanges);
+                this.comments.reverse();
                 console.log(this.comments);
             })
         },
@@ -319,6 +297,15 @@
         display: flex;
         flex-direction: row;
         align-items: flex-end;
+    }
+
+    .comment-delete {
+        cursor: pointer;
+
+    }
+
+    .comment-delete:hover {
+        background: lightpink;
     }
 
 

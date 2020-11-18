@@ -1,38 +1,78 @@
 <template>
-    <div class="modal-backdrop">
-        <div class="modal">
-            <header class="modal-header">
-                <slot name="header">
-                    This is the default tile!
-                </slot>
+    <v-dialog
+            v-model="dialog"
+            width="500"
+            persistent
+    ><v-card>
+        <v-card-title class="headline">
+            Usun komentarz
+        </v-card-title>
+        <v-card-text>Czy jesteś pewny, że chcesz usunać komentarz?</v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                    color="green darken-1"
+                    text
+                    @click="cancel"
+            >
+                Nie
+            </v-btn>
+            <v-btn
+                    color="green darken-1"
+                    text
+                    @click="agree"
+            >
+                Tak
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+    </v-dialog>
 
-            </header>
-            <section class="modal-body">
-                <slot name="body">
+    <!--<div class="modal-backdrop">-->
+        <!--<div class="modal">-->
+            <!--<header class="modal-header">-->
+                <!--<slot name="header">-->
+                    <!--This is the default tile!-->
+                <!--</slot>-->
 
-                </slot>
-            </section>
+            <!--</header>-->
+            <!--<section class="modal-body">-->
+                <!--<slot name="body">-->
 
-            <footer class="modal-footer">
-                <slot name="footer">
-                    <button
-                            type="button"
-                            class="btn-green"
-                            @click="close">Close me!
-                    </button>
-                </slot>
-            </footer>
+                <!--</slot>-->
+            <!--</section>-->
 
-        </div>
-    </div>
+            <!--<footer class="modal-footer">-->
+                <!--<slot name="footer">-->
+                    <!--<button-->
+                            <!--type="button"-->
+                            <!--class="btn-green"-->
+                            <!--@click="close">Close me!-->
+                    <!--</button>-->
+                <!--</slot>-->
+            <!--</footer>-->
+
+        <!--</div>-->
+    <!--</div>-->
 </template>
 
 <script>
     export default {
         name: "Modal",
+        props:{
+            dialog: {
+                default: false,
+            }
+        },
         methods:{
             close(){
                 this.$emit('close-modal')
+            },
+            cancel(){
+                this.$emit('modal-cancel');
+            },
+            agree(){
+                this.$emit('modal-agree');
             }
         }
     }
