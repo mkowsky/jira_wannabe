@@ -87,7 +87,7 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <artifactTId>spring-boot-maven-plugin</artifactTId>
             </plugin>
         </plugins>
     </build>

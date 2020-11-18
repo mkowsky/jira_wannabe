@@ -9,6 +9,7 @@ import pl.mkowsky.jirawannabedemo.repository.CommentRepository;
 import pl.mkowsky.jirawannabedemo.repository.TaskRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -58,12 +59,11 @@ public class CommentServiceImpl implements CommentService {
          */
         // II SPOSOB
         Comment comment = new Comment(commentDTO.getComment(),
-                new Date(),
+                new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
                 userRepository.findUserById(commentDTO.getUserID()),
                 taskRepository.getTaskById(commentDTO.getTaskID()));
 
         saveNewComment(comment);
-
     }
 
 

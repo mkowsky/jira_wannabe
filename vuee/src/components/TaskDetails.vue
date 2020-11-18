@@ -21,33 +21,32 @@
             </div>
 
             <div class="task-description">
-              <expansion-panel :panelTitle="'Task description'">
-                  <template slot="content">
-                      {{currentTask.description}}
-                  </template>
-              </expansion-panel>
+                <expansion-panel :panelTitle="'Task description'">
+                    <template slot="content">
+                        {{currentTask.description}}
+                    </template>
+                </expansion-panel>
             </div>
 
             <div class="task-description">
-              <expansion-panel :panelTitle="'Task timeline'">
-                  <template slot="content">History content</template>
-              </expansion-panel>
+                <expansion-panel :panelTitle="'Task timeline'">
+                    <template slot="content">History content</template>
+                </expansion-panel>
             </div>
 
             <div class="task-description">
-             <expansion-panel :panelTitle="'Current task users'">
-                 <template slot="content">
-                     <div class="task-users-wrapper">
-                         <user-card v-for="user in currentTask.users"
-                                    :key="user.id"
-                                    :nickname="user.firstName +' '+ user.lastName"
-                                    :position="'Developer'"
-                                    :user-id="user.id"
-                                    @navigate-to-profile="navigateTo($event)"/>
-                     </div>
-                 </template>
-             </expansion-panel>
-
+                <expansion-panel :panelTitle="'Current task users'">
+                    <template slot="content">
+                        <div class="task-users-wrapper">
+                            <user-card v-for="user in currentTask.users"
+                                       :key="user.id"
+                                       :nickname="user.firstName +' '+ user.lastName"
+                                       :position="'Developer'"
+                                       :user-id="user.id"
+                                       @navigate-to-profile="navigateTo($event)"/>
+                        </div>
+                    </template>
+                </expansion-panel>
 
 
             </div>
@@ -65,18 +64,30 @@
                                     rounded
                                     x-large
                                     @click="submitNewComment"
-                            >SUBMIT</v-btn>
-                            <div>Current comments: {{currentTask.comments.length}}</div>
-                            <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">
+                            >SUBMIT
+                            </v-btn>
 
-                                <div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>
-                                <div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>
-                                <div>{{comment.comment}}
-                                    <font-awesome-icon icon="window-close" class="comment-delete"
-                                                       v-if="sprawdz(comment.user.id)"
-                                                       @click="startDeletionProcess(comment.id)"></font-awesome-icon>
-                                </div>
-                            </div>
+
+                            <v-timeline dense>
+                                <v-timeline-item v-for="comment in comments" :key="comment.id">
+                                    <comment :comment-date="comment.commentDate"
+                                             :comment-content="comment.comment"
+                                             :comment-username="comment.user.username"/>
+                                </v-timeline-item>
+                            </v-timeline>
+
+
+                            <!--<div>Current comments: {{currentTask.comments.length}}</div>-->
+                            <!--<div v-for="comment in comments" :key="comment.id" style="margin-bottom: 30px;">-->
+
+                            <!--<div style="font-weight: bold; font-size: 20px">{{comment.user.username}}</div>-->
+                            <!--<div>{{comment.commentDate | moment("DD/MM/YYYY hh:mm")}}</div>-->
+                            <!--<div>{{comment.comment}}-->
+                            <!--<font-awesome-icon icon="window-close" class="comment-delete"-->
+                            <!--v-if="sprawdz(comment.user.id)"-->
+                            <!--@click="startDeletionProcess(comment.id)"></font-awesome-icon>-->
+                            <!--</div>-->
+                            <!--</div>-->
 
                         </div>
                     </template>
@@ -106,11 +117,12 @@
     import UserCard from "@/components/UserCard";
     import Modal from "@/components/Modal";
     import ExpansionPanel from "@/components/ExpansionPanel";
+    import Comment from "@/components/Comment";
 
 
     export default {
         name: "TaskDetails",
-        components: {ExpansionPanel, UserCard, Modal},
+        components: {Comment, ExpansionPanel, UserCard, Modal},
         props: {
             taskID: {
                 required: true,
@@ -169,6 +181,7 @@
                     axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                         this.currentTask = response.data;
                         this.comments = this.currentTask.comments;
+                        this.comments.reverse();
 
                     })
                 })
@@ -188,9 +201,9 @@
             this.currentUserID = user.id
             axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                 this.currentTask = response.data;
-                this.comments = this.currentTask.comments;
+                    this.comments = this.currentTask.comments;
+                    this.comments.reverse();
                 console.log(this.comments);
-
             })
         },
         computed: {}
