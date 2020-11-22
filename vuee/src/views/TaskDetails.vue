@@ -94,7 +94,11 @@
                 </expansion-panel>
             </div>
 
-
+            <div>
+                <label>TASK STATE</label>
+                <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
+                <v-btn @click="changeTaskState">SUBMIT</v-btn>
+            </div>
             <!--<Modal :dialog="deleteCommentModal" @modal-cancel="deleteCommentModal = false" @modal-agree="deleteComment">-->
             <!--</Modal>-->
         </div>
@@ -107,10 +111,10 @@
 <script>
 
     import axios from "axios";
-    import UserCard from "@/components/UserCard";
+    import UserCard from "../components/UserCard";
     //import Modal from "@/components/Modal";
-    import ExpansionPanel from "@/components/ExpansionPanel";
-    import Comment from "@/components/Comment";
+    import ExpansionPanel from "../components/ExpansionPanel";
+    import Comment from "../components/Comment";
 
 
     export default {
@@ -123,6 +127,8 @@
         },
         data() {
             return {
+                states: ["IN_PROGRESS", "DONE", "CODE_REVIEW", "TO_DO"],
+                newState: "",
                 currentUserID: "",
                 comments: [],
                 currentTask: [],
@@ -132,6 +138,18 @@
             }
         },
         methods: {
+            changeTaskState(){
+                console.log(this.newState);
+                console.log('change');
+                axios.post('http://localhost:8080/tasks/change-task-state', null, {
+                    params: {
+                        newState: this.newState,
+                        taskID: this.currentTask.id
+                    }
+                }).then(response => {
+                    console.log(response.status);
+                })
+            },
             closeTaskDetails() {
                 console.log('close');
                 this.$emit('close-task-details');

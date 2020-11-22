@@ -1,5 +1,6 @@
 package pl.mkowsky.jirawannabedemo.services;
 
+import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 
@@ -15,4 +16,6 @@ public interface TaskService {
     Task getTaskById(Long id);
     void createNewTask(TaskDTO taskDTO);
     void deleteTask(Long taskID);
+
+    void changeTaskState(Long taskID, EState newState);
 }

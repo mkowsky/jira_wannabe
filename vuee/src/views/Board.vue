@@ -1,12 +1,12 @@
 <template>
     <div id="container" class="board-container">
-
-        <div class="page-title" v-if="taskContainerVisible">BOARD
-            <div>{{user.firstName}} {{user.lastName}}</div>
-            <v-btn @click="logout">LOGOUT</v-btn>
+        <div style="position: absolute;top: 5%; " v-show="taskContainerVisible">
+            <v-text-field solo label="Search" v-model="query"></v-text-field>
         </div>
 
 
+        <div class="page-title" v-if="taskContainerVisible">BOARD
+        </div>
 
 
         <side-navigation-bar/>
@@ -15,68 +15,73 @@
             <TaskDetails
                     v-bind:task-i-d="currentTaskID"
                     @close-task-details="taskContainerVisible = true"
-                    />
+            />
         </div>
 
 
         <div class="tasks-container" v-show="taskContainerVisible">
 
-            <div class="row">
-                <div class="column" style="background-color: #aaa">
-                    <div class="column-title">TO DO</div>
-                    <Task v-for="task in toDo"
-                          :key="task.id"
-                          v-bind:title="task.name"
-                          v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                          v-bind:priority="task.taskPriority"
-                          class="gap"
-                          @task-item-clicked="taskItemClicked(task.id)"/>
 
-                </div>
+            <div class="column" style="background-color: #aaa; display: flex; flex-direction: column; min-height: 750px;">
+                <div class="column-title">TO DO</div>
+                <Task v-for="task in toDo"
+                      :key="task.id"
+                      v-bind:title="task.name"
+                      v-bind:description="task.description"
+                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:priority="task.taskPriority"
+                      class="gap"
+                      @task-item-clicked="taskItemClicked(task.id)"/>
 
-                <div class="column" style="background-color: #bbb">
-                    <div class="column-title">IN PROGRESS</div>
-                    <Task v-for="task in inProgress"
-                          :key="task.id"
-                          v-bind:title="task.name"
-                          v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                          v-bind:priority="task.taskPriority"
-                          class="gap"
-                          @task-item-clicked="taskItemClicked(task.id)"/>
+            </div>
 
-                </div>
+            <div class="column" style="background-color: #bbb; display: flex; flex-direction: column">
+                <div class="column-title">IN PROGRESS</div>
+                <Task v-for="task in inProgress"
+                      :key="task.id"
+                      v-bind:title="task.name"
+                      v-bind:description="task.description"
+                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:priority="task.taskPriority"
+                      class="gap"
+                      @task-item-clicked="taskItemClicked(task.id)"/>
 
-                <div class="column" style="background-color: #ccc">
-                    <div class="column-title">CODE REVIEW</div>
-                    <Task v-for="task in codeReview"
-                          :key="task.id"
-                          v-bind:title="task.name"
-                          v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                          v-bind:priority="task.taskPriority"
-                          class="gap"
-                          @task-item-clicked="taskItemClicked(task.id)"/>
+            </div>
 
-                </div>
+            <div class="column" style="background-color: #ccc; display: flex; flex-direction: column">
+                <div class="column-title">CODE REVIEW</div>
+                <Task v-for="task in codeReview"
+                      :key="task.id"
+                      v-bind:title="task.name"
+                      v-bind:description="task.description"
+                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:priority="task.taskPriority"
+                      class="gap"
+                      @task-item-clicked="taskItemClicked(task.id)"/>
 
-                <div class="column" style="background-color: #ddd">
-                    <div class="column-title">DONE</div>
-                    <Task v-for="task in done"
-                          :key="task.id"
-                          v-bind:title="task.name"
-                          v-bind:description="task.description"
-                          v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                          v-bind:priority="task.taskPriority"
-                          class="gap"
-                          @task-item-clicked="taskItemClicked(task.id)"/>
+            </div>
+
+            <div class="column" style="background-color: #ddd; display: flex; flex-direction: column">
+                <div class="column-title">DONE</div>
+                <Task v-for="task in done"
+                      :key="task.id"
+                      v-bind:title="task.name"
+                      v-bind:description="task.description"
+                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:priority="task.taskPriority"
+                      class="gap"
+                      @task-item-clicked="taskItemClicked(task.id)"/>
 
 
-                </div>
             </div>
         </div>
-
+        <v-pagination v-show="taskContainerVisible"
+                      v-model="page"
+                      :length="6"
+                      @next="next"
+                      @previous="previous"
+                      @input="pageChanged($event)"
+        ></v-pagination>
 
     </div>
 </template>
@@ -85,7 +90,7 @@
     import axios from 'axios';
     import Task from '@/components/Task'
     import SideNavigationBar from '@/components/SideNavigationBar'
-    import TaskDetails from "@/components/TaskDetails";
+    import TaskDetails from "@/views/TaskDetails";
 
 
     export default {
@@ -93,8 +98,9 @@
         components: {TaskDetails, Task, SideNavigationBar},
         data() {
             return {
+                page: 1,
                 isPM: false,
-
+                query: '',
                 user: Object,
                 taskContainerVisible: true,
                 toDoTasks: [],
@@ -112,41 +118,81 @@
             }
         },
         methods: {
-            logout() {
-                this.$store.dispatch('auth/logout');
-                this.$router.push('/login');
+            paginate(array, pageSize, pageNumber) {
+
+                return array.slice((pageNumber-1) * pageSize, (pageNumber) * pageSize);
+
             },
+
             taskItemClicked(taskID) {
                 console.log(taskID);
                 this.taskContainerVisible = false;
                 this.currentTaskID = taskID;
 
             },
+            next() {
+                console.log('nex');
+            },
+            previous() {
+                console.log('prev');
+            },
+            pageChanged(value) {
+                this.page=  value;
+            }
         },
         computed: {
             toDo() {
-                let filteredTasks = this.tasks.filter((task) => {
-                    return task.state.includes("TO_DO");
-                })
-                return filteredTasks
+                if (this.query === '') {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("TO_DO");
+                    })
+                    return this.paginate(filteredTasks, 3, this.page);
+                } else {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("TO_DO");
+                    })
+                    //return filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase()))
+                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
+                }
             },
             codeReview() {
-                let filteredTasks = this.tasks.filter((task) => {
-                    return task.state.includes("CODE_REVIEW");
-                })
-                return filteredTasks
+                if (this.query === '') {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("CODE_REVIEW");
+                    })
+                    return this.paginate(filteredTasks,3 , this.page);
+                } else {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("CODE_REVIEW");
+                    })
+                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
+                }
             },
             inProgress() {
-                let filteredTasks = this.tasks.filter((task) => {
-                    return task.state.includes("IN_PROGRESS");
-                })
-                return filteredTasks
+                if (this.query === '') {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("IN_PROGRESS");
+                    })
+                    return this.paginate(filteredTasks,3 , this.page);
+                } else {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("IN_PROGRESS");
+                    })
+                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
+                }
             },
             done() {
-                let filteredTasks = this.tasks.filter((task) => {
-                    return task.state.includes("DONE");
-                })
-                return filteredTasks
+                if (this.query === '') {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("DONE");
+                    })
+                    return this.paginate(filteredTasks,3 , this.page);
+                } else {
+                    let filteredTasks = this.tasks.filter((task) => {
+                        return task.state.includes("DONE");
+                    })
+                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
+                }
             }
         },
         created() {
@@ -168,10 +214,12 @@
                 axios.get('http://localhost:8080/tasks/get-user-tasks/' + this.user.id).then(response => {
                     this.tasks = response.data;
                     console.log(response.data);
+                    this.prepareData()
                 })
 
             }
         }
+
     }
 </script>
 
@@ -181,7 +229,8 @@
     * {
         box-sizing: border-box;
     }
-    .board-container{
+
+    .board-container {
         margin-left: 10%;
         height: 100%;
 
@@ -197,25 +246,18 @@
     }
 
     .tasks-container {
-        position: relative;
-        left: 10%;
-        top: 130px;
+        margin-top: 12vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
 
     }
 
     .column {
-        margin-right: 20px;
-        float: left;
         width: 20%;
-        padding: 5px;
 
-    }
+        padding: 15px;
 
-
-    .row::after {
-        content: "";
-        clear: both;
-        display: table;
     }
 
 
@@ -232,9 +274,8 @@
     }
 
     .gap {
-        position: relative;
-        left: 60%;
-        transform: translateX(-50%);
+
+
         margin-bottom: 20px;
         cursor: pointer;
     }

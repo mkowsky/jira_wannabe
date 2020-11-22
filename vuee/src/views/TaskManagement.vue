@@ -239,7 +239,7 @@
         },
         computed: {
             isConfirmButtonDisabled() {
-                if ((this.task.taskPriority) && (this.task.department) && (this.task.taskTitle) && (this.task.taskDescription) && (this.task.taskDeadline) && (this.chosenPeople.length > 0)) return false
+                if ((this.task.taskPriority) && (this.task.department) && (this.task.taskTitle) && (this.task.taskDescription) && (this.task.taskDeadline)) return false;// && (this.chosenPeople.length > 0)) return false
                 else return true
             },
 

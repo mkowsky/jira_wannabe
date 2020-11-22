@@ -3,6 +3,7 @@ package pl.mkowsky.jirawannabedemo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mkowsky.jirawannabedemo.dictionary.EChange;
+import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.TaskStatusChange;
 import pl.mkowsky.jirawannabedemo.repository.TaskStatusRepository;
@@ -29,5 +30,15 @@ public class TaskStatusServiceImpl implements TaskStatusService {
                 task);
         taskStatusRepository.save(taskStatusChange);
 
+    }
+
+    @Override
+    public void taskStatusChanged(EState previousState, EState newState, Task task) {
+        TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_STATUS_CHANGED,
+                "Task status changed from " + previousState.toString() + " to " + newState.toString(),
+                new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                task);
+
+        taskStatusRepository.save(taskStatusChange);
     }
 }

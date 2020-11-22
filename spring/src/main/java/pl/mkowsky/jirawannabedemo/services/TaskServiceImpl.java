@@ -2,6 +2,7 @@ package pl.mkowsky.jirawannabedemo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
@@ -89,6 +90,14 @@ public class TaskServiceImpl implements TaskService {
         }
 
         remove(task);
+    }
+
+    @Override
+    public void changeTaskState(Long taskID, EState newState) {
+        Task task = taskRepository.getTaskById(taskID);
+        taskStatusService.taskStatusChanged(task.getState(), newState, task);
+        task.setState(newState);
+        taskRepository.save(task);
     }
 
     String generateTaskID() {

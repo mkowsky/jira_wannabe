@@ -32,8 +32,7 @@
                     </router-link>
                 </li>
             </ul>
-
-
+            <v-btn @click="logout">LOGOUT</v-btn>
         </div>
     </div>
 </template>
@@ -45,10 +44,10 @@
         name: "SideNavigationBar",
         components: {Logo},
         methods: {
-            logout: function () {
+            logout() {
                 this.$store.dispatch('auth/logout');
                 this.$router.push('/login');
-            }
+            },
         },
         computed: {
             showModeratorBoard() {
