@@ -1,275 +1,179 @@
 <template>
-    <div id="container">
-        <div class="page-title">TASK MANAGEMENT</div>
-
-        <ul class="list-nav">
-            <li @click="createTaskVisible=true">CREATE TASK</li>
-            <li @click="createTaskVisible=false">EDIT TASK</li>
-        </ul>
-
-        <div id="taskCreate" v-show="createTaskVisible">
-
-            <v-select solo dense label="Chose Department" :items="departments" item-text="name" item-value="name"
-                      v-model="task.department"></v-select>
-            <v-select solo dense label="Chose Priority" :items="priorities" item-text="value" item-value="value"
-                      v-model="task.taskPriority"></v-select>
-            <v-text-field solo label="Title" v-model="task.taskTitle" ref="taskTitle"></v-text-field>
-            <v-textarea solo label="Task description" v-model="task.taskDescription"></v-textarea>
-            <div>
-                <label>TASK STATE</label>
-                <v-select solo dense label="TO_DO" disabled></v-select>
-            </div>
+    <div class="task-management-container">
+        <v-tabs centered grow color="rgba(225, 182, 193)">
+            <v-tab @click="createTaskVisible=true" style="font-size:26px">CREATE TASK</v-tab>
+            <v-tab @click="createTaskVisible=false" style="font-size:26px;">EDIT TASK</v-tab>
+        </v-tabs>
 
 
-            <div class="input-wrapper">
-                <datepicker placeholder="Deadline"
-                            value="Date"
-                            :disabledDates="disabledDates"
-                            input="null"
-                            id="kalendarz"
-                            v-model="task.taskDeadline"/>
+        <div class="task-create-wrapper" v-show="createTaskVisible">
 
-            </div>
+            <v-card class="task-create-box">
 
-            <div class="input-wrapper">
-                <Autocomplete v-bind:items="users"
-                              :filterby="'firstName'"
-                              :grid-display="false"
-                              :placehold="'Search fot user with name...'"
-                              style="width: 300px;"
-                              @list-item-clicked="listItemKlik"></Autocomplete>
-                <div style="position: absolute; left: 400px;">CHOSEN PEOPLE
-                    <ul>
-                        <li v-for="people in chosenPeople" :key="people.name">
-                            <font-awesome-icon icon="user" @click="iconClicked(people.id)"></font-awesome-icon>
-                            {{people.name}}
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <v-card class="left">
+                    <div style="position: absolute; color: white; opacity: 0.8; font-size: 26px; font-weight: 100; letter-spacing: 2px;">TASK CREATOR</div>
+                    <img src="https://images.unsplash.com/photo-1528739431815-0a7344c63409?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
+                         style="height: 100%;width: 100%; object-fit: cover">
+                </v-card>
 
-            <v-btn @click="createTask" :disabled="isConfirmButtonDisabled">CONFIRM</v-btn>
-            <button @click="clear">CLEAR</button>
+                <v-card class="center" outlined>
+                    <task-creation style="height: 100%;"
+                                   @create-task="createTask($event)"
+                                   @task-render="test($event)"
+                                   :autocomplete-data="users"></task-creation>
+                </v-card>
+
+                <v-card class="right" outlined>
+                    <div style="display: flex; flex-direction: column">
+                        <div style="font-size:28px;font-weight:300;letter-spacing:2px;align-self: center; margin-bottom: 10px; ">
+                            Live rendering
+                        </div>
+                        <TaskComponent :title="task.taskTitle"
+                                       :priority="task.taskPriority"
+                                       :description="task.taskDescription"></TaskComponent>
+                    </div>
+
+                </v-card>
+
+            </v-card>
         </div>
 
 
         <div id="editTask" v-show="!createTaskVisible">
-            <div style=" position: absolute; left: 20%; top: 30%; width: 400px">
-                <Autocomplete :items="tasks" :filterby="'name'" :grid-display="true"
-                              :placehold="'Search fot task with name...'" @grid-item-clicked="openTaskDetails"
-                              :key="render"
-                              style="position: absolute; left: 50%; transform: translateX(-50%); top: 20%"></Autocomplete>
-            </div>
-        </div>
-
-        <div v-if="gridItemClicked" class="task-details-window">
-            <button @click="deleteTask">DELETE TASK</button>
-            <button @click="gridItemClicked=false">CLOSE</button>
+            Hello
         </div>
 
 
         <side-navigation-bar></side-navigation-bar>
-        <Modal :dialog="modalVisible" :dialog-content="'Nowy task zostal pomyslnie stworzony.'" :dialog-title="'Task utworzony'"
-        :agree-button="'Ok'"
-        :one-button="true"
-        @modal-agree="modalVisible=false"></Modal>
-        <v-overlay  v-show="showOverlay">
+        <Modal :dialog="modalVisible" :dialog-content="'Nowy task zostal pomyslnie stworzony.'"
+               :dialog-title="'Task utworzony'"
+               :agree-button="'Ok'"
+               :one-button="true"
+               @modal-agree="modalVisible=false"></Modal>
+        <v-overlay v-show="showOverlay">
             <v-progress-circular
                     indeterminate
                     size="74"
-            >Loading</v-progress-circular>
+            >Loading
+            </v-progress-circular>
         </v-overlay>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
-    import Autocomplete from "@/components/Autocomplete";
     import SideNavigationBar from "@/components/SideNavigationBar";
-    import Datepicker from 'vuejs-datepicker';
     import TaskService from '../services/task.service'
-    import Task from "@/model/task";
     import Modal from "@/components/Modal";
+    import TaskCreation from "@/components/TaskCreation";
+    import TaskComponent from "@/components/Task";
+    import Task from "@/model/task";
 
 
     export default {
         name: "TaskManagement",
-        components: {Modal, SideNavigationBar, Autocomplete, Datepicker},
+        components: {TaskCreation, Modal, SideNavigationBar, TaskComponent},
         data() {
             return {
-                modalVisible: false,
+
                 user: null,
-                task: new Task(null, null, null, null, null, "TO_DO", null, null),
-                disabledDates: {
-                    to: new Date(Date.now() - 8640000)
-                },
-                render: 0,
-                deletedUsers: [],
-                taskPriority: "",
-                taskDeparment: "",
-                taskTitle: "",
-                taskDescription: "",
-                taskState: "TO_DO",
-                taskDeadline: "",
-                chosenPeopleIDS: [],
+
+
+                modalVisible: false,
+
 
                 showOverlay: false,
-                currentTaskID: null,
-
-                users: [],
-                gridItemClicked: false,
-                chosenPeople: [],
-                departments: [
-                    {name: 'BACKEND'},
-                    {name: 'FRONTEND'},
-                    {name: 'MARKETING'},
-                    {name: 'DATABASE'},
-                    {name: 'ECOMMERCE'},
-                ],
-                priorities: [
-                    {value: 1},
-                    {value: 2},
-                    {value: 3},
-                    {value: 4},
-                ],
-                times: [
-                    {name: '1 DAY'},
-                    {name: '2 DAYS'},
-                    {name: '3 DAYS'},
-                    {name: '4 DAYS'},
-                    {name: '5 DAYS'},
-                    {name: '6 DAYS'},
-                    {name: '7 DAYS'},
-                ],
                 createTaskVisible: true,
                 tasks: [],
-
+                users: [],
+                task: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
+                taskCopy: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
 
             }
         },
         methods: {
-            //TODO: dodać po0le priorytet do TASK i na jego podstawie kolor tasku
-            iconClicked(value) {
-                console.log(value);
-                for (let i = 0; i < this.chosenPeople.length; i++) {
-                    if (this.chosenPeople[i].id === value) {
-                        for (let j = 0; j < this.deletedUsers.length; j++) {
-                            if (this.chosenPeople[i].id === this.deletedUsers[j].id) {
-                                this.users.push({
-                                    id: this.deletedUsers[j].id,
-                                    firstName: this.deletedUsers[j].firstName,
-                                    lastName: this.deletedUsers[j].lastName
-                                })
-                                this.deletedUsers.splice(j, 1);
-                            }
-                        }
-                        this.chosenPeople.splice(i, 1);
-                    }
-                }
-            },
-            listItemKlik(value, identity) {
-                console.log('user name: ' + value + 'id: ' + identity);
-                this.chosenPeople.push({name: value, id: identity});
-                for (let i = 0; i < this.users.length; i++) {
-                    if (this.users[i].id === identity) {
-                        this.deletedUsers.push({
-                            id: this.users[i].id,
-                            firstName: this.users[i].firstName,
-                            lastName: this.users[i].lastName
-                        });
-                        this.users.splice(i, 1);
-                    }
-                }
-                console.log(this.deletedUsers);
-            },
-            openTaskDetails(value) {
-                console.log('task id: ' + value);
-                this.gridItemClicked = true;
-                for (let i = 0; i < this.tasks.length; i++) {
-                    if (this.tasks[i].id === value) this.currentTaskID = this.tasks[i].id;
-                }
-
-
-            },
-            clear() {
-                this.modalVisible = true;
-                this.showOverlay = false;
-                this.task.taskPriority = "",
-                    this.task.department = "",
-                    this.task.taskTitle = "";
-                this.task.taskDescription = "";
-                this.task.taskDeadline = "";
-                this.chosenPeopleIDS = [];
-                this.chosenPeople = [];
-                this.deletedUsers = [];
-            },
-
             getAllUsers() {
-                this.users = null;
                 axios.get('http://localhost:8080/users/get-names').then(response => {
-                    for (let i = 1; i < response.data.length; i++) {
-                        console.log(i + 'push');
+                    for (let i = 0; i < response.data.length; i++) {
                         this.users.push({
                             id: response.data[i].id,
-                            firstName: response.data[i].firstName,
-                            lastName: response.data[i].lastName
+                            name: response.data[i].firstName + ' ' + response.data[i].lastName
                         })
                     }
-
                 })
             },
 
-            createTask() {
+            displayModal() {
+                this.modalVisible = true;
+                this.showOverlay = false;
+            },
+
+            createTask(value) {
                 this.showOverlay = true;
+                this.task = value.task;
                 this.task.taskManagerID = this.user.id;
-
-                // //to gdzies przeniesc bo tutaj nie bedzie pasowac
-                for (let i = 0; i < this.chosenPeople.length; i++) {
-                    this.chosenPeopleIDS[i] = this.chosenPeople[i].id
-                }
-
-                TaskService.createNewTaks(this.task, this.chosenPeopleIDS).then(this.clear);
+                TaskService.createNewTaks(this.task, value.users).then(this.displayModal());
             },
-            deleteTask() {
-                console.log(this.currentTaskID);
-                TaskService.delteTask(this.currentTaskID).then(this.render++);
-
-            },
+            test(value) {
+                var change = value.changeValue;
+                if(value.task[change] === "") this.task[change] = this.taskCopy[change];
+                else this.task[change] = value.task[change];
+            }
         },
         created() {
             this.user = JSON.parse(localStorage.getItem('user'));
-            axios.get('http://localhost:8080/tasks/list-all').then(response => {
-                this.tasks = response.data;
-            });
-            axios.get('http://localhost:8080/users/get-names').then(response => {
-                for (let i = 1; i < response.data.length; i++) {
-                    this.users.push({
-                        id: response.data[i].id,
-                        firstName: response.data[i].firstName,
-                        lastName: response.data[i].lastName
-                    })
-                }
 
-            })
         },
-        computed: {
-            isConfirmButtonDisabled() {
-                if ((this.task.taskPriority) && (this.task.department) && (this.task.taskTitle) && (this.task.taskDescription) && (this.task.taskDeadline)) return false;// && (this.chosenPeople.length > 0)) return false
-                else return true
-            },
-
+        mounted() {
+            this.getAllUsers();
         }
+
     }
 </script>
 
 <style scoped>
+    * {
+        box-sizing: border-box;
+    }
 
-    #container {
-        top: 0;
-        left: 0;
-        position: absolute;
-        width: 100%;
+    .task-management-container {
+        margin-left: 10%;
         height: 100%;
+    }
+
+    .task-create-wrapper {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+    }
+
+    .task-create-box {
+        align-self: center;
+        width: 1400px;
+        height: 850px;
+        display: flex;
+
+    }
+
+    .left {
+        background: black;
+        opacity: 0.9;
+        width: 25%;
+        height: 100%;
+    }
+
+    .center {
+        width: 40%;
+    }
+
+    .right {
+        width: 35%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
     }
 
@@ -302,13 +206,6 @@
         cursor: pointer;
     }
 
-    #taskCreate {
-        position: absolute;
-        top: 30%;
-        left: 50%;
-        transform: translateX(-50%);
-
-    }
 
     .input-wrapper {
         position: relative;

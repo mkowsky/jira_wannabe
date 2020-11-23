@@ -27,6 +27,15 @@
             </div>
 
             <div class="task-description" v-show="generalInfoVisible">
+                <expansion-panel :panel-title="'Task actions'">
+                    <template slot="content">
+                        <div>
+                            <label>TASK STATE</label>
+                            <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
+                            <v-btn @click="changeTaskState">SUBMIT</v-btn>
+                        </div>
+                    </template>
+                </expansion-panel>
                 <expansion-panel :panelTitle="'Task description'">
                     <template slot="content">
                         {{currentTask.description}}
@@ -101,11 +110,7 @@
                 </expansion-panel>
             </div>
 
-            <div>
-                <label>TASK STATE</label>
-                <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
-                <v-btn @click="changeTaskState">SUBMIT</v-btn>
-            </div>
+
             <!--<Modal :dialog="deleteCommentModal" @modal-cancel="deleteCommentModal = false" @modal-agree="deleteComment">-->
             <!--</Modal>-->
         </div>

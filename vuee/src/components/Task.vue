@@ -1,5 +1,5 @@
 <template>
-    <v-card dark @click="taskItemClicked">
+    <v-card @click="taskItemClicked">
         <v-card-title>{{title}}</v-card-title>
         <v-card-subtitle>Subtitle</v-card-subtitle>
         <v-card-text>{{description}}</v-card-text>
@@ -37,15 +37,17 @@
         props: {
             title: {
                 type: String,
-                required: true,
+                default: "Title",
+
             },
             description: {
                 type: String,
-                required: true,
+                default: "Description",
+
             },
             projectManager: {
                 type: String,
-                required: true,
+
             },
             priority: {
                 type: Number,
@@ -61,7 +63,7 @@
             checkPriority() {
                 switch (this.priority) {
                     case 1:
-                        this.color =  'green';
+                        this.color = 'green';
                         break;
                     case 2:
                         this.color = 'orange'
@@ -78,6 +80,12 @@
                 this.$emit('task-item-clicked')
             }
         },
+        watch: {
+            priority: function () {
+                this.checkPriority();
+            }
+        },
+
         created() {
             this.checkPriority();
         },
