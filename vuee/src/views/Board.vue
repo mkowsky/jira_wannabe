@@ -9,7 +9,7 @@
         </div>
 
 
-        <side-navigation-bar/>
+        <side-navigation-bar @logout="modalVisible=true"/>
         <div v-if="!taskContainerVisible">
 
             <TaskDetails
@@ -21,22 +21,20 @@
 
         <div class="tasks-container" v-show="taskContainerVisible">
 
-
-            <div class="column" style="background-color: #aaa; display: flex; flex-direction: column; min-height: 750px;">
-                <div class="column-title">TO DO</div>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#aaa">
+                <v-card-title>TO DO</v-card-title>
                 <Task v-for="task in toDo"
-                      :key="task.id"
-                      v-bind:title="task.name"
-                      v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                      v-bind:priority="task.taskPriority"
-                      class="gap"
-                      @task-item-clicked="taskItemClicked(task.id)"/>
+                :key="task.id"
+                v-bind:title="task.name"
+                v-bind:description="task.description"
+                v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                v-bind:priority="task.taskPriority"
+                class="gap"
+                @task-item-clicked="taskItemClicked(task.id)"/>
+            </v-card>
 
-            </div>
-
-            <div class="column" style="background-color: #bbb; display: flex; flex-direction: column">
-                <div class="column-title">IN PROGRESS</div>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#bbb">
+                <v-card-title>IN PROGRESS</v-card-title>
                 <Task v-for="task in inProgress"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -45,11 +43,11 @@
                       v-bind:priority="task.taskPriority"
                       class="gap"
                       @task-item-clicked="taskItemClicked(task.id)"/>
+            </v-card>
 
-            </div>
 
-            <div class="column" style="background-color: #ccc; display: flex; flex-direction: column">
-                <div class="column-title">CODE REVIEW</div>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#ccc">
+                <v-card-title>CODE REVIEW</v-card-title>
                 <Task v-for="task in codeReview"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -58,11 +56,10 @@
                       v-bind:priority="task.taskPriority"
                       class="gap"
                       @task-item-clicked="taskItemClicked(task.id)"/>
+            </v-card>
 
-            </div>
-
-            <div class="column" style="background-color: #ddd; display: flex; flex-direction: column">
-                <div class="column-title">DONE</div>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#ddd">
+                <v-card-title>DONE</v-card-title>
                 <Task v-for="task in done"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -71,9 +68,10 @@
                       v-bind:priority="task.taskPriority"
                       class="gap"
                       @task-item-clicked="taskItemClicked(task.id)"/>
+            </v-card>
 
 
-            </div>
+
         </div>
         <v-pagination v-show="taskContainerVisible"
                       v-model="page"
@@ -82,6 +80,11 @@
                       @previous="previous"
                       @input="pageChanged($event)"
         ></v-pagination>
+        <Modal :dialog="modalVisible"
+        :dialog-content="'Czy jestes pewny ze chcesz sie wylogowac?'"
+        :dialog-title="'Wyloguj'"
+        @modal-agree="logout"
+        @modal-cancel="modalVisible=false"></Modal>
 
     </div>
 </template>
@@ -91,13 +94,15 @@
     import Task from '@/components/Task'
     import SideNavigationBar from '@/components/SideNavigationBar'
     import TaskDetails from "@/views/TaskDetails";
+    import Modal from "@/components/Modal"
 
 
     export default {
         name: "Home",
-        components: {TaskDetails, Task, SideNavigationBar},
+        components: {TaskDetails, Task, SideNavigationBar, Modal},
         data() {
             return {
+                modalVisible: false,
                 page: 1,
                 isPM: false,
                 query: '',
@@ -118,6 +123,10 @@
             }
         },
         methods: {
+           logout(){
+                this.$store.dispatch('auth/logout');
+                this.$router.push('/login');
+            },
             paginate(array, pageSize, pageNumber) {
 
                 return array.slice((pageNumber-1) * pageSize, (pageNumber) * pageSize);

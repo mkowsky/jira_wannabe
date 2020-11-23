@@ -69,7 +69,16 @@
 
 
         <side-navigation-bar></side-navigation-bar>
-
+        <Modal :dialog="modalVisible" :dialog-content="'Nowy task zostal pomyslnie stworzony.'" :dialog-title="'Task utworzony'"
+        :agree-button="'Ok'"
+        :one-button="true"
+        @modal-agree="modalVisible=false"></Modal>
+        <v-overlay  v-show="showOverlay">
+            <v-progress-circular
+                    indeterminate
+                    size="74"
+            >Loading</v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
@@ -80,13 +89,15 @@
     import Datepicker from 'vuejs-datepicker';
     import TaskService from '../services/task.service'
     import Task from "@/model/task";
+    import Modal from "@/components/Modal";
 
 
     export default {
         name: "TaskManagement",
-        components: {SideNavigationBar, Autocomplete, Datepicker},
+        components: {Modal, SideNavigationBar, Autocomplete, Datepicker},
         data() {
             return {
+                modalVisible: false,
                 user: null,
                 task: new Task(null, null, null, null, null, "TO_DO", null, null),
                 disabledDates: {
@@ -102,7 +113,7 @@
                 taskDeadline: "",
                 chosenPeopleIDS: [],
 
-
+                showOverlay: false,
                 currentTaskID: null,
 
                 users: [],
@@ -181,6 +192,8 @@
 
             },
             clear() {
+                this.modalVisible = true;
+                this.showOverlay = false;
                 this.task.taskPriority = "",
                     this.task.department = "",
                     this.task.taskTitle = "";
@@ -205,7 +218,9 @@
 
                 })
             },
+
             createTask() {
+                this.showOverlay = true;
                 this.task.taskManagerID = this.user.id;
 
                 // //to gdzies przeniesc bo tutaj nie bedzie pasowac

@@ -5,12 +5,12 @@
             persistent
     ><v-card>
         <v-card-title class="headline">
-            Usun komentarz
+            {{dialogTitle}}
         </v-card-title>
-        <v-card-text>Czy jesteś pewny, że chcesz usunać komentarz?</v-card-text>
+        <v-card-text>{{dialogContent}}</v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
+            <v-btn  v-show="!oneButton"
                     color="green darken-1"
                     text
                     @click="cancel"
@@ -22,46 +22,35 @@
                     text
                     @click="agree"
             >
-                Tak
+               {{agreeButton}}
             </v-btn>
         </v-card-actions>
     </v-card>
     </v-dialog>
 
-    <!--<div class="modal-backdrop">-->
-        <!--<div class="modal">-->
-            <!--<header class="modal-header">-->
-                <!--<slot name="header">-->
-                    <!--This is the default tile!-->
-                <!--</slot>-->
 
-            <!--</header>-->
-            <!--<section class="modal-body">-->
-                <!--<slot name="body">-->
-
-                <!--</slot>-->
-            <!--</section>-->
-
-            <!--<footer class="modal-footer">-->
-                <!--<slot name="footer">-->
-                    <!--<button-->
-                            <!--type="button"-->
-                            <!--class="btn-green"-->
-                            <!--@click="close">Close me!-->
-                    <!--</button>-->
-                <!--</slot>-->
-            <!--</footer>-->
-
-        <!--</div>-->
-    <!--</div>-->
 </template>
 
 <script>
     export default {
         name: "Modal",
         props:{
+            oneButton:{
+                default: false,
+            },
             dialog: {
                 default: false,
+            },
+            dialogContent:{
+                required: true,
+                default: "Default",
+            },
+            dialogTitle:{
+                required: true,
+                default: "Dialog title",
+            },
+            agreeButton:{
+                default: "Tak"
             }
         },
         methods:{

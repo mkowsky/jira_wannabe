@@ -1,53 +1,87 @@
 <template>
-    <div class="wrapper">
+    <v-card
 
-        <div class="sidenav">
+            class="sidenav"
+            dark
+    >
+        <v-navigation-drawer permanent>
+            <div style="display: flex; width: 100%; height: auto; flex-direction: column">
+                <Logo class="logo" style="align-self: center; margin-bottom: 20px;"></Logo>
+                <div style="margin-bottom: 30px; align-self: center; letter-spacing: 2px;">JIRA-WANNABE</div>
+            </div>
 
 
-            <Logo class="logo" v-bind:font-size="230"></Logo>
+            <v-divider></v-divider>
 
-            <!--<div class="logo">-->
-            <!--<img src="../assets/logo.png"  style="width: 65%; height: 65%; position: relative; top: 10%">-->
-            <!--<div id="circle-title" style="position: relative; bottom: -12px; font-size: 11px; font-weight: bolder">JIRA-WANNABE</div>-->
-            <!--<div style="color: white; font-size: 16px; margin-top: 40px">JIRA-WANNABE</div>-->
-            <!--</div>-->
+            <v-list nav>
 
-            <ul style="list-style: none;">
-                <li>
-                    <router-link to="/board" class="router-nav">
-                        <font-awesome-icon icon="user" class="icon-nav"/>
-                        Board
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/profile" class="router-nav">
-                        <font-awesome-icon icon="user" class="icon-nav"/>
-                        Profile
-                    </router-link>
-                </li>
-                <li v-if="showModeratorBoard">
-                    <router-link to="/task-management" class="router-nav">
-                        <font-awesome-icon icon="user" class="icon-nav"/>
-                        PM
-                    </router-link>
-                </li>
-            </ul>
-            <v-btn @click="logout">LOGOUT</v-btn>
-        </div>
-    </div>
+                <v-list-item link @click="navigate('/board')">
+                    <v-list-item-icon>
+                        <v-icon>mdi-view-dashboard</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content >
+                        <v-list-item-title>Board</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item link @click="navigate('/profile')">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content >
+                        <v-list-item-title>Profile</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item link v-show="showModeratorBoard" @click="navigate('/task-management')">
+                    <v-list-item-icon>
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Task-Creation</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item link @click="logout">
+                    <v-list-item-icon>
+                        <v-icon>mdi-logout</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+
+            </v-list>
+
+
+        </v-navigation-drawer>
+    </v-card>
+
 </template>
 
 <script>
+
+
     import Logo from "@/components/Logo";
 
     export default {
         name: "SideNavigationBar",
         components: {Logo},
+        data() {
+            return {}
+        },
         methods: {
             logout() {
-                this.$store.dispatch('auth/logout');
-                this.$router.push('/login');
+                this.$emit('logout');
             },
+            navigate(value) {
+                this.$router.push(value);
+            }
         },
         computed: {
             showModeratorBoard() {
@@ -69,58 +103,21 @@
     .sidenav {
 
         height: 100%;
-        width:  10%;
+        width: 10%;
         position: fixed;
         top: 0;
         left: 0;
         background-color: #111;
 
 
-
     }
 
-    .sidenav ul li {
-        font-size: 20px;
-        padding-bottom: 20px;
-        padding-top: 20px;
-        border-bottom: 2px solid #fff;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.5);
-        border-top: 2px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .sidenav ul li .router-nav {
-        text-decoration: none;
-        display: block;
-    }
-
-    .sidenav ul li:hover {
-        background-color: #A29C9B;
-        cursor: pointer;
-    }
-
-    .sidenav ul li:hover .router-nav {
-
-        color: #fff
-    }
-
-
-    .sidenav .router-nav {
-
-        color: lightpink;
-    }
-
-
-    .icon-nav {
-        margin-right: 5px;
-        color: white;
-    }
 
     .logo {
-        height: 120px;
-        width: 120px;
+        height: 140px;
+        width: 140px;
         position: relative;
-        left: 10px;
-        margin-bottom: 60px;
+
 
     }
 

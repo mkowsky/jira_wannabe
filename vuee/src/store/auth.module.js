@@ -22,9 +22,9 @@ export const auth = {
             );
         },
 
-        logout({ commit }) {
-            AuthService.logout();
-            commit('logout');
+        showModal({ commit }) {
+            AuthService.showModal();
+            commit('showModal');
         },
         register({ commit }, user){
             return AuthService.register(user).then(
@@ -48,7 +48,7 @@ export const auth = {
             state.status.loggedIn = false;
             state.user = null;
         },
-        logout(state) {
+        showModal(state) {
             state.status.loggedIn = false;
             state.user = null;
         },

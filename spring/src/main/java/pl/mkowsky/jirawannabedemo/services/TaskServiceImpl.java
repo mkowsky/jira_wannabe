@@ -21,13 +21,15 @@ public class TaskServiceImpl implements TaskService {
     private UserService userService;
     private UserRepository userRepository;
     private TaskStatusService taskStatusService;
+    private EmailService emailService;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository, TaskStatusService taskStatusService) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository, TaskStatusService taskStatusService, EmailService emailService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.userRepository = userRepository;
         this.taskStatusService = taskStatusService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class TaskServiceImpl implements TaskService {
                 taskDTO.getTaskPriority()
         );
 
-
+        emailService.sendEmaiLTaskCraeted();
         save(newTask);
         taskStatusService.newTaskCreated(newTask);
 
@@ -97,6 +99,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getTaskById(taskID);
         taskStatusService.taskStatusChanged(task.getState(), newState, task);
         task.setState(newState);
+        emailService.sendEmailTaskStatusChanged();
         taskRepository.save(task);
     }
 

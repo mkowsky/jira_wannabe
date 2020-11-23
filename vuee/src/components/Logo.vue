@@ -2,7 +2,7 @@
 
     <div class="circle">
         <div class="logo-img-wrapper"><img src="../assets/logo.png" style="width: 100%; height: 100%"></div>
-        <div class="circle-title">JIRA-WANNABE</div>
+
     </div>
 
 </template>

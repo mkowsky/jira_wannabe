@@ -5,12 +5,14 @@
     <v-card outlined shaped class="content">
         <v-card-subtitle style="font-size: 18px;"><v-avatar color="grey" size="30" style="margin-right: 10px;">
 
-        </v-avatar>{{commentUsername}} <span style="position: absolute; left: 85%; font-size: 14px;">{{wysiwetlDate}}</span>  <font-awesome-icon @click="isDialogVisible = true" v-show="deleteIconVisible" class="icon" style="position: absolute; left: 95%" icon="window-close"></font-awesome-icon></v-card-subtitle>
+        </v-avatar>{{commentUsername}} <span style="position: absolute; left: 80%; font-size: 14px;">{{wysiwetlDate}}</span>  <font-awesome-icon @click="isDialogVisible = true" v-show="deleteIconVisible" class="icon" style="position: absolute; left: 95%" icon="window-close"></font-awesome-icon></v-card-subtitle>
 
         <v-card-text>{{commentContent}}</v-card-text>
     </v-card>
 
-    <Modal :dialog="isDialogVisible" @modal-cancel="isDialogVisible = false" @modal-agree="deleteComment"></Modal>
+    <Modal :dialog="isDialogVisible" @modal-cancel="isDialogVisible = false" @modal-agree="deleteComment" :dialog-content="'Czy jestes pewny ze chcesz usunac komentarz?'"
+    :dialog-title="'Usun komentarz'"
+    ></Modal>
 </div>
 </template>
 
@@ -52,7 +54,8 @@
                 var minutes = date.getMinutes();
                 var godziny = date.getHours();
 
-                if(godziny < 2) this.wysiwetlDate = minutes + ' min temu';
+                if(howLong > 86400000) this.wysiwetlDate = this.commentDate;
+                else if(godziny < 2) this.wysiwetlDate = minutes + ' min temu';
                 else this.wysiwetlDate = godziny + ' godz temu';
                 // this.wysiwetlDate = minutes;
             },

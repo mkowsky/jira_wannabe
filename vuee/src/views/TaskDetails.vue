@@ -1,5 +1,11 @@
 <template>
     <div class="task-details-container">
+        <v-tabs @change="changeContent($event)">
+            <v-tab>General info</v-tab>
+            <v-tab>Task timeline</v-tab>
+            <v-tab>Task users</v-tab>
+            <v-tab>Task comments</v-tab>
+        </v-tabs>
         <font-awesome-icon icon="window-close" class="icon-nav" @click="closeTaskDetails"/>
         <div class="task-details-flex-container">
 
@@ -20,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="task-description">
+            <div class="task-description" v-show="generalInfoVisible">
                 <expansion-panel :panelTitle="'Task description'">
                     <template slot="content">
                         {{currentTask.description}}
@@ -28,22 +34,23 @@
                 </expansion-panel>
             </div>
 
-            <div class="task-description">
+            <div class="task-description" v-show="timelineVisible">
                 <expansion-panel :panelTitle="'Task timeline'">
                     <template slot="content">
 
                         <v-timeline dense>
-                            <v-timeline-item v-for="change in taskChanges" :key="change.id">
-                                <div>{{change.changeDate | moment("DD/MM/YYYY HH:mm")}}</div>
-                                <div>{{change.changeDescription}}</div>
-                            </v-timeline-item>
+                            <status-change-item v-for="change in taskChanges"
+                                                :key="change.id"
+                                                :change-date="change.changeDate"
+                                                :change-description="change.changeDescription"
+                            :change-type="change.changeType">
+                            </status-change-item>
                         </v-timeline>
-
                     </template>
                 </expansion-panel>
             </div>
 
-            <div class="task-description">
+            <div class="task-description" v-show="usersVisible">
                 <expansion-panel :panelTitle="'Current task users'">
                     <template slot="content">
                         <div class="task-users-wrapper">
@@ -59,7 +66,7 @@
 
 
             </div>
-            <div class="task-description">
+            <div class="task-description" v-show="commentsVisible">
                 <expansion-panel :panelTitle="'Comments'">
                     <template slot="content">
                         <div>
@@ -115,14 +122,16 @@
     //import Modal from "@/components/Modal";
     import ExpansionPanel from "../components/ExpansionPanel";
     import Comment from "../components/Comment";
+    import StatusChangeItem from "@/components/StatusChangeItem";
 
 
     export default {
         name: "TaskDetails",
-        components: {Comment, ExpansionPanel, UserCard, },
+        components: {StatusChangeItem, Comment, ExpansionPanel, UserCard, },
         props: {
             taskID: {
                 required: true,
+
             }
         },
         data() {
@@ -134,10 +143,36 @@
                 currentTask: [],
                 commentValue: "",
                 taskChanges: [],
-
+                tabNumber: 0,
+                generalInfoVisible: true,
+                timelineVisible: false,
+                usersVisible: false,
+                commentsVisible: false,
             }
         },
         methods: {
+            changeContent(event){
+                console.log(event)
+                this.tabNumber = event;
+                this.generalInfoVisible = false;
+                this.timelineVisible = false;
+                this.usersVisible = false;
+                this.commentsVisible = false;
+                switch(this.tabNumber){
+                    case 0:
+                        this.generalInfoVisible = true;
+                        break;
+                    case 1:
+                        this.timelineVisible = true;
+                        break;
+                    case 2:
+                        this.usersVisible = true;
+                        break;
+                    case 3:
+                        this.commentsVisible = true;
+                        break;
+                }
+            },
             changeTaskState(){
                 console.log(this.newState);
                 console.log('change');
@@ -206,6 +241,7 @@
                 this.currentTask = response.data;
                 this.comments = this.currentTask.comments;
                 this.taskChanges = this.currentTask.taskChanges;
+                this.taskChanges.reverse();
                 console.log(this.taskChanges);
                 this.comments.reverse();
                 console.log(this.comments);
