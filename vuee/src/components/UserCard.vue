@@ -3,7 +3,7 @@
             :loading="loading"
             class="mx-auto my-12 flex-display"
             width="300"
-            dark
+            color="#424242"
     >
 
         <div style="width: 180px; height: 180px; border-radius: 50%; background: white; align-self: center; box-shadow: 0 0 10px 10px gray;"></div>
@@ -57,7 +57,10 @@
 
     .nickname {
         cursor: pointer;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
+        color: white;
+        font-weight: 300;
+        font-size: 22px;
     }
 
     .center {
@@ -65,7 +68,9 @@
     }
 
     .template {
-        font-weight: 200;
-        letter-spacing: 2px;
+        font-weight: 100;
+        letter-spacing: 5px;
+        color: white;
+
     }
 </style>

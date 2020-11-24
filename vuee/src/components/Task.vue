@@ -72,7 +72,7 @@
                         this.color = 'gold';
                         break;
                     case 4:
-                        this.color = 'crimson';
+                        this.color = '#AD1457';
                         break;
                 }
             },

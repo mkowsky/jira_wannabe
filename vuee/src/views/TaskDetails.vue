@@ -1,120 +1,109 @@
 <template>
     <div class="task-details-container">
-        <v-tabs @change="changeContent($event)">
-            <v-tab>General info</v-tab>
+        <v-tabs @change="changeContent($event)" grow color="rgba(235, 182, 193, 1)">
+            <v-tab>General</v-tab>
             <v-tab>Task timeline</v-tab>
             <v-tab>Task users</v-tab>
             <v-tab>Task comments</v-tab>
+            <v-tab style="margin-left: 10%" @click="closeTaskDetails">
+                <font-awesome-icon icon="window-close" class="icon-nav"/>
+            </v-tab>
         </v-tabs>
-        <font-awesome-icon icon="window-close" class="icon-nav" @click="closeTaskDetails"/>
-        <div class="task-details-flex-container">
 
-            <div class="general-task-info">
-                <div class="pm-display">
-                    <div class="pm-name-lighter">PROJECT MANAGER</div>
-                    <div class="circle-avatar"></div>
-                    <div class="pm-name"
-                         @click="navigateToUserProfile(currentTask.taskManager.id)">Mateusz Pietrzykowski
-                    </div>
-                </div>
-                <div class="content">
 
-                    <div class="task-title">{{currentTask.name}}</div>
-                    <div class="task-rest">Deadline {{currentTask.expireDate}}</div>
-                    <div class="task-rest"> Status {{currentTask.state}}</div>
-                    <div class="task-rest">Department {{currentTask.department}}</div>
-                </div>
-            </div>
+        <div class="task-details-flex-container" v-show="generalInfoVisible">
 
-            <div class="task-description" v-show="generalInfoVisible">
-                <expansion-panel :panel-title="'Task actions'">
+            <general-task-info :current-task="currentTask"
+            @pm-name-clicked="navigateToUserProfile($event)"></general-task-info>
+
+
+            <div class="task-description">
+                <expansion-panel :panel-title="'Task actions'" :expanded="0" >
                     <template slot="content">
-                        <div>
-                            <label>TASK STATE</label>
-                            <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
-                            <v-btn @click="changeTaskState">SUBMIT</v-btn>
-                        </div>
-                    </template>
-                </expansion-panel>
-                <expansion-panel :panelTitle="'Task description'">
-                    <template slot="content">
-                        {{currentTask.description}}
-                    </template>
-                </expansion-panel>
-            </div>
+                        <div style="display: flex; justify-content: space-evenly">
+                            <v-btn @click="changeStateVisible = true">CHANGE STATE</v-btn>
+                            <v-btn>PASS TO SOMEONE ELSE</v-btn>
 
-            <div class="task-description" v-show="timelineVisible">
-                <expansion-panel :panelTitle="'Task timeline'">
-                    <template slot="content">
-
-                        <v-timeline dense>
-                            <status-change-item v-for="change in taskChanges"
-                                                :key="change.id"
-                                                :change-date="change.changeDate"
-                                                :change-description="change.changeDescription"
-                            :change-type="change.changeType">
-                            </status-change-item>
-                        </v-timeline>
-                    </template>
-                </expansion-panel>
-            </div>
-
-            <div class="task-description" v-show="usersVisible">
-                <expansion-panel :panelTitle="'Current task users'">
-                    <template slot="content">
-                        <div class="task-users-wrapper">
-                            <user-card v-for="user in currentTask.users"
-                                       :key="user.id"
-                                       :nickname="user.firstName +' '+ user.lastName"
-                                       :position="'Developer'"
-                                       v-bind:userid="user.id"
-                                       @navigate-to-profile="navigateTo($event)"/>
                         </div>
                     </template>
                 </expansion-panel>
 
-
             </div>
-            <div class="task-description" v-show="commentsVisible">
-                <expansion-panel :panelTitle="'Comments'">
-                    <template slot="content">
-                        <div>
-                            <v-text-field
-                                    label="Write a comment"
-                                    solo
-                                    v-model="commentValue"
-                            ></v-text-field>
-                            <v-btn
-                                    elevation="2"
-                                    rounded
-                                    x-large
-                                    @click="submitNewComment"
-                            >SUBMIT
-                            </v-btn>
-
-                            <div style="margin-top: 20px;">
-                                <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 10px;">
-
-                                    <comment
-                                            :comment-date="comment.commentDate"
-                                            :comment-content="comment.comment"
-                                            :comment-username="comment.user.firstName + ' ' + comment.user.lastName"
-                                            :delete-icon-visible="checkIfThisIsLoggedUserComment(comment.user.id)"
-                                            @delete-comment="deleteComment(comment.id)"/>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </template>
-                </expansion-panel>
-            </div>
-
-
-            <!--<Modal :dialog="deleteCommentModal" @modal-cancel="deleteCommentModal = false" @modal-agree="deleteComment">-->
-            <!--</Modal>-->
         </div>
 
+
+        <div class="task-timeline-flex-container" v-show="timelineVisible">
+            <div class="task-timeline">
+                <div class="task-timeline-item">
+                    <v-timeline >
+                        <status-change-item v-for="change in taskChanges"
+                                            :key="change.id"
+                                            :change-date="change.changeDate"
+                                            :change-description="change.changeDescription"
+                                            :change-type="change.changeType">
+                        </status-change-item>
+                    </v-timeline>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="task-users-flex-container" v-show="usersVisible">
+
+            <div class="task-users-wrapper">
+                <user-card v-for="user in currentTask.users"
+                           :key="user.id"
+                           :nickname="user.firstName +' '+ user.lastName"
+                           :position="'Developer'"
+                           v-bind:userid="user.id"
+                           @navigate-to-profile="navigateTo($event)"/>
+            </div>
+        </div>
+
+
+        <div class="task-users-flex-container" v-show="commentsVisible">
+                    <div>
+                        <v-text-field
+                                label="Write a comment"
+                                solo
+                                v-model="commentValue"
+                        ></v-text-field>
+                        <v-btn
+                                elevation="2"
+                                rounded
+                                x-large
+                                @click="submitNewComment"
+                        >SUBMIT
+                        </v-btn>
+
+                        <div style="margin-top: 20px;">
+                            <div v-for="comment in comments" :key="comment.id" style="margin-bottom: 10px;">
+
+                                <comment
+                                        :comment-date="comment.commentDate"
+                                        :comment-content="comment.comment"
+                                        :comment-username="comment.user.firstName + ' ' + comment.user.lastName"
+                                        :delete-icon-visible="checkIfThisIsLoggedUserComment(comment.user.id)"
+                                        @delete-comment="deleteComment(comment.id)"/>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+            <Modal :dialog="changeStateVisible"
+            :dialog-title="'Change task status'"
+            :dialog-content="'Change current task status. All changes will be visible in task timeline tab.'"
+                   @modal-cancel="cancelStateChange()"
+                   @modal-agree="changeTaskState()"
+            >
+                <template slot="body">
+                    <label>TASK STATE</label>
+                    <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
+                </template>
+            </Modal>
+
+        </div>
     </div>
 
 
@@ -124,15 +113,16 @@
 
     import axios from "axios";
     import UserCard from "../components/UserCard";
-    //import Modal from "@/components/Modal";
     import ExpansionPanel from "../components/ExpansionPanel";
     import Comment from "../components/Comment";
     import StatusChangeItem from "@/components/StatusChangeItem";
+    import Modal from "@/components/Modal";
+    import GeneralTaskInfo from "@/components/GeneralTaskInfo";
 
 
     export default {
         name: "TaskDetails",
-        components: {StatusChangeItem, Comment, ExpansionPanel, UserCard, },
+        components: {GeneralTaskInfo, Modal, StatusChangeItem, Comment, ExpansionPanel, UserCard,},
         props: {
             taskID: {
                 required: true,
@@ -153,17 +143,19 @@
                 timelineVisible: false,
                 usersVisible: false,
                 commentsVisible: false,
+
+                changeStateVisible: false,
             }
         },
         methods: {
-            changeContent(event){
+            changeContent(event) {
                 console.log(event)
                 this.tabNumber = event;
                 this.generalInfoVisible = false;
                 this.timelineVisible = false;
                 this.usersVisible = false;
                 this.commentsVisible = false;
-                switch(this.tabNumber){
+                switch (this.tabNumber) {
                     case 0:
                         this.generalInfoVisible = true;
                         break;
@@ -178,9 +170,8 @@
                         break;
                 }
             },
-            changeTaskState(){
-                console.log(this.newState);
-                console.log('change');
+            changeTaskState() {
+                this.changeStateVisible = false;
                 axios.post('http://localhost:8080/tasks/change-task-state', null, {
                     params: {
                         newState: this.newState,
@@ -189,6 +180,11 @@
                 }).then(response => {
                     console.log(response.status);
                 })
+                this.newState = "";
+            },
+            cancelStateChange(){
+                this.changeStateVisible = false;
+                this.newState = "";
             },
             closeTaskDetails() {
                 console.log('close');
@@ -258,15 +254,10 @@
 
 <style scoped lang="scss">
     .task-details-container {
-        height: 100vh;
+        height: 91.5vh;
     }
 
-
     .icon-nav {
-        position: absolute;
-        left: 95%;
-        top: 1%;
-        cursor: pointer;
         font-size: 40px;
     }
 
@@ -275,97 +266,51 @@
     }
 
     .task-details-flex-container {
-        margin-top: 5%;
+        margin-top: 2%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        align-items: center;
 
+        justify-content: center;
     }
 
-    .general-task-info {
-        background: black;
-        width: 70%;
-        height: 400px;
-        display: flex;
-    }
-
-    .pm-display {
-        background: lightpink;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-evenly;
-        width: 35%;
-    }
-
-    .circle-avatar {
-        border-radius: 50%;
-        height: 60%;
-        width: 60%;
-        background: white;
-        box-shadow: 0 0 10px 10px black;
-    }
-
-    .pm-name {
-        cursor: pointer;
-        font-weight: 300;
-        font-size: 24px;
-        letter-spacing: 2px;
-        color: white;
-
-        &:hover {
-            color: black;
-        }
-    }
-
-    .pm-name-lighter {
-        font-weight: 300;
-        font-size: 20px;
-        letter-spacing: 2px;
-
-    }
-
-    .content {
-        display: flex;
-        flex-direction: column;
-
-        .task-title {
-            color: white;
-            font-size: 48px;
-            font-weight: 200;
-            letter-spacing: 3px;
-        }
-
-        .task-rest {
-            color: white;
-            font-size: 24px;
-            font-weight: 200;
-            letter-spacing: 3px;
-        }
-
-    }
 
 
     .task-description {
         width: 70%;
+        align-self: center;
 
     }
 
-    .task-users-wrapper {
+    .task-timeline-flex-container {
+        margin-top: 2%;
+        height: 100%;
         display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .comment-delete {
-        cursor: pointer;
+        flex-direction: column;
+        justify-content: flex-end;
 
     }
 
-    .comment-delete:hover {
-        background: lightpink;
+    .task-timeline {
+        display: flex;
+        justify-content: center;
     }
+
+    .task-timeline-item {
+        width: 50%;
+        align-self: center;
+    }
+
+    .task-users-flex-container {
+        margin-top: 2%;
+        height: 100%;
+
+    }
+
+    .task-users-wrapper{
+
+    }
+
 
 
 </style>

@@ -1,12 +1,9 @@
 <template>
     <div class="task-management-container">
-        <v-tabs centered grow color="rgba(225, 182, 193)">
-            <v-tab @click="createTaskVisible=true" style="font-size:26px">CREATE TASK</v-tab>
-            <v-tab @click="createTaskVisible=false" style="font-size:26px;">EDIT TASK</v-tab>
-        </v-tabs>
 
 
-        <div class="task-create-wrapper" v-show="createTaskVisible">
+
+        <div class="task-create-wrapper">
 
             <v-card class="task-create-box">
 
@@ -39,9 +36,7 @@
         </div>
 
 
-        <div id="editTask" v-show="!createTaskVisible">
-            Hello
-        </div>
+
 
 
         <side-navigation-bar></side-navigation-bar>

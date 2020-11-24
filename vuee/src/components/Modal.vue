@@ -8,17 +8,18 @@
             {{dialogTitle}}
         </v-card-title>
         <v-card-text>{{dialogContent}}</v-card-text>
+        <v-card-text><slot name="body"></slot></v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn  v-show="!oneButton"
-                    color="green darken-1"
+                    color="#424242"
                     text
                     @click="cancel"
             >
-                Nie
+                {{cancelButton}}
             </v-btn>
             <v-btn
-                    color="green darken-1"
+                    color="#424242"
                     text
                     @click="agree"
             >
@@ -50,7 +51,10 @@
                 default: "Dialog title",
             },
             agreeButton:{
-                default: "Tak"
+                default: "Confirm"
+            },
+            cancelButton:{
+                default: "Cancel"
             }
         },
         methods:{

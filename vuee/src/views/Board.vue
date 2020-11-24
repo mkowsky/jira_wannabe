@@ -21,8 +21,8 @@
 
         <div class="tasks-container" v-show="taskContainerVisible">
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#aaa">
-                <v-card-title>TO DO</v-card-title>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">TO DO</v-card-title>
                 <Task v-for="task in toDo"
                 :key="task.id"
                 v-bind:title="task.name"
@@ -33,8 +33,8 @@
                 @task-item-clicked="taskItemClicked(task.id)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#bbb">
-                <v-card-title>IN PROGRESS</v-card-title>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">IN PROGRESS</v-card-title>
                 <Task v-for="task in inProgress"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -46,8 +46,8 @@
             </v-card>
 
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#ccc">
-                <v-card-title>CODE REVIEW</v-card-title>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">CODE REVIEW</v-card-title>
                 <Task v-for="task in codeReview"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -58,8 +58,8 @@
                       @task-item-clicked="taskItemClicked(task.id)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#ddd">
-                <v-card-title>DONE</v-card-title>
+            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">DONE</v-card-title>
                 <Task v-for="task in done"
                       :key="task.id"
                       v-bind:title="task.name"
@@ -79,6 +79,10 @@
                       @next="next"
                       @previous="previous"
                       @input="pageChanged($event)"
+                      color="rgba(235, 182, 193, 1)"
+                      circle
+                      style="margin-top: 2%"
+
         ></v-pagination>
         <Modal :dialog="modalVisible"
         :dialog-content="'Czy jestes pewny ze chcesz sie wylogowac?'"

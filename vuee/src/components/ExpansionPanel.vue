@@ -1,8 +1,8 @@
 <template>
     <div>
-        <v-expansion-panels>
+        <v-expansion-panels :value="expanded">
             <v-expansion-panel>
-                <v-expansion-panel-header>
+                <v-expansion-panel-header >
                     {{panelTitle}}
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -20,6 +20,9 @@
             panelTitle: {
                 type: String,
                 default: 'Title',
+            },
+            expanded: {
+                type: Number,
             }
         }
     }

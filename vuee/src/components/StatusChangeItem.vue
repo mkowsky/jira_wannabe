@@ -1,6 +1,6 @@
 <template>
     <v-timeline-item :color="color" :small="smallDot">
-        <v-card style="max-width: 40%;" dark>
+        <v-card>
 
             <v-card-subtitle>{{changeDate | moment("DD/MM/YYYY HH:mm")}}</v-card-subtitle>
             <v-card-text>{{changeDescription}}</v-card-text>
@@ -34,10 +34,10 @@
             colorPick() {
                 switch (this.changeType) {
                     case "TASK_CREATED":
-                        this.color = "green";
+                        this.color = "#424242";
                         break;
                     case "TASK_STATUS_CHANGED":
-                        this.color = "yellow";
+                        this.color = "rgba(225, 182, 193, 1)";
                         break;
                 }
             }
