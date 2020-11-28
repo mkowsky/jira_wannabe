@@ -30,7 +30,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmailTaskStatusChanged() {
         String templateUsername = "cookie";
         SimpleMailMessage mail = new SimpleMailMessage();
-
+ 
         mail.setSubject("Task's status has been changed.");
         mail.setText("Hello "  + templateUsername + ",one of tasks, that you're involved in has changed its status.");
         javaMailSender.send(mail);

@@ -5,6 +5,9 @@ import Login from "@/views/Login";
 import Board from "@/views/Board";
 import TaskManagement from "@/views/TaskManagement";
 import Profile from "@/views/Profile";
+import Projects from "@/views/Projects";
+import ProjectDetails from "@/views/ProjectDetails";
+import TaskDetails from "@/views/TaskDetails";
 
 
 
@@ -90,6 +93,22 @@ const routes = [
         component: Profile,
 
     },
+    {   name: 'projects',
+        path: '/projects',
+        component: Projects
+    },
+    {
+        name: 'projectDetails',
+        path: '/projects/project-:projectID',
+        component: ProjectDetails,
+        props: true,
+    },
+    {
+        name: 'taskDetails',
+        path: '/task/task-:taskID',
+        component: TaskDetails,
+        props: true,
+    }
 
 
 ]

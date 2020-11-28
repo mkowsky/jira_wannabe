@@ -1,5 +1,6 @@
 package pl.mkowsky.jirawannabedemo.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.mkowsky.jirawannabedemo.dictionary.EDepartment;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 
@@ -54,6 +55,11 @@ public class Task {
             orphanRemoval = true)
     //@JoinColumn(name = "task_id")
     private List<TaskStatusChange> taskChanges;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    @JsonManagedReference
+    private Project project;
 
     public Task() {
 
@@ -185,5 +191,13 @@ public class Task {
 
     public void setTaskPriority(int taskPriority) {
         this.taskPriority = taskPriority;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

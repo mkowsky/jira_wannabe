@@ -15,7 +15,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -34,24 +34,28 @@ public class User {
     private List<Task> tasks;
 
 
-
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_tasks",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "task_id") })
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "task_id")})
     private List<Task> userstasks = new ArrayList<Task>();
+
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "projectUsers")
+    private List<Project> projects = new ArrayList<Project>();
 
 
     private String firstName;
     private String lastName;
 
 
-    public User(){
+    public User() {
 
     }
 
-    public User(String username, String email, String password){
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -81,12 +85,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void addTask(Task task){
+    public void addTask(Task task) {
         userstasks.add(task);
         //task.getUsers().add(this);
     }
 
-    public void removeTask(Task task){
+    public void removeTask(Task task) {
         userstasks.remove(task);
         //task.getUsers().remove(this);
     }
@@ -147,5 +151,11 @@ public class User {
         this.roles = roles;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
 
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
 }

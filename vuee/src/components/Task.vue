@@ -15,7 +15,7 @@
 
     <!---->
     <!--<div id="cont">-->
-    <!--<div class="content-black" @click="taskItemClicked">-->
+    <!--<div class="content-black" @click="navigateToTask">-->
     <!--<div id="title">{{title}}</div>-->
     <!--<div id="description">{{description}}</div>-->
     <!--<div id="wrapper">-->

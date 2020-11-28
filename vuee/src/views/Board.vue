@@ -1,8 +1,8 @@
 <template>
     <div id="container" class="board-container">
-        <div style="position: absolute;top: 5%; " v-show="taskContainerVisible">
-            <v-text-field solo label="Search" v-model="query"></v-text-field>
-        </div>
+        <!--<div style="position: absolute;top: 5%; " v-show="taskContainerVisible">-->
+            <!--<v-text-field solo label="Search" v-model="query"></v-text-field>-->
+        <!--</div>-->
 
 
         <div class="page-title" v-if="taskContainerVisible">BOARD
@@ -20,70 +20,61 @@
 
 
         <div class="tasks-container" v-show="taskContainerVisible">
+            <TaskBoard :tasks="tasks" style="width: 100%"></TaskBoard>
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
-                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">TO DO</v-card-title>
-                <Task v-for="task in toDo"
-                :key="task.id"
-                v-bind:title="task.name"
-                v-bind:description="task.description"
-                v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                v-bind:priority="task.taskPriority"
-                class="gap"
-                @task-item-clicked="taskItemClicked(task.id)"/>
-            </v-card>
+            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
+                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">TO DO</v-card-title>-->
+                <!--<Task v-for="task in toDo"-->
+                <!--:key="task.id"-->
+                <!--v-bind:title="task.name"-->
+                <!--v-bind:description="task.description"-->
+                <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
+                <!--v-bind:priority="task.taskPriority"-->
+                <!--class="gap"-->
+                <!--@task-item-clicked="navigateToTask(task.id)"/>-->
+            <!--</v-card>-->
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
-                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">IN PROGRESS</v-card-title>
-                <Task v-for="task in inProgress"
-                      :key="task.id"
-                      v-bind:title="task.name"
-                      v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                      v-bind:priority="task.taskPriority"
-                      class="gap"
-                      @task-item-clicked="taskItemClicked(task.id)"/>
-            </v-card>
+            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
+                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">IN PROGRESS</v-card-title>-->
+                <!--<Task v-for="task in inProgress"-->
+                      <!--:key="task.id"-->
+                      <!--v-bind:title="task.name"-->
+                      <!--v-bind:description="task.description"-->
+                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
+                      <!--v-bind:priority="task.taskPriority"-->
+                      <!--class="gap"-->
+                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
+            <!--</v-card>-->
 
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
-                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">CODE REVIEW</v-card-title>
-                <Task v-for="task in codeReview"
-                      :key="task.id"
-                      v-bind:title="task.name"
-                      v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                      v-bind:priority="task.taskPriority"
-                      class="gap"
-                      @task-item-clicked="taskItemClicked(task.id)"/>
-            </v-card>
+            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
+                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">CODE REVIEW</v-card-title>-->
+                <!--<Task v-for="task in codeReview"-->
+                      <!--:key="task.id"-->
+                      <!--v-bind:title="task.name"-->
+                      <!--v-bind:description="task.description"-->
+                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
+                      <!--v-bind:priority="task.taskPriority"-->
+                      <!--class="gap"-->
+                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
+            <!--</v-card>-->
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
-                <v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">DONE</v-card-title>
-                <Task v-for="task in done"
-                      :key="task.id"
-                      v-bind:title="task.name"
-                      v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
-                      v-bind:priority="task.taskPriority"
-                      class="gap"
-                      @task-item-clicked="taskItemClicked(task.id)"/>
-            </v-card>
+            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
+                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">DONE</v-card-title>-->
+                <!--<Task v-for="task in done"-->
+                      <!--:key="task.id"-->
+                      <!--v-bind:title="task.name"-->
+                      <!--v-bind:description="task.description"-->
+                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
+                      <!--v-bind:priority="task.taskPriority"-->
+                      <!--class="gap"-->
+                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
+            <!--</v-card>-->
 
 
 
         </div>
-        <v-pagination v-show="taskContainerVisible"
-                      v-model="page"
-                      :length="6"
-                      @next="next"
-                      @previous="previous"
-                      @input="pageChanged($event)"
-                      color="rgba(235, 182, 193, 1)"
-                      circle
-                      style="margin-top: 2%"
 
-        ></v-pagination>
         <Modal :dialog="modalVisible"
         :dialog-content="'Czy jestes pewny ze chcesz sie wylogowac?'"
         :dialog-title="'Wyloguj'"
@@ -95,15 +86,16 @@
 
 <script>
     import axios from 'axios';
-    import Task from '@/components/Task'
+
     import SideNavigationBar from '@/components/SideNavigationBar'
     import TaskDetails from "@/views/TaskDetails";
     import Modal from "@/components/Modal"
+    import TaskBoard from "@/components/TaskBoard";
 
 
     export default {
         name: "Home",
-        components: {TaskDetails, Task, SideNavigationBar, Modal},
+        components: {TaskBoard, TaskDetails,SideNavigationBar, Modal},
         data() {
             return {
                 modalVisible: false,
@@ -137,7 +129,7 @@
 
             },
 
-            taskItemClicked(taskID) {
+            navigateToTask(taskID) {
                 console.log(taskID);
                 this.taskContainerVisible = false;
                 this.currentTaskID = taskID;
@@ -259,7 +251,7 @@
     }
 
     .tasks-container {
-        margin-top: 12vh;
+
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;

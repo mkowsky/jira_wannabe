@@ -103,6 +103,11 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
+    @Override
+    public List<Task> getAllProjectTasks(Long projectID) {
+        return taskRepository.getTasksForProject(projectID);
+    }
+
     String generateTaskID() {
 
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

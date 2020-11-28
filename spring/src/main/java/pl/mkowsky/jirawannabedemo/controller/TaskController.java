@@ -53,6 +53,12 @@ public class TaskController {
     }
 
 
+    @GetMapping(value = "/list-all-tasks-in-project/{projectID}")
+    List<Task> getAllProjectTasks(@PathVariable ("projectID") Long projectID){
+        return taskService.getAllProjectTasks(projectID);
+    }
+
+
     @GetMapping(value = "/user/{userID}/to-task/{taskID}")
     private void addUserToTask(@PathVariable("userID") Long userID,
                                @PathVariable("taskID") Long taskID) {
