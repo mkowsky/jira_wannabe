@@ -213,13 +213,13 @@
                 console.log('get-all');
                 axios.get('http://localhost:8080/tasks/list-all').then(response => {
                     this.tasks = response.data;
+                    console.log(response.data)
                 })
             } else {
                 console.log('get-user-tasks')
                 axios.get('http://localhost:8080/tasks/get-user-tasks/' + this.user.id).then(response => {
                     this.tasks = response.data;
                     console.log(response.data);
-                    this.prepareData()
                 })
 
             }

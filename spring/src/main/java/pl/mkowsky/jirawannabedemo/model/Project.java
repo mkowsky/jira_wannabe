@@ -28,6 +28,9 @@ public class Project {
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> projectUsers = new ArrayList<>();
 
+    @OneToOne
+    private User projectManager;
+
 
     public void addUser(User user){
         projectUsers.add(user);
@@ -41,6 +44,12 @@ public class Project {
     public Project(){
     }
 
+    public Project(String projectName, List<Task> taskList, List<User> projectUsers, User projectManager) {
+        this.projectName = projectName;
+        this.taskList = taskList;
+        this.projectUsers = projectUsers;
+        this.projectManager = projectManager;
+    }
 
     public Long getId() {
         return id;
@@ -72,5 +81,13 @@ public class Project {
 
     public void setProjectUsers(List<User> projectUsers) {
         this.projectUsers = projectUsers;
+    }
+
+    public User getProjectManager() {
+        return projectManager;
+    }
+
+    public void setProjectManager(User projectManager) {
+        this.projectManager = projectManager;
     }
 }

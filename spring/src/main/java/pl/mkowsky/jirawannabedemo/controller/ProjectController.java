@@ -26,6 +26,17 @@ public class ProjectController {
         this.userService = userService;
     }
 
+    @PostMapping(value= "/create-new-project")
+    void createNewProject(@RequestParam("pmID") Long projectManagerID){
+           projectService.createNewProject(projectManagerID, "Template");
+
+    }
+
+    @GetMapping(value = "get-project-details/{projectID}")
+    Project getProjectDetails(@PathVariable("projectID") Long projectID) {
+        return projectService.findProjectByID(projectID);
+    }
+
     @GetMapping(value = "/list-all")
     List<Project> getAllProjects() {
         return projectService.getAllProjcets();

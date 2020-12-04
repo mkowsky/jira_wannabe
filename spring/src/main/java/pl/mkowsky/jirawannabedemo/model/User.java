@@ -22,6 +22,7 @@ public class User {
 
     private String email;
 
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -33,13 +34,24 @@ public class User {
     @OneToMany(mappedBy = "taskManager")
     private List<Task> tasks;
 
-
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "users_tasks",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "task_id")})
-    private List<Task> userstasks = new ArrayList<Task>();
+    @OneToMany(mappedBy="user")
+    private List<Task> userTasks;
+
+    public List<Task> getUserTasks() {
+        return userTasks;
+    }
+
+    public void setUserTasks(List<Task> userTasks) {
+        this.userTasks = userTasks;
+    }
+
+    //    @JsonIgnore
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name = "users_tasks",
+//            joinColumns = {@JoinColumn(name = "user_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "task_id")})
+//    private List<Task> userstasks = new ArrayList<Task>();
 
 
     @JsonIgnore
@@ -49,6 +61,8 @@ public class User {
 
     private String firstName;
     private String lastName;
+
+    private String pictureURL;
 
 
     public User() {
@@ -69,6 +83,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -85,15 +107,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void addTask(Task task) {
-        userstasks.add(task);
-        //task.getUsers().add(this);
-    }
 
-    public void removeTask(Task task) {
-        userstasks.remove(task);
-        //task.getUsers().remove(this);
-    }
 
     public List<Task> getTasks() {
         return tasks;
@@ -102,14 +116,24 @@ public class User {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+//
+//    public List<Task> getUserstasks() {
+//        return userstasks;
+//    }
+//
+//    public void setUserstasks(List<Task> userstasks) {
+//        this.userstasks = userstasks;
+//    }
 
-    public List<Task> getUserstasks() {
-        return userstasks;
-    }
-
-    public void setUserstasks(List<Task> userstasks) {
-        this.userstasks = userstasks;
-    }
+    //    public void addTask(Task task) {
+//        userstasks.add(task);
+//        //task.getUsers().add(this);
+//    }
+//
+//    public void removeTask(Task task) {
+//        userstasks.remove(task);
+//        //task.getUsers().remove(this);
+//    }
 
     public Long getId() {
         return id;

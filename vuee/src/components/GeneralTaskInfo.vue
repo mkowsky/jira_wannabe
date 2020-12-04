@@ -1,9 +1,11 @@
 <template>
     <div class="general-task-info">
         <div class="pm-display">
-            <div class="pm-name-lighter">PROJECT MANAGER</div>
-            <div class="circle-avatar"></div>
-            <div class="pm-name" @click="pmNameClicked">Mateusz Pietrzykowski</div>
+            <div class="pm-name-lighter">TASK USER</div>
+            <v-avatar style="height: 80%; width: 80%;">
+                <img :src="currentTask.user.pictureURL" style="object-fit: cover">
+            </v-avatar>
+            <div class="pm-name" @click="navigateToTaskUser">{{currentTask.user.firstName + ' ' + currentTask.user.lastName}}</div>
         </div>
         <div class="task-content">
             <div class="task-title">{{currentTask.name}}</div>
@@ -33,11 +35,12 @@
             }
         },
         methods:{
-            pmNameClicked(){
-                this.$emit('pm-name-clicked', {id: this.currentTask.taskManager.id})
+            navigateToTaskUser(){
+                this.$emit('pm-name-clicked', {id: this.currentTask.user.id})
             }
         },
         created(){
+
         }
     }
 </script>
@@ -52,7 +55,7 @@
     }
 
     .pm-display {
-        background: rgba(235, 182, 193, 1);
+        background: rgba(225, 182, 193, 1);
         display: flex;
         flex-direction: column;
         align-items: center;

@@ -5,7 +5,7 @@
         <v-card-text>{{description}}</v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-avatar color="grey" size="36" style="margin-right: 10px;"></v-avatar>
+            <v-avatar style="margin-right: 10px;"><img :src="profilePicture" style="object-fit: cover"></v-avatar>
             {{projectManager}}
         </v-card-actions>
         <v-card-actions style="padding: 0;">
@@ -49,6 +49,9 @@
                 type: String,
 
             },
+            profilePicture:{
+                type: String,
+            },
             priority: {
                 type: Number,
             }
@@ -88,6 +91,7 @@
 
         created() {
             this.checkPriority();
+
         },
     }
 </script>

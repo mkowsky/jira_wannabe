@@ -3,11 +3,12 @@ import Router from 'vue-router';
 
 import Login from "@/views/Login";
 import Board from "@/views/Board";
-import TaskManagement from "@/views/TaskManagement";
+import TaskManagement from "@/views/TaskCreation";
 import Profile from "@/views/Profile";
 import Projects from "@/views/Projects";
 import ProjectDetails from "@/views/ProjectDetails";
 import TaskDetails from "@/views/TaskDetails";
+
 
 
 
@@ -62,6 +63,7 @@ function checkIfModerator(to, from, next) {
 
 const routes = [
 
+
     {
         path: '/login',
         component: Login,
@@ -70,6 +72,7 @@ const routes = [
         }
     },
     {
+        name: 'board',
         path: '/board',
         beforeEnter: guardMyroute,
         component: Board,

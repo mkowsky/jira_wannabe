@@ -14,6 +14,8 @@ import VueMoment from 'vue-moment';
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import vuetify from './plugins/vuetify';
+import VueHighlightJS from 'vue-highlightjs'
+Vue.use(VueHighlightJS);
 
 
 

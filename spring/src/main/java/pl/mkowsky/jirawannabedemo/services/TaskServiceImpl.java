@@ -75,21 +75,22 @@ public class TaskServiceImpl implements TaskService {
         save(newTask);
         taskStatusService.newTaskCreated(newTask);
 
-
-        for (int j = 0; j < taskUsers.size(); j++) {
-            taskUsers.get(j).addTask(newTask);
-            userService.save(taskUsers.get(j));
-        }
+        //TODO: tutaj
+//        for (int j = 0; j < taskUsers.size(); j++) {
+//            taskUsers.get(j).addTask(newTask);
+//            userService.save(taskUsers.get(j));
+//        }
 
 
     }
 
     @Override
     public void deleteTask(Long taskID) {
+        //TODO: tutaj
         Task task = taskRepository.getTaskById(taskID);
-        for (int i = 0; i < task.getUsers().size(); i++) {
-            task.getUsers().get(i).removeTask(task);
-        }
+//        for (int i = 0; i < task.getUsers().size(); i++) {
+//            task.getUsers().get(i).removeTask(task);
+//        }
 
         remove(task);
     }
@@ -100,6 +101,15 @@ public class TaskServiceImpl implements TaskService {
         taskStatusService.taskStatusChanged(task.getState(), newState, task);
         task.setState(newState);
         emailService.sendEmailTaskStatusChanged();
+        taskRepository.save(task);
+    }
+
+    @Override
+    public void changeTaskUser(Long taskID, Long newUserID) {
+        Task task = taskRepository.getTaskById(taskID);
+        User newTaskUser = userService.getUserById(newUserID);
+        taskStatusService.taskUserChanged(newTaskUser, task);
+        task.setUser(newTaskUser);
         taskRepository.save(task);
     }
 
@@ -121,4 +131,6 @@ public class TaskServiceImpl implements TaskService {
         }
         return stringBuilder.toString();
     }
+
+
 }

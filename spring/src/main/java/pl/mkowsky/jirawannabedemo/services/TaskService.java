@@ -18,7 +18,7 @@ public interface TaskService {
     void deleteTask(Long taskID);
 
     void changeTaskState(Long taskID, EState newState);
-
+    void changeTaskUser(Long taskID, Long newUserID);
 
     List<Task> getAllProjectTasks(Long projectID);
 }

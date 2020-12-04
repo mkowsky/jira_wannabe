@@ -1,12 +1,16 @@
 <template>
     <v-card
             :loading="loading"
-            class="mx-auto my-12 flex-display"
-            width="300"
+            width="240"
             color="#424242"
+            style="display: flex; flex-direction: column; padding: 10px 0 0 0"
     >
 
-        <div style="width: 180px; height: 180px; border-radius: 50%; background: white; align-self: center; box-shadow: 0 0 10px 10px gray;"></div>
+
+
+            <v-avatar style="align-self: center; box-shadow: 0 0 10px 10px gray; width: 140px; height: 140px;">
+                <img :src="profilePicture" style="object-fit: cover">
+            </v-avatar>
 
 
         <v-card-title class="center nickname" @click="navigateToUserProfile">{{nickname}}</v-card-title>
@@ -37,6 +41,9 @@
                 type: String,
                 required: true,
                 default: "Developer"
+            },
+            profilePicture:{
+                type: String,
             }
         },
         methods: {
@@ -48,19 +55,15 @@
 </script>
 
 <style scoped>
-    .flex-display {
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-    }
+
 
 
     .nickname {
         cursor: pointer;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         color: white;
         font-weight: 300;
-        font-size: 22px;
+        font-size: 16px;
     }
 
     .center {
@@ -69,7 +72,7 @@
 
     .template {
         font-weight: 100;
-        letter-spacing: 5px;
+        letter-spacing: 3px;
         color: white;
 
     }

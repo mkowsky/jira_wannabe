@@ -1,5 +1,6 @@
 package pl.mkowsky.jirawannabedemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.mkowsky.jirawannabedemo.dictionary.EDepartment;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
@@ -33,11 +34,15 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
+    @JsonIgnore
     private User taskManager;
 
 
-    @ManyToMany(mappedBy = "userstasks")
-    private List<User> users = new ArrayList<User>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+//    @ManyToMany(mappedBy = "userstasks")
+//    private List<User> users = new ArrayList<User>();
 
     @Enumerated(EnumType.STRING)
     private EDepartment department;
@@ -56,16 +61,22 @@ public class Task {
     //@JoinColumn(name = "task_id")
     private List<TaskStatusChange> taskChanges;
 
+
+    @OneToMany(mappedBy = "task",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Issue> taskIssues;
+
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @JsonManagedReference
+    @JsonIgnore
     private Project project;
 
     public Task() {
 
     }
 
-    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, List<User> users
+    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, User users
             , EDepartment department, int taskPriority) {
         this.taskID = taskID;
         this.name = name;
@@ -74,7 +85,7 @@ public class Task {
         this.description = description;
         this.state = state;
         this.taskManager = taskManager;
-        this.users = users;
+        this.user = users;
         this.department = department;
         this.taskPriority = taskPriority;
     }
@@ -113,12 +124,21 @@ public class Task {
         this.taskManager = taskManager;
     }
 
-    public List<User> getUsers() {
-        return users;
+//    public List<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(List<User> users) {
+//        this.users = users;
+//    }
+
+
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {

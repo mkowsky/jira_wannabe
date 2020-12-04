@@ -34,6 +34,7 @@ public class TaskStatusChange {
 
 
 
+
     public TaskStatusChange(){
 
     }
@@ -84,4 +85,7 @@ public class TaskStatusChange {
     public void setTask(Task task) {
         this.task = task;
     }
+
+
+
 }

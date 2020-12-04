@@ -20,8 +20,9 @@
                       :key="task.id"
                       v-bind:title="task.name"
                       v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:project-manager="task.user.firstName + ' ' + task.user.lastName"
                       v-bind:priority="task.taskPriority"
+                      v-bind:profile-picture="task.user.pictureURL"
                       class="gap"
                       @task-item-clicked="navigateToTask(task.id)"/>
             </v-card>
@@ -36,8 +37,9 @@
                       :key="task.id"
                       v-bind:title="task.name"
                       v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:project-manager="task.user.firstName + ' ' + task.user.lastName"
                       v-bind:priority="task.taskPriority"
+                      v-bind:profile-picture="task.user.pictureURL"
                       class="gap"
                       @task-item-clicked="navigateToTask(task.id)"/>
             </v-card>
@@ -52,8 +54,9 @@
                       :key="task.id"
                       v-bind:title="task.name"
                       v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:project-manager="task.user.firstName + ' ' + task.user.lastName"
                       v-bind:priority="task.taskPriority"
+                      v-bind:profile-picture="task.user.pictureURL"
                       class="gap"
                       @task-item-clicked="navigateToTask(task.id)"/>
             </v-card>
@@ -67,8 +70,9 @@
                       :key="task.id"
                       v-bind:title="task.name"
                       v-bind:description="task.description"
-                      v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"
+                      v-bind:project-manager="task.user.firstName + ' ' + task.user.lastName"
                       v-bind:priority="task.taskPriority"
+                      v-bind:profile-picture="task.user.pictureURL"
                       class="gap"
                       @task-item-clicked="navigateToTask(task.id)"/>
             </v-card>

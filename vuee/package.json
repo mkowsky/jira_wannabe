@@ -15,11 +15,15 @@
     "bootstrap-vue": "^2.19.0",
     "core-js": "^3.6.5",
     "postcss-prefix-selector": "^1.7.2",
+    "prismjs": "^1.22.0",
     "vee-validate": "^3.4.2",
     "vue": "^2.6.12",
+    "vue-highlightjs": "^1.3.3",
     "vue-moment": "^4.1.0",
+    "vue-prism-editor": "^1.2.2",
     "vue-router": "^3.4.7",
     "vuetify": "^2.3.17",
+    "vuetify-markdown-editor": "^3.3.0",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -35,6 +39,7 @@
     "sass": "^1.29.0",
     "sass-loader": "^10.1.0",
     "vue-cli-plugin-vuetify": "~2.0.7",
+    "vue-concise-slider": "^3.4.4",
     "vue-template-compiler": "^2.6.11",
     "vuejs-datepicker": "^1.6.2",
     "vuetify-loader": "^1.3.0"

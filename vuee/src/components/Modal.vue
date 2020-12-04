@@ -1,7 +1,7 @@
 <template>
     <v-dialog
             v-model="dialog"
-            width="500"
+            :width="width"
             persistent
     ><v-card>
         <v-card-title class="headline">
@@ -55,6 +55,9 @@
             },
             cancelButton:{
                 default: "Cancel"
+            },
+            width:{
+                default: 500,
             }
         },
         methods:{
