@@ -1,14 +1,18 @@
 package pl.mkowsky.jirawannabedemo.services;
 
+import org.hibernate.query.Query;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
+import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.repository.TaskRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,14 +26,19 @@ public class TaskServiceImpl implements TaskService {
     private UserRepository userRepository;
     private TaskStatusService taskStatusService;
     private EmailService emailService;
+    private ProjectService projectService;
+    private EntityManager entityManager;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository, TaskStatusService taskStatusService, EmailService emailService) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, UserRepository userRepository, TaskStatusService taskStatusService, EmailService emailService,
+    ProjectService projectService, EntityManager entityManager) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.userRepository = userRepository;
         this.taskStatusService = taskStatusService;
         this.emailService = emailService;
+        this.projectService = projectService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -54,10 +63,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void createNewTask(TaskDTO taskDTO) {
-        List<User> taskUsers = new ArrayList<>();
-        for (int i = 0; i < taskDTO.getTaskUsers().length; i++) {
-            taskUsers.add(userRepository.findUserById(taskDTO.getTaskUsers()[i]));
-        }
+        User taskUser = userService.getUserById(taskDTO.getTaskUser());
 
         Task newTask = new Task(generateTaskID(),
                 taskDTO.getTaskTitle(),
@@ -66,22 +72,17 @@ public class TaskServiceImpl implements TaskService {
                 taskDTO.getTaskDescription(),
                 taskDTO.getState(),
                 userService.getUserById(taskDTO.getTaskManagerID()),
-                null,
+                taskUser,
                 taskDTO.getDepartment(),
-                taskDTO.getTaskPriority()
+                taskDTO.getTaskPriority(),
+                projectService.findProjectByID(taskDTO.getProjectID())
         );
 
         emailService.sendEmaiLTaskCraeted();
         save(newTask);
         taskStatusService.newTaskCreated(newTask);
-
-        //TODO: tutaj
-//        for (int j = 0; j < taskUsers.size(); j++) {
-//            taskUsers.get(j).addTask(newTask);
-//            userService.save(taskUsers.get(j));
-//        }
-
-
+        taskUser.getUserTasks().add(newTask);
+        userRepository.save(taskUser);
     }
 
     @Override
@@ -132,5 +133,12 @@ public class TaskServiceImpl implements TaskService {
         return stringBuilder.toString();
     }
 
+    @Override
+    public List<BasicTaskInfoDTO> getBasicTaskInfo() {
+        String searchQuery = "SELECT name as taskName, state as taskState, task_priority as taskPriority, CONCAT(first_name, \" \", last_name) AS userFullName, task.id as taskID, user.id as userID, pictureurl as userPictureURL, project_name as projectName from task join user on task.user_id = user.id join project on task.project_id = project.id";
+        Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
+        List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
+        return result;
+    }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mkowsky.jirawannabedemo.dictionary.EChange;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
+import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskStatusDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.TaskStatusChange;
@@ -113,6 +114,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         List<TaskStatusDTO> result = (List<TaskStatusDTO>) query.list();
         return result;
     }
+
+
 }
 
 

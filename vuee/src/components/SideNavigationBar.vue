@@ -1,4 +1,7 @@
 <template>
+    <div>
+
+
     <v-card
 
             class="sidenav"
@@ -48,7 +51,7 @@
 
 
 
-                <v-list-item link v-show="showModeratorBoard" @click="navigate('/task-management')">
+                <v-list-item link v-show="showModeratorBoard" @click="navigate('/task-creation')">
                     <v-list-item-icon>
                         <v-icon>mdi-pencil</v-icon>
                     </v-list-item-icon>
@@ -58,7 +61,17 @@
                     </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item link @click="logout">
+                <v-list-item link v-show="showModeratorBoard" @click="navigate('/project-creation')">
+                    <v-list-item-icon>
+                        <v-icon>mdi-pencil</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Project-Creation</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item link @click="modalVisible = true;">
                     <v-list-item-icon>
                         <v-icon>mdi-logout</v-icon>
                     </v-list-item-icon>
@@ -75,22 +88,32 @@
         </v-navigation-drawer>
     </v-card>
 
+        <Modal :dialog="modalVisible"
+               :dialog-content="'Czy jestes pewny ze chcesz sie wylogowac?'"
+               :dialog-title="'Wyloguj'"
+               @modal-agree="logout"
+               @modal-cancel="modalVisible=false"></Modal>
+    </div>
 </template>
 
 <script>
 
 
     import Logo from "@/components/Logo";
+    import Modal from "@/components/Modal"
 
     export default {
         name: "SideNavigationBar",
-        components: {Logo},
+        components: {Logo, Modal},
         data() {
-            return {}
+            return {
+                modalVisible: false,
+            }
         },
         methods: {
             logout() {
-                this.$emit('logout');
+                this.$store.dispatch('auth/logout');
+                this.$router.push('/login');
             },
             navigate(value) {
                 this.$router.push(value);

@@ -2,13 +2,14 @@
     <div class="task-management-container">
 
 
-
         <div class="task-create-wrapper">
 
             <v-card class="task-create-box">
 
                 <v-card class="left">
-                    <div style="position: absolute; color: white; opacity: 0.8; font-size: 26px; font-weight: 100; letter-spacing: 2px;">TASK CREATOR</div>
+                    <div style="position: absolute; color: white; opacity: 0.8; font-size: 26px; font-weight: 100; letter-spacing: 2px;">
+                        TASK CREATOR
+                    </div>
                     <img src="https://images.unsplash.com/photo-1528739431815-0a7344c63409?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
                          style="height: 100%;width: 100%; object-fit: cover">
                 </v-card>
@@ -17,7 +18,9 @@
                     <task-creation style="height: 100%;"
                                    @create-task="createTask($event)"
                                    @task-render="test($event)"
-                                   :autocomplete-data="users"></task-creation>
+                                   @get-team-members="getProjectTeamMembers($event)"
+                                   :users="users"
+                                   :projects="projects"></task-creation>
                 </v-card>
 
                 <v-card class="right" outlined>
@@ -34,9 +37,6 @@
 
             </v-card>
         </div>
-
-
-
 
 
         <side-navigation-bar></side-navigation-bar>
@@ -81,23 +81,31 @@
                 createTaskVisible: true,
                 tasks: [],
                 users: [],
-                task: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
-                taskCopy: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
+                projects: [],
+                task: new Task(null, null, null, "Title", "Description", "TO_DO", null, null, null),
+                taskCopy: new Task(null, null, null, "Title", "Description", "TO_DO", null, null, null),
 
             }
         },
         methods: {
             getAllUsers() {
                 axios.get('http://localhost:8080/users/get-names').then(response => {
-                    for (let i = 0; i < response.data.length; i++) {
-                        this.users.push({
-                            id: response.data[i].id,
-                            name: response.data[i].firstName + ' ' + response.data[i].lastName
-                        })
-                    }
+                    console.log(response.data);
+                    this.users = response.data;
+                    // for (let i = 0; i < response.data.length; i++) {
+                    //     this.users.push({
+                    //         id: response.data[i].id,
+                    //         name: response.data[i].firstName + ' ' + response.data[i].lastName
+                    //     })
+                    // }
                 })
             },
-
+            getAllProjects() {
+                axios.get('http://localhost:8080/projects/list-all').then(response => {
+                    console.log(response.data);
+                    this.projects = response.data;
+                })
+            },
             displayModal() {
                 this.modalVisible = true;
                 this.showOverlay = false;
@@ -107,12 +115,24 @@
                 this.showOverlay = true;
                 this.task = value.task;
                 this.task.taskManagerID = this.user.id;
-                TaskService.createNewTaks(this.task, value.users).then(this.displayModal());
+                TaskService.createNewTaks(this.task, value.user).then(this.displayModal());
             },
             test(value) {
                 var change = value.changeValue;
-                if(value.task[change] === "") this.task[change] = this.taskCopy[change];
+                if (value.task[change] === "") this.task[change] = this.taskCopy[change];
                 else this.task[change] = value.task[change];
+            },
+            getProjectTeamMembers(value) {
+                console.log(value.taskID);
+                axios.get('http://localhost:8080/projects/get-all-team-members-personal-data/' + value.taskID).then(response => {
+                    this.users = response.data;
+                    // for (let i = 0; i < response.data.length; i++) {
+                    //     this.users.push({
+                    //         id: response.data[i].id,
+                    //         name: response.data[i].firstName + ' ' + response.data[i].lastName
+                    //     })
+                    // }
+                })
             }
         },
         created() {
@@ -121,6 +141,7 @@
         },
         mounted() {
             this.getAllUsers();
+            this.getAllProjects();
         }
 
     }
@@ -132,7 +153,6 @@
     }
 
     .task-management-container {
-        margin-left: 10%;
         height: 100%;
     }
 

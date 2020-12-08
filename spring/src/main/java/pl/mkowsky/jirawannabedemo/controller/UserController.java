@@ -7,6 +7,7 @@ import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.model.User;
 import pl.mkowsky.jirawannabedemo.services.UserService;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,22 +25,23 @@ public class UserController {
 
     @GetMapping(value = "/get-names")
     List<PersonalDataDTO> listAllUserNames(){
-        List<User> list = userService.getAllusers();
-        List<PersonalDataDTO> template =  new ArrayList<>();
-        for(int i = 0 ;  i < list.size(); i++){
-            PersonalDataDTO temp = new PersonalDataDTO(
-                    list.get(i).getId(),
-                    list.get(i).getFirstName(),
-                    list.get(i).getLastName());
-                    template.add(temp);
-        }
-        return template;
+        //List<User> list = userService.getAllusers();
+        return userService.getOnlyUsersPersonalData();
+
+//        for(int i = 0 ;  i < list.size(); i++){
+//            PersonalDataDTO temp = new PersonalDataDTO(
+//                    list.get(i).getId(),
+//                    list.get(i).getFirstName(),
+//                    list.get(i).getLastName());
+//                    template.add(temp);
+//        }
+//        return template;
     }
 
-    @GetMapping(value = "/get-user-personal-data/{userID}")
-    PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
-        User user = userService.getUserById(userID);
-        return new PersonalDataDTO(userID, user.getFirstName(), user.getLastName());
-    }
+//    @GetMapping(value = "/get-user-personal-data/{userID}")
+//    PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
+//        User user = userService.getUserById(userID);
+//        return new PersonalDataDTO((BigInteger) userID, user.getFirstName(), user.getLastName());
+//    }
 
 }

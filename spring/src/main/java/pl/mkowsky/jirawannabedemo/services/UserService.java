@@ -1,6 +1,7 @@
 package pl.mkowsky.jirawannabedemo.services;
 
 
+import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.model.User;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public interface UserService {
     void save(User user);
     String generateRandomName();
     String generateRandomSurname();
+    List<PersonalDataDTO> getOnlyUsersPersonalData();
 
 }

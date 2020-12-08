@@ -3,13 +3,12 @@ import Router from 'vue-router';
 
 import Login from "@/views/Login";
 import Board from "@/views/Board";
-import TaskManagement from "@/views/TaskCreation";
+import TaskCreation from "@/views/TaskCreation";
 import Profile from "@/views/Profile";
 import Projects from "@/views/Projects";
 import ProjectDetails from "@/views/ProjectDetails";
 import TaskDetails from "@/views/TaskDetails";
-
-
+import ProjectCreation from "@/views/ProjectCreation";
 
 
 Vue.use(Router);
@@ -82,10 +81,16 @@ const routes = [
     },
 
     {
-        path: '/task-management',
-        component: TaskManagement,
+        path: '/task-creation',
+        component: TaskCreation,
         beforeEnter: checkIfModerator
     },
+    {
+        path: '/project-creation',
+        component: ProjectCreation,
+        beforeEnter: checkIfModerator
+    },
+
     {
         path: '/profile',
         component: Profile
@@ -96,7 +101,8 @@ const routes = [
         component: Profile,
 
     },
-    {   name: 'projects',
+    {
+        name: 'projects',
         path: '/projects',
         component: Projects
     },

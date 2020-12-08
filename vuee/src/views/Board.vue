@@ -1,85 +1,15 @@
 <template>
     <div id="container" class="board-container">
-        <!--<div style="position: absolute;top: 5%; " v-show="taskContainerVisible">-->
-            <!--<v-text-field solo label="Search" v-model="query"></v-text-field>-->
-        <!--</div>-->
-
-
-        <div class="page-title" v-if="taskContainerVisible">BOARD
-        </div>
 
 
         <side-navigation-bar @logout="modalVisible=true"/>
-        <div v-if="!taskContainerVisible">
-
-            <TaskDetails
-                    v-bind:task-i-d="currentTaskID"
-                    @close-task-details="taskContainerVisible = true"
-            />
-        </div>
 
 
-        <div class="tasks-container" v-show="taskContainerVisible">
+        <div class="tasks-container">
             <TaskBoard :tasks="tasks" style="width: 100%"></TaskBoard>
 
-            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
-                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">TO DO</v-card-title>-->
-                <!--<Task v-for="task in toDo"-->
-                <!--:key="task.id"-->
-                <!--v-bind:title="task.name"-->
-                <!--v-bind:description="task.description"-->
-                <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
-                <!--v-bind:priority="task.taskPriority"-->
-                <!--class="gap"-->
-                <!--@task-item-clicked="navigateToTask(task.id)"/>-->
-            <!--</v-card>-->
-
-            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
-                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">IN PROGRESS</v-card-title>-->
-                <!--<Task v-for="task in inProgress"-->
-                      <!--:key="task.id"-->
-                      <!--v-bind:title="task.name"-->
-                      <!--v-bind:description="task.description"-->
-                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
-                      <!--v-bind:priority="task.taskPriority"-->
-                      <!--class="gap"-->
-                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
-            <!--</v-card>-->
-
-
-            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
-                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">CODE REVIEW</v-card-title>-->
-                <!--<Task v-for="task in codeReview"-->
-                      <!--:key="task.id"-->
-                      <!--v-bind:title="task.name"-->
-                      <!--v-bind:description="task.description"-->
-                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
-                      <!--v-bind:priority="task.taskPriority"-->
-                      <!--class="gap"-->
-                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
-            <!--</v-card>-->
-
-            <!--<v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">-->
-                <!--<v-card-title style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">DONE</v-card-title>-->
-                <!--<Task v-for="task in done"-->
-                      <!--:key="task.id"-->
-                      <!--v-bind:title="task.name"-->
-                      <!--v-bind:description="task.description"-->
-                      <!--v-bind:project-manager="task.taskManager.firstName + ' ' + task.taskManager.lastName"-->
-                      <!--v-bind:priority="task.taskPriority"-->
-                      <!--class="gap"-->
-                      <!--@task-item-clicked="navigateToTask(task.id)"/>-->
-            <!--</v-card>-->
-
-
-
         </div>
 
-        <Modal :dialog="modalVisible"
-        :dialog-content="'Czy jestes pewny ze chcesz sie wylogowac?'"
-        :dialog-title="'Wyloguj'"
-        @modal-agree="logout"
-        @modal-cancel="modalVisible=false"></Modal>
 
     </div>
 </template>
@@ -88,119 +18,26 @@
     import axios from 'axios';
 
     import SideNavigationBar from '@/components/SideNavigationBar'
-    import TaskDetails from "@/views/TaskDetails";
-    import Modal from "@/components/Modal"
+
+
     import TaskBoard from "@/components/TaskBoard";
 
 
     export default {
         name: "Home",
-        components: {TaskBoard, TaskDetails,SideNavigationBar, Modal},
+        components: {TaskBoard, SideNavigationBar},
         data() {
             return {
-                modalVisible: false,
-                page: 1,
                 isPM: false,
-                query: '',
                 user: Object,
-                taskContainerVisible: true,
-                toDoTasks: [],
-                inProgressTasks: [],
-                codeReviewTasks: [],
-                doneTasks: [],
                 tasks: [],
-                taskName: "",
-                taskDescription: "",
-                taskState: "",
-                currentTaskID: "",
-                userID: null,
-                appUsers: [],
-                cellTable: ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE']
             }
         },
         methods: {
-           logout(){
-                this.$store.dispatch('auth/logout');
-                this.$router.push('/login');
-            },
-            paginate(array, pageSize, pageNumber) {
 
-                return array.slice((pageNumber-1) * pageSize, (pageNumber) * pageSize);
-
-            },
-
-            navigateToTask(taskID) {
-                console.log(taskID);
-                this.taskContainerVisible = false;
-                this.currentTaskID = taskID;
-
-            },
-            next() {
-                console.log('nex');
-            },
-            previous() {
-                console.log('prev');
-            },
-            pageChanged(value) {
-                this.page=  value;
-            }
-        },
-        computed: {
-            toDo() {
-                if (this.query === '') {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("TO_DO");
-                    })
-                    return this.paginate(filteredTasks, 3, this.page);
-                } else {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("TO_DO");
-                    })
-                    //return filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase()))
-                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
-                }
-            },
-            codeReview() {
-                if (this.query === '') {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("CODE_REVIEW");
-                    })
-                    return this.paginate(filteredTasks,3 , this.page);
-                } else {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("CODE_REVIEW");
-                    })
-                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
-                }
-            },
-            inProgress() {
-                if (this.query === '') {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("IN_PROGRESS");
-                    })
-                    return this.paginate(filteredTasks,3 , this.page);
-                } else {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("IN_PROGRESS");
-                    })
-                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
-                }
-            },
-            done() {
-                if (this.query === '') {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("DONE");
-                    })
-                    return this.paginate(filteredTasks,3 , this.page);
-                } else {
-                    let filteredTasks = this.tasks.filter((task) => {
-                        return task.state.includes("DONE");
-                    })
-                    return this.paginate(filteredTasks.filter((task) => task.name.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
-                }
-            }
         },
         created() {
+            //TODO: Moze jakies lepsze rozwiazanie?
             this.user = JSON.parse(localStorage.getItem('user'));
             console.log(this.user);
             for (let i = 0; i < this.user.roles.length; i++) {
@@ -211,7 +48,7 @@
             }
             if (this.isPM) {
                 console.log('get-all');
-                axios.get('http://localhost:8080/tasks/list-all').then(response => {
+                axios.get('http://localhost:8080/tasks/get-basic-tasks-info').then(response => {
                     this.tasks = response.data;
                     console.log(response.data)
                 })
@@ -241,48 +78,13 @@
 
     }
 
-    .page-title {
-        position: absolute;
-        left: 10%;
-        top: 2%;
-        letter-spacing: 2px;
-        margin-bottom: 40px;
-
-    }
 
     .tasks-container {
-
+        height: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
 
-    }
-
-    .column {
-        width: 20%;
-
-        padding: 15px;
-
-    }
-
-
-    .column-title {
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-top: 10px;
-        font-size: 30px;
-        margin-bottom: 30px;
-        font-weight: lighter;
-        font-family: 'Courier New', Courier, monospace;
-        letter-spacing: 1px;
-    }
-
-    .gap {
-
-
-        margin-bottom: 20px;
-        cursor: pointer;
     }
 
 

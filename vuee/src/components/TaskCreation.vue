@@ -11,20 +11,21 @@
                     step="1"
                     editable
                     color="rgba(225, 182, 193)">
-                Chose department
+                Chose project
 
             </v-stepper-step>
 
             <v-stepper-content step="1">
                 <v-select solo
                           dense
-                          label="Chose Department"
-                          :items="departments"
-                          item-text="name"
-                          item-value="name"
+                          label="Chose project"
+                          :items="projects"
+                          item-text="projectName"
+                          item-value="id"
                           class="select"
-                          v-model="task.department"
+                          v-model="task.taskProject"
                           color="rgba(225, 182, 193)"
+                          @change="getProjectTeamMembers()"
                 ></v-select>
 
                 <v-btn
@@ -80,7 +81,7 @@
                           v-model="task.taskPriority"
                           @input="liveRenderChange('taskPriority')"
 
-                         ></v-select>
+                ></v-select>
 
                 <v-btn
                         color="rgba(225, 182, 193)"
@@ -137,30 +138,48 @@
             </v-stepper-step>
 
             <v-stepper-content step="6">
+                <template v-if="!task.taskProject">
+                    To select user, first select one of the projects from first step
+                </template>
+                <template v-if="task.taskProject">
+                    <v-select
+                            solo
+                            dense
+                            label="Chose user"
+                            :items="users"
+                            item-text="fullName"
+                            item-value="id"
+                            class="select"
+                            color="rgba(225, 182, 193)"
+                            v-model="chosenUser"
+                            @input="liveRenderChange('taskPriority')"
 
-                <v-autocomplete
-                        solo
-                        label="Search for user"
-                        :items="autocompleteData"
-                        item-text="name"
-                        item-value="id"
-                        hide-selected
-                        multiple
-                        chips
-                        small-chips
-                        v-model="chosenPeople"
-                        color="rgba(225, 182, 193)"
-                >
-                    <template v-slot:selection="data">
-                        <v-chip
-                                close
-                                @click:close="remove(data.item.id)"
-                                color="rgba(225, 182, 193)"
-                        >
-                            {{ data.item.name }}
-                        </v-chip>
-                    </template>
-                </v-autocomplete>
+                    ></v-select>
+                </template>
+
+                <!--<v-autocomplete-->
+                <!--solo-->
+                <!--label="Search for user"-->
+                <!--:items="autocompleteData"-->
+                <!--item-text="name"-->
+                <!--item-value="id"-->
+                <!--hide-selected-->
+                <!--multiple-->
+                <!--chips-->
+                <!--small-chips-->
+                <!--v-model="chosenPeople"-->
+                <!--color="rgba(225, 182, 193)"-->
+                <!--&gt;-->
+                <!--<template v-slot:selection="data">-->
+                <!--<v-chip-->
+                <!--close-->
+                <!--@click:close="remove(data.item.id)"-->
+                <!--color="rgba(225, 182, 193)"-->
+                <!--&gt;-->
+                <!--{{ data.item.name }}-->
+                <!--</v-chip>-->
+                <!--</template>-->
+                <!--</v-autocomplete>-->
                 <v-btn
                         color="rgba(225, 182, 193)"
                         @click="e6 = 7"
@@ -187,32 +206,36 @@
         name: "TaskCreation",
         components: {},
         props: {
-            autocompleteData: {
+            users: {
+                type: Array,
+            },
+            projects: {
                 type: Array,
             }
+
         },
         data() {
             return {
                 e6: 1,
-                task: new Task(null, null, null, null, null, "TO_DO", null, null),
-                currentDate: '2020-11-23',
-                departments: [
-                    {name: 'BACKEND'},
-                    {name: 'FRONTEND'},
-                    {name: 'MARKETING'},
-                    {name: 'DATABASE'},
-                    {name: 'ECOMMERCE'},
-                ],
+                task: new Task(null, null, 'BACKEND', null, null, "TO_DO", null, null, null),
+                currentDate: this.$moment().format("YYYY-MM-DD"),
 
+                // projects: [
+                //     {value: 1},
+                //     {value: 4},
+                //     {value: 5},
+                //
+                // ],
                 priorities: [
                     {value: 1},
                     {value: 2},
                     {value: 3},
                     {value: 4},
                 ],
-                users: [],
+
 
                 chosenPeople: [],
+                chosenUser: '',
             }
         },
         methods: {
@@ -220,17 +243,22 @@
                 this.$emit('task-render', {task: this.task, changeValue: value})
             },
             createTask() {
-                this.$emit('create-task', {task: this.task, users: this.chosenPeople});
+                this.$emit('create-task', {task: this.task, user: this.chosenUser});
                 this.clearData();
+            },
+            getProjectTeamMembers() {
+                this.$emit('get-team-members', {taskID: this.task.taskProject});
             },
             clearData() {
                 this.e6 = 1;
-                this.task = new Task(null, null, null, null, null, "TO_DO", null, null)
+                this.task = new Task(null, null, null, null, null, "TO_DO", null, null, null)
+                this.chosenUser = '';
             },
         },
         computed: {
             isConfirmButtonDisabled() {
-                if ((this.task.taskPriority) && (this.task.department) && (this.task.taskTitle) && (this.task.taskDescription) && (this.task.taskDeadline) && (this.chosenPeople.length > 0)) return false
+
+                if ((this.task.taskPriority) && (this.task.department) && (this.task.taskTitle) && (this.task.taskDescription) && (this.task.taskDeadline) && (this.chosenUser)) return false
                 else return true
             },
         },

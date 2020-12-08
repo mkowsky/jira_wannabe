@@ -16,12 +16,22 @@ public class TaskDTO {
     private String taskDescription;
     private EState state;
     private Date taskDeadline;
-    private Long[] taskUsers;
-
+    private Long taskUser;
+    private Long projectID;
 
     public TaskDTO(){
 
     }
+
+    public Long getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(Long projectID) {
+        this.projectID = projectID;
+    }
+
+
 
     public Long getTaskManagerID() {
         return taskManagerID;
@@ -79,11 +89,11 @@ public class TaskDTO {
         this.taskDeadline = taskDeadline;
     }
 
-    public Long[] getTaskUsers() {
-        return taskUsers;
+    public Long getTaskUser() {
+        return taskUser;
     }
 
-    public void setTaskUsers(Long[] taskUsers) {
-        this.taskUsers = taskUsers;
+    public void setTaskUser(Long taskUser) {
+        this.taskUser = taskUser;
     }
 }

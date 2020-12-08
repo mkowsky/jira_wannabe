@@ -18,4 +18,5 @@ public interface TaskStatusService {
 
     List<TaskStatusChange> getAllTaskChangesForProject(Long projectID);
     List<TaskStatusDTO> testQuery(Long projectID);
+
 }

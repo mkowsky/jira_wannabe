@@ -77,7 +77,7 @@ public class Task {
     }
 
     public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, User users
-            , EDepartment department, int taskPriority) {
+            , EDepartment department, int taskPriority, Project project) {
         this.taskID = taskID;
         this.name = name;
         this.createdDate = createdDate;
@@ -88,8 +88,8 @@ public class Task {
         this.user = users;
         this.department = department;
         this.taskPriority = taskPriority;
+        this.project = project;
     }
-
 
 
     public List<Comment> getComments() {

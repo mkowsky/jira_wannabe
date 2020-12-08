@@ -21,6 +21,7 @@ public class EmailServiceImpl implements EmailService {
         String templateUsername = "cookie";
         SimpleMailMessage mail = new SimpleMailMessage();
 
+        mail.setSubject("New task has been created.");
         mail.setText("Hello "  + templateUsername + ", new task that you're involded in has been created.");
         javaMailSender.send(mail);
 }
@@ -30,6 +31,7 @@ public class EmailServiceImpl implements EmailService {
         String templateUsername = "cookie";
         SimpleMailMessage mail = new SimpleMailMessage();
 
+        mail.setSubject("Task's status has been changed.");
         mail.setText("Hello "  + templateUsername + ",one of tasks, that you're involved in has changed its status.");
         javaMailSender.send(mail);
     }

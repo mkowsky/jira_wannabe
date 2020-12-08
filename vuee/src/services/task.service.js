@@ -9,7 +9,8 @@ class TaskService {
         console.log('default funciton hello');
     }
 
-    createNewTaks(task, chosenPeople) {
+    createNewTaks(task, chosenUser) {
+        console.log(task.taskProject);
         return axios.post(API_URL + 'create-new', {
             taskManagerID: task.taskManagerID,
             taskPriority: task.taskPriority,
@@ -18,7 +19,9 @@ class TaskService {
             taskDescription: task.taskDescription,
             state: task.lifecycle,
             taskDeadline: task.taskDeadline,
-            taskUsers: chosenPeople,
+            projectID: task.taskProject,
+            taskUser: chosenUser,
+
         })
     }
 

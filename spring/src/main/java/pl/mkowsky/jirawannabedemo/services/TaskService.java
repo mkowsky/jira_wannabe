@@ -1,6 +1,7 @@
 package pl.mkowsky.jirawannabedemo.services;
 
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
+import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 
@@ -21,4 +22,5 @@ public interface TaskService {
     void changeTaskUser(Long taskID, Long newUserID);
 
     List<Task> getAllProjectTasks(Long projectID);
+    List<BasicTaskInfoDTO> getBasicTaskInfo();
 }

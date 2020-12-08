@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
+import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
@@ -112,6 +113,10 @@ public class TaskController {
     @GetMapping(value = "/get-all-task-changes-for-project/{projectID}")
     private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID){
         return taskStatusService.testQuery(projectID);
+    }
+    @GetMapping(value = "/get-basic-tasks-info")
+    private List<BasicTaskInfoDTO> getBasicTaskInfo(){
+        return taskService.getBasicTaskInfo();
     }
 
 }

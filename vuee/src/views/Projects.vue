@@ -3,8 +3,8 @@
         <side-navigation-bar></side-navigation-bar>
 
 
-        <div  style="height: 100%; display: flex; flex-direction: column;">
-            <div  style="width: 100%; background: #424242; height: 55%;  position: relative;">
+        <div style="height: 100%; display: flex; flex-direction: column;">
+            <div style="width: 100%; background: #424242; height: 55%;  position: relative;">
 
                 <div style="left: 10%; top: 5%; display: flex;  position: relative; z-index: 25;">
 
@@ -18,9 +18,10 @@
                         </div>
                     </div>
 
-                    <v-btn style="align-self: center; margin-left: 1%;" rounded large @click="navigateToProjectDetails()">VIEW DETAILS</v-btn>
+                    <v-btn style="align-self: center; margin-left: 1%;" rounded large
+                           @click="navigateToProjectDetails()">VIEW DETAILS
+                    </v-btn>
                 </div>
-
 
 
                 <svg style="position: absolute; bottom: 0px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
@@ -34,7 +35,8 @@
 
                 <div style="display: flex; align-self: center" ref="cards">
 
-                    <div v-for="(project,index) in projects" :key="project.id" @click="cardClicked(index, project.id)" style="cursor: pointer">
+                    <div v-for="(project,index) in projects" :key="project.id" @click="cardClicked(index, project.id)"
+                         style="cursor: pointer">
 
                         <ProjectCard :id="index" class="gap" :project-i-d="project.id" active-class="active"
                                      :project-title="project.projectName"></ProjectCard>
@@ -67,13 +69,12 @@
                 active: '',
                 previousCard: 0,
                 currentProject: [],
-
+                isPM: false,
 
             }
         },
         methods: {
             cardClicked(index, projectID) {
-
 
 
                 document.getElementById(this.previousCard).style.opacity = '0.7';
@@ -110,10 +111,31 @@
             }
         },
         created() {
-            axios.get('http://localhost:8080/projects/list-all').then(response => {
-                this.projects = response.data;
-                this.currentProject = this.projects[0];
-            })
+            //TODO: Moze jakies lepsze rozwiazanie?
+            let user = JSON.parse(localStorage.getItem('user'));
+            console.log(user);
+            for (let i = 0; i < user.roles.length; i++) {
+                if ((user.roles[i] === "ROLE_PROJECT_MANAGER") || (user.roles[i] === "ROLE_ADMIN")) {
+                    this.isPM = true;
+                    break;
+                } else this.isPM = false;
+            }
+            if (this.isPM) {
+                console.log('get-all');
+                axios.get('http://localhost:8080/projects/list-all').then(response => {
+                    this.projects = response.data;
+                    this.currentProject = this.projects[0];
+                })
+
+            } else {
+                console.log('get-user-tasks')
+
+                axios.get('http://localhost:8080/projects/get-all-user-projects/' + user.id).then(response => {
+                    this.projects = response.data;
+                    this.currentProject = this.projects[0];
+                })
+            }
+
 
         },
         mounted() {
@@ -162,7 +184,6 @@
     }
 
 
-
     .project-title {
         position: relative;
         color: white;
@@ -174,7 +195,7 @@
 
     }
 
-    .moveTitle{
+    .moveTitle {
         transition: 0.6s;
         transform: translateX(-1000%);
     }
