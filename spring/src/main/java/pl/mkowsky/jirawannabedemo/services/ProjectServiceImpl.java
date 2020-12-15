@@ -52,7 +52,8 @@ public class ProjectServiceImpl implements ProjectService {
             User user = userRepository.findUserById(projectCreationDTO.getUsersID()[i]);
             projectUsers.add(user);
         }
-        Project project = new Project(projectCreationDTO.getProjectName(), null, projectUsers, userRepository.findUserById(projectCreationDTO.getProjectManagerID()));
+        Project project = new Project(projectCreationDTO.getProjectName(), null, projectUsers, userRepository.findUserById(projectCreationDTO.getProjectManagerID()),
+                projectCreationDTO.getProjectIconID());
         projectRepository.save(project);
     }
 

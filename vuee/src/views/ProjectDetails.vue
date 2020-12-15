@@ -90,7 +90,7 @@
 
                         <div v-for="user in projectUsers" :key="user.id" style="flex: 1 0 15%; margin-right: 30px;">
                             <UserCard
-                                    :nickname="user.firstName+ ' ' + user.lastName"
+                                    :nickname="user.firstName + ' ' + user.lastName"
                                     :position="'Developer'"
                                     :userid="user.id"
                                     :profile-picture="user.pictureURL"

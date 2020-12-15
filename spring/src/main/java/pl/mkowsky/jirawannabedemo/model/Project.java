@@ -20,6 +20,9 @@ public class Project {
     @JsonBackReference
     private List<Task> taskList;
 
+    //@TODO: change in the future;
+    private Long projectIconID;
+
 
 
     @ManyToMany
@@ -44,11 +47,20 @@ public class Project {
     public Project(){
     }
 
-    public Project(String projectName, List<Task> taskList, List<User> projectUsers, User projectManager) {
+    public Project(String projectName, List<Task> taskList, List<User> projectUsers, User projectManager, Long projectIconID) {
         this.projectName = projectName;
         this.taskList = taskList;
         this.projectUsers = projectUsers;
         this.projectManager = projectManager;
+        this.projectIconID = projectIconID;
+    }
+
+    public Long getProjectIconID() {
+        return projectIconID;
+    }
+
+    public void setProjectIconID(Long projectIconID) {
+        this.projectIconID = projectIconID;
     }
 
     public Long getId() {

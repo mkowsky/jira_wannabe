@@ -5,6 +5,7 @@ public class ProjectCreationDTO {
     private String projectName;
     private Long[] usersID;
     private Long projectManagerID;
+    private Long projectIconID;
 
     public String getProjectName() {
         return projectName;
@@ -28,5 +29,13 @@ public class ProjectCreationDTO {
 
     public void setProjectManagerID(Long projectManagerID) {
         this.projectManagerID = projectManagerID;
+    }
+
+    public Long getProjectIconID() {
+        return projectIconID;
+    }
+
+    public void setProjectIconID(Long projectIconID) {
+        this.projectIconID = projectIconID;
     }
 }

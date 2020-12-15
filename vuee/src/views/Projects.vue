@@ -21,8 +21,13 @@
                     <v-btn style="align-self: center; margin-left: 1%;" rounded large
                            @click="navigateToProjectDetails()">VIEW DETAILS
                     </v-btn>
+
+
                 </div>
 
+                <div style="width: 400px; height: 400px; position: absolute; right: 10px; top: 1%">
+                    <img src="../assets/undraw/20.svg" style="width: 100%; height: 100%;">
+                </div>
 
                 <svg style="position: absolute; bottom: 0px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                     <path fill="white" fill-opacity="1"
@@ -39,7 +44,7 @@
                          style="cursor: pointer">
 
                         <ProjectCard :id="index" class="gap" :project-i-d="project.id" active-class="active"
-                                     :project-title="project.projectName"></ProjectCard>
+                                     :project-title="project.projectName" :project-icon-i-d="project.projectIconID"></ProjectCard>
                     </div>
                 </div>
             </div>
@@ -124,6 +129,7 @@
                 console.log('get-all');
                 axios.get('http://localhost:8080/projects/list-all').then(response => {
                     this.projects = response.data;
+                    console.log(response.data);
                     this.currentProject = this.projects[0];
                 })
 

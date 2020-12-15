@@ -5,7 +5,7 @@
             <v-tabs @change="changeContent($event)" grow color="rgba(235, 182, 193, 1)">
                 <v-tab>General</v-tab>
                 <v-tab>Task timeline</v-tab>
-                <v-tab>CODE</v-tab>
+                <v-tab>?????</v-tab>
                 <v-tab>Task comments</v-tab>
 
             </v-tabs>
@@ -50,53 +50,7 @@
 
 
             <div class="code-flex-container" v-show="usersVisible">
-                <div class="code-inner-flex">
-                    <div style="display: flex; flex-direction: row; padding: 20px; justify-content: space-evenly; width: 30%">
-                        <v-btn @click="applyCodeVisible = true">ENTER CODE</v-btn>
-                        <v-btn @click="issueReportVisible = true">REPORT ISSUE</v-btn>
-                        <v-btn v-if="currentTask.state === 'CODE_REVIEW'">CODE ACCEPTATION</v-btn>
-
-                    </div>
-
-                    <prism-editor
-                            class="my-editor"
-                            v-model="code"
-                            :highlight="highlighter"
-                            :line-numbers="lineNumbers"
-                            readonly
-                    ></prism-editor>
-                </div>
-
-
-                <Modal :dialog="applyCodeVisible"
-                       :dialog-title="'Apply code'"
-                       :dialog-content="'Please paste your code below.'"
-                       @modal-cancel="cancelCodeChange()"
-                       @modal-agree="applyCodeChange()"
-                       :width="800"
-                >
-                    <template slot="body">
-
-                        <prism-editor
-                                class="my-editor"
-                                style="height: 300px;"
-                                v-model="codeChange"
-                                :highlight="highlighter"
-                                :line-numbers="lineNumbers"
-                        ></prism-editor>
-                    </template>
-                </Modal>
-
-                <Modal :dialog="issueReportVisible"
-                       :dialog-title="'Issue report'"
-                       :dialog-content="'Please provide short descripiton for issue you have faced.'"
-                       @modal-agree="reportIssue()"
-                       @modal-cancel="cancelIssue()"
-                >
-                    <template slot="body">
-                        <v-textarea solo label="Issue description" v-model="issueDescription"></v-textarea>
-                    </template>
-                </Modal>
+          ?????
 
 
             </div>
@@ -204,7 +158,7 @@
     import SideNavigationBar from "@/components/SideNavigationBar";
 
 
-    import {PrismEditor} from "vue-prism-editor";
+    //import {PrismEditor} from "vue-prism-editor";
     import "vue-prism-editor/dist/prismeditor.min.css"; // import the styles somewhere
 
     // import highlighting library (you can use any library you want just return html string)
@@ -214,7 +168,7 @@
     import "prismjs/themes/prism-tomorrow.css"; // import syntax highlighting styles
     export default {
         name: "TaskDetails",
-        components: {SideNavigationBar, GeneralTaskInfo, Modal, StatusChangeItem, Comment, ExpansionPanel, PrismEditor},
+        components: {SideNavigationBar, GeneralTaskInfo, Modal, StatusChangeItem, Comment, ExpansionPanel,},
         props: {
             taskID: {
                 required: true,

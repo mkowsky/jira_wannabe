@@ -38,10 +38,12 @@ public class UserController {
 //        return template;
     }
 
-//    @GetMapping(value = "/get-user-personal-data/{userID}")
-//    PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
-//        User user = userService.getUserById(userID);
-//        return new PersonalDataDTO((BigInteger) userID, user.getFirstName(), user.getLastName());
-//    }
+    @GetMapping(value = "/get-user-personal-data/{userID}")
+    PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
+        User user = userService.getUserById(userID);
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(userID, user.getFirstName(), user.getLastName(), user.getFirstName() + " " + user.getLastName());
+        System.out.println(personalDataDTO.getFullName());
+        return personalDataDTO;
+    }
 
 }

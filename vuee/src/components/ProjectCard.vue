@@ -4,7 +4,7 @@
 
 
         <div class="img-wrapper" style=" align-self: center; width: 80%; height: 130px; ">
-            <img src="../assets/creation.svg" style="height: 100%; width: 100%;">
+            <img :src="require(`../assets/undraw/` + projectIconID+ `.svg`)" style="height: 100%; width: 100%;">
         </div>
 
         <v-card-subtitle style="align-self: center; font-size: 15px;">{{projectTitle}}</v-card-subtitle>
@@ -22,7 +22,7 @@
 
     export default {
         name: "ProjectCard",
-        props: ['projectTitle', 'projectID'],
+        props: ['projectTitle', 'projectID', 'projectIconID'],
         methods:{
             cardClicked(){
                 this.$emit('card-clicked', {id: this.projectID});

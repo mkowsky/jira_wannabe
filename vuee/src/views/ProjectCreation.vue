@@ -2,72 +2,189 @@
     <div class="project-creation-container">
         <side-navigation-bar></side-navigation-bar>
         <div class="project-creation-content">
-      <project-card style="position: absolute; left: 50%;"></project-card>
-            <!--<div class="project-creation-box">-->
-                <!--<img src="../assets/creation.svg"-->
-                     <!--style="position:absolute; width: 50%; height: 50%; top: 50%; transform: translateY(-50%); left: -5%;">-->
-                <!--<v-text class="project-title">PROJECT CREATOR</v-text>-->
-                <!--<v-text class="project-info">In this project-creator-->
-                    <!--you can only choose your team members and set-->
-                    <!--title for your new project. To add tasks you should head to-->
-                    <!--task creation view.-->
-                <!--</v-text>-->
 
-                <!--<div style="background: white; width: 40%; height: 50%; position: absolute; left: 55%; top: 30%; border-radius: 35px;">-->
-                    <!--<v-text-field solo label="Enter project title" v-model="projectTitle"  style="position: relative; top:20%; width: 70%; left: 50%; transform: translateX(-50%);"></v-text-field>-->
-                    <!--<v-autocomplete-->
-                            <!--solo-->
-                            <!--label="Search for user"-->
-                            <!--:items="users"-->
-                            <!--item-text="name"-->
-                            <!--item-value="id"-->
-                            <!--hide-selected-->
-                            <!--multiple-->
-                            <!--chips-->
-                            <!--small-chips-->
-                            <!--v-model="chosenPeople"-->
-                            <!--color="rgba(225, 182, 193)"-->
-                            <!--style="position: relative; top: 25%; width: 70%; left: 50%; transform: translateX(-50%);"-->
-                    <!--&gt;-->
-                        <!--<template v-slot:selection="data">-->
-                            <!--<v-chip-->
-                                    <!--close-->
-                                    <!--@click:close="remove(data.item.id)"-->
-                                    <!--color="#bababa"-->
-                            <!--&gt;-->
-                                <!--{{ data.item.name }}-->
-                            <!--</v-chip>-->
-                        <!--</template>-->
-                    <!--</v-autocomplete>-->
+            <div class="project-creation-box">
+                <img src="../assets/creation.svg"
+                     style="position:absolute; width: 50%; height: 50%; top: 50%; transform: translateY(-50%); left: -5%;">
+                <p class="project-title">PROJECT CREATOR</p>
+                <p class="project-info">In this project-creator
+                    you can only choose your team members and set
+                    title for your new project. To add tasks you should head to
+                    task creation view.
+                </p>
 
-                    <!--<v-btn @click="createNewProject()" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); border-radius: 25px;">CREATE-->
-                        <!--PROJECT-->
-                    <!--</v-btn>-->
-                <!--</div>-->
+                <div style="background: white; width: 40%; height: 50%; position: absolute; left: 55%; top: 30%; border-radius: 35px; display: flex; flex-direction: column; padding: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                        <v-btn style="margin-right: 20px;" @click="modalVisible = true">Choose icon</v-btn>
 
-            <!--</div>-->
+                        <div style="border: 2px solid black; width: 150px; height: 150px; padding: 5px;">
+                            <v-img
+                                    style="object-fit: cover; "
+                                    :src="currentSRC"
+                                    class="image"
+                            ></v-img>
+                        </div>
+                    </div>
+                    <v-text-field solo label="Enter project title" v-model="projectTitle" style=""></v-text-field>
+
+                    <v-autocomplete
+                            solo
+                            label="Search for user"
+                            :items="users"
+                            item-text="name"
+                            item-value="id"
+                            hide-selected
+                            multiple
+                            chips
+                            small-chips
+                            v-model="chosenPeople"
+                            color="rgba(225, 182, 193)"
+                            style=""
+                    >
+                        <template v-slot:selection="data">
+                            <v-chip
+                                    close
+                                    @click:close="remove(data.item.id)"
+                                    color="#bababa"
+                            >
+                                {{ data.item.name }}
+                            </v-chip>
+                        </template>
+                    </v-autocomplete>
+
+                    <v-btn @click="createNewProject()" style="">CREATE
+                        PROJECT
+                    </v-btn>
+                </div>
+
+            </div>
 
 
         </div>
+        <Modal :dialog="modalVisible"
+               :dialog-content="'Pick icon for you new project.'"
+               :dialog-title="'Pick icon'"
+               @modal-cancel="modalVisible=false"
+               @modal-agree="pickIcon()">
+            <template slot="body">
+                <div style="display: flex; flex-direction: column; padding: 10px;">
+                    <div style="display: flex; flex-direction: row; margin-bottom: 20px;"
+                         v-for="(icon, index) in iconImages" :key="index">
+                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'0'"
+                                                                                                         :src="icon.src1"
+                                                                                                         style="height: 100%; width: 100%; "
+                                                                                                         @click="makeHover($event, icon.src1)"
+                        >
+                        </div>
+                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'1'"
+                                                                                                         :src="icon.src2"
+                                                                                                         style="height: 100%; width: 100%; "
+                                                                                                         @click="makeHover($event,icon.src2 )">
+                        </div>
+                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'2'"
+                                                                                                         :src="icon.src3"
+                                                                                                         style="height: 100%; width: 100%; "
+                                                                                                         @click="makeHover($event, icon.src3)"
+                        >
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </template>
+        </Modal>
     </div>
 </template>
 
 <script>
     import SideNavigationBar from "@/components/SideNavigationBar";
     import axios from "axios";
-    import ProjectCard from "@/components/ProjectCard";
+    import Modal from "@/components/Modal";
 
     export default {
         name: "ProjectCreation",
-        components: {ProjectCard, SideNavigationBar},
+        components: {Modal, SideNavigationBar},
         data() {
             return {
                 users: [],
                 chosenPeople: [],
                 projectTitle: '',
+                modalVisible: false,
+                currentHoverID: [],
+                currentSRC: 'https://assets.stickpng.com/thumbs/5a4613ddd099a2ad03f9c994.png',
+                iconImages: [
+                    {
+                        "src1": require(`../assets/undraw/1.svg`),
+                        "src2": require(`../assets/undraw/2.svg`),
+                        "src3": require(`../assets/undraw/3.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/4.svg`),
+                        "src2": require(`../assets/undraw/5.svg`),
+                        "src3": require(`../assets/undraw/6.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/7.svg`),
+                        "src2": require(`../assets/undraw/8.svg`),
+                        "src3": require(`../assets/undraw/9.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/10.svg`),
+                        "src2": require(`../assets/undraw/11.svg`),
+                        "src3": require(`../assets/undraw/12.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/13.svg`),
+                        "src2": require(`../assets/undraw/14.svg`),
+                        "src3": require(`../assets/undraw/15.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/16.svg`),
+                        "src2": require(`../assets/undraw/17.svg`),
+                        "src3": require(`../assets/undraw/18.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/19.svg`),
+                        "src2": require(`../assets/undraw/20.svg`),
+                        "src3": require(`../assets/undraw/21.svg`)
+                    },
+                    {
+                        "src1": require(`../assets/undraw/22.svg`),
+                        "src2": require(`../assets/undraw/23.svg`),
+                        "src3": require(`../assets/undraw/24.svg`)
+                    },
+                ]
             }
         },
         methods: {
+
+            pickIcon() {
+                this.modalVisible = false;
+                this.currentSRC = require(`../assets/undraw/` + this.currentHoverID[0].src + `.svg`);
+
+
+            },
+            makeHover(event, value) {
+                let splited = value.split(".", 2);
+                let sliced = splited[0].slice(-2);
+                if (sliced[0] === "/") sliced = sliced.slice(-1);
+                console.log(sliced);
+
+                if (this.currentHoverID.length === 0) {
+                    document.getElementById(event.target.id).parentElement.style.border = '2px solid black';
+                    document.getElementById(event.target.id).parentElement.style.opacity = '0.5';
+                    this.currentHoverID.push({ID: event.target.id, src: sliced});
+                } else if (this.currentHoverID.length >= 1) {
+                    if (event.target.id === this.currentHoverID[0].ID) {
+                        this.currentHoverID.splice(0, 1)
+                        document.getElementById(event.target.id).parentElement.style.border = 'none';
+                        document.getElementById(event.target.id).parentElement.style.opacity = '1';
+                    } else {
+                        console.log('you have already picekd');
+                    }
+                }
+            },
             createNewProject() {
                 let user = JSON.parse(localStorage.getItem('user'));
                 console.log(this.chosenPeople);
@@ -76,6 +193,7 @@
                     projectName: this.projectTitle,
                     usersID: this.chosenPeople,
                     projectManagerID: user.id,
+                    projectIconID: this.currentHoverID[0].src,
                 }).then(response => {
                     console.log(response.status);
                     this.clearData();
@@ -105,6 +223,8 @@
             clearData() {
                 this.chosenPeople = [];
                 this.projectTitle = '';
+                this.currentHoverID.splice(0, 1);
+                this.currentSRC = 'https://assets.stickpng.com/thumbs/5a4613ddd099a2ad03f9c994.png';
             }
         },
         created() {
@@ -166,7 +286,8 @@
         font-size: 36px;
 
     }
-    .project-info{
+
+    .project-info {
         color: black;
         position: absolute;
         max-width: 30%;

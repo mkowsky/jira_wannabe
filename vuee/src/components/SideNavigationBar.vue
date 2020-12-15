@@ -31,7 +31,7 @@
 
                 <v-list-item link @click="navigate('/projects')">
                     <v-list-item-icon>
-                        <v-icon>mdi-account</v-icon>
+                        <v-icon>mdi-form-select</v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content >
@@ -57,17 +57,17 @@
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                        <v-list-item-title>Task-Creation</v-list-item-title>
+                        <v-list-item-title>Create task</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
                 <v-list-item link v-show="showModeratorBoard" @click="navigate('/project-creation')">
                     <v-list-item-icon>
-                        <v-icon>mdi-pencil</v-icon>
+                        <v-icon>mdi-note-plus-outline</v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                        <v-list-item-title>Project-Creation</v-list-item-title>
+                        <v-list-item-title>Add project</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
