@@ -62,10 +62,7 @@ public class TaskController {
     }
 
 
-    @GetMapping(value = "/list-all-tasks-in-project/{projectID}")
-    List<Task> getAllProjectTasks(@PathVariable("projectID") Long projectID) {
-        return taskService.getAllProjectTasks(projectID);
-    }
+
 
 
     @GetMapping(value = "/user/{userID}/to-task/{taskID}")
@@ -111,12 +108,55 @@ public class TaskController {
 //    }
 
     @GetMapping(value = "/get-all-task-changes-for-project/{projectID}")
-    private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID){
+    private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID) {
         return taskStatusService.testQuery(projectID);
     }
-    @GetMapping(value = "/get-basic-tasks-info")
-    private List<BasicTaskInfoDTO> getBasicTaskInfo(){
-        return taskService.getBasicTaskInfo();
+
+
+    @GetMapping(value = "/get-basic-tasks-info/{userID}")
+    private List<BasicTaskInfoDTO> getBasicTaskInfo(@PathVariable("userID") Long userID) {
+        User user = userService.getUserById(userID);
+        if(user.checkIfProjectManager()){
+            return taskService.getBasicTaskInfo();
+        } else {
+            return taskService.getBasicTaskInfo(userID);
+        }
     }
+
+    @GetMapping(value = "/list-all-tasks-in-project/{projectID}")
+    List<BasicTaskInfoDTO> getAllProjectTasks(@PathVariable("projectID") Long projectID) {
+        return taskService.getBasicTaskInfoForProjectWithProjectID(projectID);
+    }
+
+    @GetMapping(value = "/get-number-of-tasks-by-their-status")
+    private int getNumberOfTaskByTheirStatus(@RequestParam("userID") Long userID) {
+        int maxLength = 0;
+        User user = userService.getUserById(userID);
+        if (user.checkIfProjectManager()) {
+            for (int i = 0; i < taskService.getTaksLength().get(0).length; i++) {
+                if (taskService.getTaksLength().get(0)[i] > maxLength) {
+                    maxLength = taskService.getTaksLength().get(0)[i].intValue();
+                }
+            }
+        } else {
+            for (int i = 0; i < taskService.getTaksLength(userID).get(0).length; i++) {
+                if (taskService.getTaksLength(userID).get(0)[i] > maxLength) {
+                    maxLength = taskService.getTaksLength(userID).get(0)[i].intValue();
+                }
+            }
+        }
+        return maxLength;
+    }
+    @GetMapping(value = "/get-number-of-tasks-by-their-status-for-project/{projectID}")
+    private int getNumberOfTasksByTheirStatusForProjectWitID(@PathVariable("projectID") Long projectID){
+        int maxLength = 0;
+        for(int i =0; i < taskService.getTasksLengthForProjectWithProjectID(projectID).get(0).length; i++){
+            if(taskService.getTasksLengthForProjectWithProjectID(projectID).get(0)[i] > maxLength){
+                maxLength = taskService.getTasksLengthForProjectWithProjectID(projectID).get(0)[i].intValue();
+            }
+        }
+        return maxLength;
+    }
+
 
 }

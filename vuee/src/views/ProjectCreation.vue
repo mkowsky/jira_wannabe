@@ -13,7 +13,7 @@
                     task creation view.
                 </p>
 
-                <div style="background: white; width: 40%; height: 50%; position: absolute; left: 55%; top: 30%; border-radius: 35px; display: flex; flex-direction: column; padding: 20px;">
+                <div style="background: white; width: 40%; height: 60%; position: absolute; left: 55%; top: 30%; border-radius: 35px; display: flex; flex-direction: column; padding: 20px;">
                     <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                         <v-btn style="margin-right: 20px;" @click="modalVisible = true">Choose icon</v-btn>
 

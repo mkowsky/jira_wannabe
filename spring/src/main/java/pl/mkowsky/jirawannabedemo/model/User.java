@@ -3,6 +3,7 @@ package pl.mkowsky.jirawannabedemo.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import pl.mkowsky.jirawannabedemo.dictionary.ERole;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.Set;
 @Entity
 @Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
 public class User {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -181,5 +184,12 @@ public class User {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    public boolean checkIfProjectManager(){
+        for(Role role : roles){
+            if (role.getName().equals(ERole.ROLE_PROJECT_MANAGER)) return true;
+        }
+        return false;
     }
 }

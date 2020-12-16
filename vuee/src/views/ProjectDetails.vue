@@ -14,7 +14,6 @@
             </v-tabs>
 
             <div v-show="backlogContentVisible" style="display: flex; flex-direction: row; justify-content: flex-end; padding: 20px;">
-
                 <div class="recent-changes-wrapper">
                     <div style="align-self: center; margin-bottom: 20px; font-size: 30px; font-weight: 300;">RECENT CHANGES IN PROJECT</div>
                     <v-card class="list-wrapper">
@@ -51,19 +50,13 @@
 
                     </v-card>
                 </div>
-
-
-
-
-
-
-
             </div>
 
 
             <div v-show="boardContentVisible">
                 <TaskBoard
                         :tasks="tasks"
+                        :pages="pages"
                         style="height: 95vh;"></TaskBoard>
             </div>
 
@@ -101,6 +94,7 @@
 
 
             </div>
+
         </div>
 
 
@@ -134,6 +128,7 @@
                 projectDetails: [],
                 projectUsers: [],
                 recentTaskChanges: [],
+                pages: 0,
             }
         },
         methods: {
@@ -172,11 +167,9 @@
             },
         },
         created() {
-            console.log('??');
-            axios.get('http://localhost:8080/tasks/list-all-tasks-in-project/' + this.projectID).then(response => {
-                this.tasks = response.data;
-                console.log(this.tasks);
-            })
+
+            axios.get('http://localhost:8080/tasks/list-all-tasks-in-project/' + this.projectID).then(response => {this.tasks = response.data;});
+            axios.get('http://localhost:8080/tasks/get-number-of-tasks-by-their-status-for-project/'+ this.projectID).then(response=>{this.pages = Math.ceil(response.data/4)});
 
             axios.get('http://localhost:8080/projects/get-project-details/' + this.projectID).then(response => {
                 this.projectDetails = response.data;
@@ -185,8 +178,9 @@
 
             axios.get('http://localhost:8080/tasks/get-all-task-changes-for-project/' + this.projectID).then(response => {
                 this.recentTaskChanges = response.data;
-                console.log(this.recentTaskChanges);
             });
+
+
         }
     }
 </script>

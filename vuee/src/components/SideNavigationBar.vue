@@ -6,6 +6,7 @@
 
             class="sidenav"
             dark
+            tile
     >
         <v-navigation-drawer permanent>
             <div style="display: flex; width: 100%; height: auto; flex-direction: column">
@@ -16,15 +17,15 @@
 
             <v-divider></v-divider>
 
-            <v-list nav>
+            <v-list nav >
 
-                <v-list-item link @click="navigate('/board')">
+                <v-list-item link @click="navigate('/board')" >
                     <v-list-item-icon>
                         <v-icon>mdi-view-dashboard</v-icon>
                     </v-list-item-icon>
 
                     <v-list-item-content >
-                        <v-list-item-title>Board</v-list-item-title>
+                        <v-list-item-title >Board</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
@@ -143,7 +144,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        background-color: #111;
+
 
 
     }

@@ -1,5 +1,6 @@
 package pl.mkowsky.jirawannabedemo.services;
 
+import pl.mkowsky.jirawannabedemo.dto.BasicProjectDTO;
 import pl.mkowsky.jirawannabedemo.dto.ProjectCreationDTO;
 import pl.mkowsky.jirawannabedemo.model.Project;
 import pl.mkowsky.jirawannabedemo.model.User;
@@ -19,5 +20,5 @@ public interface ProjectService {
     List<Long> getAllProjectUsers(Long projectID);
     void createNewProject(ProjectCreationDTO projectCreationDTO);
 
-    List<Project> getProjectNameAndID();
+    List<BasicProjectDTO> getProjectNameAndID();
 }

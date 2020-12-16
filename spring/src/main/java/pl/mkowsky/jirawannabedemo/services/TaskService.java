@@ -22,5 +22,10 @@ public interface TaskService {
     void changeTaskUser(Long taskID, Long newUserID);
 
     List<Task> getAllProjectTasks(Long projectID);
+    List<BasicTaskInfoDTO> getBasicTaskInfo(Long userID);
+    List<BasicTaskInfoDTO> getBasicTaskInfoForProjectWithProjectID(Long projectID);
     List<BasicTaskInfoDTO> getBasicTaskInfo();
+    List<Long[]> getTaksLength();
+    List<Long[]> getTaksLength(Long userID);
+    List<Long[]> getTasksLengthForProjectWithProjectID(Long projectID);
 }

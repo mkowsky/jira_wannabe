@@ -6,7 +6,10 @@
 
 
         <div class="tasks-container">
-            <TaskBoard :tasks="tasks" style="width: 100%"></TaskBoard>
+            <TaskBoard :tasks="tasks"
+                       :projects="projects"
+                       :pages="pages"
+                       style="width: 100%"></TaskBoard>
 
         </div>
 
@@ -28,38 +31,18 @@
         components: {TaskBoard, SideNavigationBar},
         data() {
             return {
-                isPM: false,
-                user: Object,
-                tasks: [],
-            }
-        },
-        methods: {
 
+                tasks: [],
+                projects: [],
+                pages: 0,
+            }
         },
         created() {
-            //TODO: Moze jakies lepsze rozwiazanie?
-            this.user = JSON.parse(localStorage.getItem('user'));
-            console.log(this.user);
-            for (let i = 0; i < this.user.roles.length; i++) {
-                if ((this.user.roles[i] === "ROLE_PROJECT_MANAGER") || (this.user.roles[i] === "ROLE_ADMIN")) {
-                    this.isPM = true;
-                    break;
-                } else this.isPM = false;
-            }
-            if (this.isPM) {
-                console.log('get-all');
-                axios.get('http://localhost:8080/tasks/get-basic-tasks-info').then(response => {
-                    this.tasks = response.data;
-                    console.log(response.data)
-                })
-            } else {
-                console.log('get-user-tasks')
-                axios.get('http://localhost:8080/tasks/get-user-tasks/' + this.user.id).then(response => {
-                    this.tasks = response.data;
-                    console.log(response.data);
-                })
-
-            }
+            // //TODO: Moze jakies lepsze rozwiazanie?
+             let user = JSON.parse(localStorage.getItem('user'));
+            axios.get('http://localhost:8080/projects/get-project-name-and-id', {params:{userID:user.id}}).then(response =>{this.projects = response.data;});
+            axios.get('http://localhost:8080/tasks/get-number-of-tasks-by-their-status', {params:{userID:user.id}}).then(response=>{this.pages=Math.ceil(response.data/3)});
+            axios.get('http://localhost:8080/tasks/get-basic-tasks-info/' + user.id).then(response => {this.tasks = response.data});
         }
 
     }

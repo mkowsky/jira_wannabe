@@ -134,11 +134,64 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<BasicTaskInfoDTO> getBasicTaskInfo(Long userID) {
+        String searchQuery =
+                "SELECT name as taskName, state as taskState, task_priority as taskPriority," +
+                        " CONCAT(first_name, \" \", last_name) AS userFullName, task.id as taskID," +
+                        " user.id as userID, pictureurl as userPictureURL, project_name as projectName" +
+                        " from" +
+                        " task join user on task.user_id = user.id" +
+                        " join project on task.project_id = project.id where user.id = :userID";
+
+        Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
+        query.setParameter("userID", userID);
+        List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
+        return result;
+    }
+
+    @Override
     public List<BasicTaskInfoDTO> getBasicTaskInfo() {
-        String searchQuery = "SELECT name as taskName, state as taskState, task_priority as taskPriority, CONCAT(first_name, \" \", last_name) AS userFullName, task.id as taskID, user.id as userID, pictureurl as userPictureURL, project_name as projectName from task join user on task.user_id = user.id join project on task.project_id = project.id";
+        String searchQuery =
+                "SELECT name as taskName, state as taskState, task_priority as taskPriority," +
+                        " CONCAT(first_name, \" \", last_name) AS userFullName, task.id as taskID," +
+                        " user.id as userID, pictureurl as userPictureURL, project_name as projectName" +
+                        " from" +
+                        " task join user on task.user_id = user.id" +
+                        " join project on task.project_id = project.id";
+
         Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
         List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
         return result;
     }
 
+    @Override
+    public List<BasicTaskInfoDTO> getBasicTaskInfoForProjectWithProjectID(Long projectID) {
+        String searchQuery =
+                " SELECT name as taskName, state as taskState, task_priority as taskPriority,\n" +
+                        "                         CONCAT(first_name,\" \", last_name) AS userFullName, task.id as taskID,\n" +
+                        "                         user.id as userID, pictureurl as userPictureURL, project_name as projectName\n" +
+                        "                         from\n" +
+                        "                        task join user on task.user_id = user.id\n" +
+                        "                         join project on task.project_id = project.id where project.id = :projectID";
+
+        Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
+        query.setParameter("projectID", projectID);
+        List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
+        return result;
+    }
+
+    @Override
+    public List<Long[]> getTaksLength() {
+        return taskRepository.getTasksLength();
+    }
+
+    @Override
+    public List<Long[]> getTaksLength(Long userID) {
+        return taskRepository.getTasksLength(userID);
+    }
+
+    @Override
+    public List<Long[]> getTasksLengthForProjectWithProjectID(Long projectID) {
+        return taskRepository.getTasksLengthForProjectWithProjectID(projectID);
+    }
 }
