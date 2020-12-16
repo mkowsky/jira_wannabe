@@ -41,8 +41,13 @@ public class UserController {
     @GetMapping(value = "/get-user-personal-data/{userID}")
     PersonalDataDTO getUserPersonalData(@PathVariable("userID") Long userID){
         User user = userService.getUserById(userID);
-        PersonalDataDTO personalDataDTO = new PersonalDataDTO(userID, user.getFirstName(), user.getLastName(), user.getFirstName() + " " + user.getLastName());
-        System.out.println(personalDataDTO.getFullName());
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(
+                userID,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getFirstName() + " " + user.getLastName(),
+                user.getPictureURL());
+        System.out.println(user.getPictureURL());
         return personalDataDTO;
     }
 

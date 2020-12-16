@@ -9,6 +9,7 @@ public class PersonalDataDTO {
     private String firstName;
     private String lastName;
     private String fullName;
+    private String pictureURL;
 
     public PersonalDataDTO(){
 
@@ -25,11 +26,24 @@ public class PersonalDataDTO {
         this.lastName = lastName;
     }
 
-    public PersonalDataDTO(Long id, String firstName, String lastName, String fullName) {
+    public PersonalDataDTO(Long id, String firstName, String lastName, String fullName, String pictureURL) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.fullName = fullName;
+        this.pictureURL = pictureURL;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 
     public Long getId() {
