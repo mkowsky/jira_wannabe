@@ -3,6 +3,7 @@ package pl.mkowsky.jirawannabedemo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
 import pl.mkowsky.jirawannabedemo.model.Issue;
 
 import pl.mkowsky.jirawannabedemo.repository.IssueRepository;
@@ -29,11 +30,12 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public void newIssueReported(Long taskID, String issueDescription) {
+    public void newIssueReported(Long taskID, String issueDescription, EIssue issueType) {
         Issue issue = new Issue(issueDescription,
+                issueType,
                 taskRepository.getTaskById(taskID),
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         issueRepository.save(issue);
-        taskStatusService.newTaskIssue(issueDescription, taskRepository.getTaskById(taskID));
+        taskStatusService.newTaskIssue(issue, taskRepository.getTaskById(taskID));
     }
 }

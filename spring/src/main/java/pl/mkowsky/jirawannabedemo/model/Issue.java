@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +18,9 @@ public class Issue {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private EIssue issueType;
+
     @ManyToOne
     @JsonIgnore
     private Task task;
@@ -28,8 +32,9 @@ public class Issue {
     public Issue(){
     }
 
-    public Issue(String description, Task task, LocalDateTime issueDate) {
+    public Issue(String description, EIssue issueType, Task task, LocalDateTime issueDate) {
         this.description = description;
+        this.issueType = issueType;
         this.task = task;
         this.issueDate = issueDate;
     }
@@ -64,5 +69,13 @@ public class Issue {
 
     public void setIssueDate(LocalDateTime issueDate) {
         this.issueDate = issueDate;
+    }
+
+    public EIssue getIssueType() {
+        return issueType;
+    }
+
+    public void setIssueType(EIssue issueType) {
+        this.issueType = issueType;
     }
 }

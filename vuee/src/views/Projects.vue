@@ -9,7 +9,7 @@
                 <div style="left: 10%; top: 5%; display: flex;  position: relative; z-index: 25;">
 
                     <div>
-                        <div class="project-title">Spacex project future exploration</div>
+                        <div class="projects-title"></div>
                         <div class="project-subtitle">Lorem Ipsum is simply dummy text of the printing and typesetting
                             industry.
                             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
@@ -88,6 +88,8 @@
                 document.getElementById(index).style.opacity = '1.0';
                 document.getElementById(index).style.transform = 'scale(1.2)';
                 this.currentProject = this.projects.find(project => project.id === projectID);
+
+                document.querySelector('.projects-title').innerHTML = this.currentProject.projectName;
                 this.previousCard = index;
 
             },
@@ -131,6 +133,7 @@
                     this.projects = response.data;
                     console.log(response.data);
                     this.currentProject = this.projects[0];
+                    document.querySelector('.projects-title').innerHTML = this.currentProject.projectName;
                 })
 
             } else {
@@ -139,6 +142,7 @@
                 axios.get('http://localhost:8080/projects/get-all-user-projects/' + user.id).then(response => {
                     this.projects = response.data;
                     this.currentProject = this.projects[0];
+                    document.querySelector('.projects-title').innerHTML = this.currentProject.projectName;
                 })
             }
 
@@ -190,13 +194,12 @@
     }
 
 
-    .project-title {
+    .projects-title {
         position: relative;
         color: white;
         font-size: 50px;
         letter-spacing: 3px;
         max-width: 500px;
-        transition: 1s;
 
 
     }
@@ -220,6 +223,19 @@
 
     .card-active {
 
+    }
+
+    .fade-in{
+        animation: fadeIn 300ms
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
 

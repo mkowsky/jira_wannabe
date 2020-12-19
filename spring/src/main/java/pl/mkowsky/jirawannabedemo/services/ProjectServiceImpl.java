@@ -71,4 +71,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<BasicProjectDTO> result = (List<BasicProjectDTO>) query.list();
         return result;
     }
+
+
 }

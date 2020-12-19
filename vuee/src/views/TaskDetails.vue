@@ -2,12 +2,10 @@
     <div class="task-details-container">
         <side-navigation-bar></side-navigation-bar>
         <div class="task-details-content">
-            <v-tabs @change="changeContent($event)" grow color="rgba(235, 182, 193, 1)">
-                <v-tab>General</v-tab>
-                <v-tab>Task timeline</v-tab>
-                <v-tab>?????</v-tab>
-                <v-tab>Task comments</v-tab>
-
+            <v-tabs @change="changeContent($event)" grow color="rgba(235, 182, 193, 1)" >
+                <v-tab style="font-size: 24px;">General</v-tab>
+                <v-tab style="font-size: 24px;">Task timeline</v-tab>
+                <v-tab style="font-size: 24px;">?????</v-tab>
             </v-tabs>
 
 
@@ -21,42 +19,16 @@
                     <expansion-panel :panel-title="'Task actions'" :expanded="0">
                         <template slot="content">
                             <div style="display: flex; justify-content: space-evenly">
-                                <v-btn @click="changeStateVisible = true">CHANGE STATE</v-btn>
-                                <v-btn @click="passTaskVisible = true">PASS TO SOMEONE ELSE</v-btn>
-
+                                <v-btn @click="changeStateVisible = true" v-if="changeStatePossible">CHANGE STATE
+                                </v-btn>
+                                <v-btn @click="startPassTaskProcess()">PASS TO SOMEONE ELSE</v-btn>
+                                <v-btn @click="issueReportVisible = true">REPORT AN ISSUE</v-btn>
+                                <v-btn @click="changeDeadlineVisible = true">CHANGE DEADLINE</v-btn>
                             </div>
                         </template>
                     </expansion-panel>
-
-
                 </div>
-            </div>
 
-
-            <div class="task-timeline-flex-container" v-show="timelineVisible">
-                <div class="task-timeline">
-                    <div class="task-timeline-item">
-                        <v-timeline>
-                            <status-change-item v-for="change in taskChanges"
-                                                :key="change.id"
-                                                :change-date="change.changeDate"
-                                                :change-description="change.changeDescription"
-                                                :change-type="change.changeType">
-                            </status-change-item>
-                        </v-timeline>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="code-flex-container" v-show="usersVisible">
-          ?????
-
-
-            </div>
-
-
-            <div class="task-users-flex-container" v-show="commentsVisible">
                 <div>
                     <v-text-field
                             label="Write a comment"
@@ -86,9 +58,57 @@
 
                     </div>
                 </div>
+            </div>
+
+
+            <div style="height: 95%;" v-show="timelineVisible">
+
+                <div style="width: 100%; height: 100%;display: flex;">
+
+
+                    <div style="display: flex; flex-direction: column; justify-content: flex-end; width: 60%; padding: 20px;">
+                        <div class="task-timeline-item">
+                            <v-timeline>
+                                <status-change-item v-for="change in taskChanges"
+                                                    :key="change.id"
+                                                    :change-date="change.changeDate"
+                                                    :change-description="change.changeDescription"
+                                                    :change-type="change.changeType">
+                                </status-change-item>
+                            </v-timeline>
+                        </div>
+                    </div>
+
+                    <div style="width: 40%; padding: 10px; display: flex; flex-direction: column;; margin-top: 50px;">
+                        <div class="claim"
+                             style="font-size: 44px; font-weight: 800; align-self: center; font-family: Roboto, monospace">
+                            Track task changes!
+                        </div>
+
+                        <div class="subclaim"
+                             style="font-size: 26px; font-weight: 200; width: 400px; align-self: center">
+                            <span style="font-weight: 400">Task timeline</span> is a palce where you can check <span
+                                style="font-weight: 400">all previous</span> task <span
+                                style="font-weight: 400">changes</span>
+                            with their exact dates and time. This helps you to <span style="font-weight: 400">track all the proces</span>
+                            from
+                            task creation to its end!
+                        </div>
+
+                        <img src="../assets/timeline.svg" style="width: 90%; margin-top: 40px; align-self: flex-end">
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="code-flex-container" v-show="usersVisible">
+                ?????
 
 
             </div>
+
+
         </div>
 
 
@@ -102,16 +122,15 @@
                 <v-select solo dense label="CHOSE PERSON" :items="projectUsers" v-model="passPerson">
                     <template slot="selection" slot-scope="data">
                         <!-- HTML that describe how select should render selected items -->
-                        {{ data.item.firstName }} {{ data.item.lastName }}
+                        {{ data.item.fullName }}
                     </template>
                     <template slot="item" slot-scope="data">
-                        {{ data.item.firstName }} {{ data.item.lastName }}
+                        {{ data.item.fullName }}
                     </template>
 
                 </v-select>
             </template>
         </Modal>
-
         <Modal :dialog="changeStateVisible"
                :dialog-title="'Change task status'"
                :dialog-content="'Change current task status. All changes will be visible in task timeline tab.'"
@@ -121,6 +140,29 @@
             <template slot="body">
                 <label>TASK STATE</label>
                 <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
+            </template>
+        </Modal>
+        <Modal :dialog="issueReportVisible"
+               :dialog-title="'Issue report'"
+               :dialog-content="'Please provide us with issue type and short descripiton for issue you have faced.'"
+               @modal-agree="reportIssue()"
+               @modal-cancel="cancelIssue()"
+        >
+            <template slot="body">
+                <v-select solo label="Issue type" :items="issueType" v-model="issType"></v-select>
+                <v-textarea solo label="Issue description" v-model="issueDescription"></v-textarea>
+            </template>
+        </Modal>
+        <Modal :dialog="changeDeadlineVisible"
+               :dialog-title="'Change task deadline'"
+               :dialog-content="'Choose new task deadline from calendar below.'"
+               @modal-cancel="cancelDeadlineChange()"
+               @modal-agree="newDeadline()"
+        >
+            <template slot="body">
+                <v-date-picker v-model="newTaskDeadline"
+                               color="rgba(225, 182, 193)"
+                               :min="currentDate"></v-date-picker>
             </template>
         </Modal>
 
@@ -157,15 +199,6 @@
     import GeneralTaskInfo from "@/components/GeneralTaskInfo";
     import SideNavigationBar from "@/components/SideNavigationBar";
 
-
-    //import {PrismEditor} from "vue-prism-editor";
-    import "vue-prism-editor/dist/prismeditor.min.css"; // import the styles somewhere
-
-    // import highlighting library (you can use any library you want just return html string)
-    import {highlight, languages} from "prismjs/components/prism-core";
-    import "prismjs/components/prism-clike";
-    import "prismjs/components/prism-javascript";
-    import "prismjs/themes/prism-tomorrow.css"; // import syntax highlighting styles
     export default {
         name: "TaskDetails",
         components: {SideNavigationBar, GeneralTaskInfo, Modal, StatusChangeItem, Comment, ExpansionPanel,},
@@ -177,76 +210,47 @@
         },
         data() {
             return {
-                issueDescription: '',
-                code: 'console.log("Hello World")',
-                lineNumbers: true,
-                codeChange: '',
-                passPerson: "",
-                projectUsers: [],
+                generalInfoVisible: true,
+                timelineVisible: false,
+                usersVisible: false,
+
                 states: [],
                 newState: "",
+
+                passPerson: "",
+                projectUsers: [],
+
+                issueReportVisible: false,
+                issueType: ["DESCRIPTION", "DEADLINE", "OTHERS"],
+                issType: '',
+
                 currentUserID: "",
                 comments: [],
                 currentTask: [],
                 commentValue: "",
                 taskChanges: [],
-                tabNumber: 0,
-                generalInfoVisible: true,
-                timelineVisible: false,
-                usersVisible: false,
-                commentsVisible: false,
 
-                applyCodeVisible: false,
+
                 changeStateVisible: false,
+                changeStatePossible: true,
 
                 showOverlay: false,
                 taskStatusChanged: false,
-                issueReportVisible: false,
+
 
                 passTaskVisible: false,
+
+                changeDeadlineVisible: false,
+                newTaskDeadline: '',
+                currentDate: this.$moment().format("YYYY-MM-DD"),
             }
         },
         methods: {
-            reportIssue() {
-                axios.post('http://localhost:8080/tasks/report-new-issue-for-task', null, {
-                    params: {
-                        taskID: this.currentTask.id,
-                        issueDescription: this.issueDescription,
-                    }
-                }).then(response => {
-                    console.log(response.status);
-                    this.issueReportVisible = false;
-                    this.getTask();
-                });
-
-            },
-            cancelIssue() {
-                this.issueDescription = '';
-                this.issueReportVisible = false;
-            },
-            cancelCodeChange() {
-                this.code = 'console.log("Hello World")',
-                    this.applyCodeVisible = false;
-            },
-            applyCodeChange() {
-                this.code = this.codeChange;
-                this.applyCodeVisible = false;
-            },
-            applyCode(code) {
-                console.log(code.split(/\r\n|\r|\n/).length)
-            },
-            highlighter(code) {
-                return highlight(code, languages.js);
-            },
-            changeContent(event) {
-
-                console.log(event)
-                this.tabNumber = event;
+            changeContent(tabNumber) {
                 this.generalInfoVisible = false;
                 this.timelineVisible = false;
                 this.usersVisible = false;
-                this.commentsVisible = false;
-                switch (this.tabNumber) {
+                switch (tabNumber) {
                     case 0:
                         this.generalInfoVisible = true;
                         break;
@@ -256,11 +260,12 @@
                     case 2:
                         this.usersVisible = true;
                         break;
-                    case 3:
-                        this.commentsVisible = true;
-                        break;
                 }
             },
+            navigateToUserProfile(event) {
+                this.$router.push({name: 'profileDetails', params: {userID: event.id}})
+            },
+
             changeTaskState() {
                 this.changeStateVisible = false;
                 this.showOverlay = true;
@@ -269,10 +274,7 @@
                         newState: this.newState,
                         taskID: this.currentTask.id
                     }
-                }).then(response => {
-                    console.log(response.status);
-                    this.getTask();
-                });
+                }).then(this.getTask());
                 this.newState = "";
             },
             cancelPass() {
@@ -283,7 +285,8 @@
                 axios.post('http://localhost:8080/tasks/change-task-person', null, {
                     params: {
                         taskID: this.currentTask.id,
-                        newTaskUser: this.passPerson.id
+                        newTaskUser: this.passPerson.id,
+                        previousTaskUser: this.currentUserID
                     }
                 }).then(response => {
                     console.log(response.status);
@@ -296,17 +299,7 @@
                 this.changeStateVisible = false;
                 this.newState = "";
             },
-            closeTaskDetails() {
-                //TODO: tutaj jakos powrot do proejktu ogaranc
-                // this.$router.push({name: 'projectDetails', params:{projectID: this.currentTask.projectID}})
-            },
-            navigateTo(value) {
-                this.$router.push({name: 'profileDetails', params: {userID: value}})
-            },
-            navigateToUserProfile(value) {
-                console.log(value);
-                this.$router.push({name: 'profileDetails', params: {userID: value}})
-            },
+
             submitNewComment() {
                 axios.post('http://localhost:8080/comments/new-comment', {
                     userID: this.currentUserID,
@@ -321,7 +314,6 @@
                         this.currentTask = response.data;
                         this.comments = this.currentTask.comments;
                         this.comments.reverse();
-
                     })
                 })
                 this.commentValue = "";
@@ -362,15 +354,15 @@
                 switch (this.currentTask.state) {
                     case "TO_DO":
                         this.states = ["IN_PROGRESS", "CODE_REVIEW", "DONE"]
-                        console.log('to do')
                         break;
                     case "IN_PROGRESS":
                         this.states = ["CODE_REVIEW", "DONE"];
-                        console.log('2');
                         break;
                     case "CODE_REVIEW":
                         this.states = ["DONE"];
-                        console.log('3');
+                        break;
+                    case "DONE":
+                        this.changeStatePossible = false;
                         break;
                 }
 
@@ -380,22 +372,64 @@
                     if (this.projectUsers[i].id === this.currentUserID) {
                         this.projectUsers.splice(i, 1);
                     }
+                    if (this.projectUsers[i].id === this.currentTask.user.id) {
+                        this.projectUsers.splice(i, 1);
+                    }
                 }
             },
-
+            startPassTaskProcess() {
+                axios.get('http://localhost:8080/tasks/get-all-project-members/' + this.currentTask.id).then(response => {
+                    this.projectUsers = response.data;
+                    this.prepareProjectUsers();
+                    this.passTaskVisible = true;
+                })
+            },
+            cancelIssue() {
+                this.issueDescription = '';
+                this.issueReportVisible = false;
+            },
+            reportIssue() {
+                axios.post('http://localhost:8080/tasks/report-new-issue-for-task', null, {
+                    params: {
+                        taskID: this.currentTask.id,
+                        issueDescription: this.issueDescription,
+                        issueType: this.issType,
+                    }
+                }).then(response => {
+                    console.log(response.status);
+                    this.issueReportVisible = false;
+                    this.getTask();
+                });
+            },
+            cancelDeadlineChange() {
+                this.newTaskDeadline = '',
+                    this.changeDeadlineVisible = false;
+            },
+            newDeadline() {
+                axios.post('http://localhost:8080/tasks/change-task-deadline', null, {
+                    params: {
+                        newTaskDeadline: this.newTaskDeadline,
+                        taskID: this.currentTask.id
+                    }
+                }).then(response => {
+                    console.log(response.status);
+                    this.changeDeadlineVisible = false;
+                    this.newTaskDeadline = '';
+                    this.getTask()
+                });
+            }
         },
         created() {
             let user = JSON.parse(localStorage.getItem('user'));
-            this.currentUserID = user.id
+            this.currentUserID = user.id;
             axios.get('http://localhost:8080/tasks/get-task/' + this.taskID).then(response => {
                 this.currentTask = response.data;
+                console.log(this.currentTask);
                 this.comments = this.currentTask.comments;
                 this.taskChanges = this.currentTask.taskChanges;
                 this.taskChanges.reverse();
                 this.comments.reverse();
-                this.projectUsers = this.currentTask.project.projectUsers;
                 this.checkStates();
-                this.prepareProjectUsers();
             })
 
         },
@@ -461,18 +495,19 @@
 
         height: 95%;
         display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
+
 
     }
 
     .task-timeline {
+        background: darkred;
         display: flex;
         justify-content: center;
+        width: 50%;
     }
 
     .task-timeline-item {
-        width: 50%;
+        width: 100%;
         align-self: center;
     }
 

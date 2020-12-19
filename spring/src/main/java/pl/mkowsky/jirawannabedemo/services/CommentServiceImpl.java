@@ -19,12 +19,16 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private UserRepository userRepository;
     private TaskRepository taskRepository;
+    private TaskStatusService taskStatusService;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, TaskRepository taskRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, TaskRepository taskRepository,
+                              TaskStatusService taskStatusService) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.taskStatusService = taskStatusService;
+
     }
 
     @Override
@@ -58,12 +62,14 @@ public class CommentServiceImpl implements CommentService {
         taskRepository.save(task);
          */
         // II SPOSOB
+        Task task = taskRepository.getTaskById(commentDTO.getTaskID());
         Comment comment = new Comment(commentDTO.getComment(),
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
                 userRepository.findUserById(commentDTO.getUserID()),
-                taskRepository.getTaskById(commentDTO.getTaskID()));
+               task);
 
         saveNewComment(comment);
+        taskStatusService.newCommentForTask(task, comment);
     }
 
 

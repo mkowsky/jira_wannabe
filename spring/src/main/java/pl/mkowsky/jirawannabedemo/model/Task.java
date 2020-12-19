@@ -1,12 +1,11 @@
 package pl.mkowsky.jirawannabedemo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import pl.mkowsky.jirawannabedemo.dictionary.EDepartment;
+import pl.mkowsky.jirawannabedemo.dictionary.EPriority;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +46,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private EDepartment department;
 
-    private int taskPriority;
+    @Enumerated(EnumType.STRING)
+    private EPriority taskPriority;
 
     @OneToMany(mappedBy = "task",
             cascade = CascadeType.ALL,
@@ -77,7 +77,7 @@ public class Task {
     }
 
     public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, User users
-            , EDepartment department, int taskPriority, Project project) {
+            , EDepartment department, EPriority taskPriority, Project project) {
         this.taskID = taskID;
         this.name = name;
         this.createdDate = createdDate;
@@ -205,11 +205,11 @@ public class Task {
         this.department = department;
     }
 
-    public int getTaskPriority() {
+    public EPriority getTaskPriority() {
         return taskPriority;
     }
 
-    public void setTaskPriority(int taskPriority) {
+    public void setTaskPriority(EPriority taskPriority) {
         this.taskPriority = taskPriority;
     }
 

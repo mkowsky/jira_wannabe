@@ -178,10 +178,10 @@
 
                 queryPriorityName: '',
                 priorities: [
-                    {value: 1, name: "ABLE TO WAIT"},
-                    {value: 2, name: "IMPORTANT"},
-                    {value: 3, name: "URGENT"},
-                    {value: 4, name: 'IMMEDIATE'},
+                    {value: "ABLE_TO_WAIT", name: "ABLE TO WAIT"},
+                    {value: "IMPORTANT", name: "IMPORTANT"},
+                    {value: "URGENT", name: "URGENT"},
+                    {value: "IMMEDIATE", name: 'IMMEDIATE'},
                 ],
             }
         },
@@ -234,10 +234,10 @@
                 })
                 if ((this.queryPriority) && (this.query) && (this.queryProject)) {
                     return this.paginate(filteredTasks.filter((task) => ((task.taskName.toLowerCase().includes(this.query.toLowerCase()))
-                        && (task.taskPriority === (this.queryPriority))
+                        && (task.taskPriority.includes(this.queryPriority))
                         && (task.projectName.toLowerCase().includes(this.queryProject.toLowerCase())))), 3, this.page);
                 } else if ((this.queryPriority) && (this.query) && !(this.queryProject)) {
-                    return this.paginate(filteredTasks.filter((task) => ((task.taskName.toLowerCase().includes(this.query.toLowerCase())) && (task.taskPriority === (this.queryPriority)))), 3, this.page);
+                    return this.paginate(filteredTasks.filter((task) => ((task.taskName.toLowerCase().includes(this.query.toLowerCase())) && (task.taskPriority.includes(this.queryPriority)))), 3, this.page);
                 } else if ((this.queryPriority) && (this.queryProject) && !(this.query)) {
                     return this.paginate(filteredTasks.filter((task) => ((task.projectName.toLowerCase().includes(this.queryProject.toLowerCase())) && (task.taskPriority === (this.queryPriority)))), 3, this.page);
                 } else if ((this.query) && (this.queryProject) && !(this.queryPriority)) {
@@ -246,7 +246,7 @@
                 } else if (this.query) {
                     return this.paginate(filteredTasks.filter((task) => task.taskName.toLowerCase().includes(this.query.toLowerCase())), 3, this.page);
                 } else if (this.queryPriority) {
-                    return this.paginate(filteredTasks.filter((task) => task.taskPriority === (this.queryPriority)), 3, this.page);
+                    return this.paginate(filteredTasks.filter((task) => task.taskPriority.includes(this.queryPriority)), 3, this.page);
                 } else if (this.queryProject) {
                     return this.paginate(filteredTasks.filter((task) => task.projectName.toLowerCase().includes(this.queryProject.toLowerCase())), 3, this.page);
                 } else if (!(this.queryPriority) && !(this.query) && !(this.queryProject)) {

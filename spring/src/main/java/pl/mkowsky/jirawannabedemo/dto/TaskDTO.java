@@ -1,16 +1,16 @@
 package pl.mkowsky.jirawannabedemo.dto;
 
 import pl.mkowsky.jirawannabedemo.dictionary.EDepartment;
+import pl.mkowsky.jirawannabedemo.dictionary.EPriority;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 
 
 import java.util.Date;
-import java.util.List;
 
 public class TaskDTO {
 
     private Long taskManagerID;
-    private int taskPriority;
+    private EPriority taskPriority;
     private EDepartment department;
     private String taskTitle;
     private String taskDescription;
@@ -41,11 +41,11 @@ public class TaskDTO {
         this.taskManagerID = taskManagerID;
     }
 
-    public int getTaskPriority() {
+    public EPriority getTaskPriority() {
         return taskPriority;
     }
 
-    public void setTaskPriority(int taskPriority) {
+    public void setTaskPriority(EPriority taskPriority) {
         this.taskPriority = taskPriority;
     }
 

@@ -1,9 +1,5 @@
 package pl.mkowsky.jirawannabedemo.dto;
 
-import pl.mkowsky.jirawannabedemo.dictionary.EState;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.math.BigInteger;
 
 public class BasicTaskInfoDTO {
@@ -14,7 +10,7 @@ public class BasicTaskInfoDTO {
     private String userFullName;
     private String taskName;
     private String taskState;
-    private int taskPriority;
+    private String taskPriority;
     private String userPictureURL;
 
     public Long getTaskID() {
@@ -65,11 +61,11 @@ public class BasicTaskInfoDTO {
         this.taskState = taskState;
     }
 
-    public int getTaskPriority() {
+    public String getTaskPriority() {
         return taskPriority;
     }
 
-    public void setTaskPriority(int taskPriority) {
+    public void setTaskPriority(String taskPriority) {
         this.taskPriority = taskPriority;
     }
 

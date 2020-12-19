@@ -14,7 +14,6 @@ public interface ProjectService {
     Project findProjectByID(Long projectID);
     List<Project> getAllProjcets();
 
-
     void save(Project proejct);
 
     List<Long> getAllProjectUsers(Long projectID);

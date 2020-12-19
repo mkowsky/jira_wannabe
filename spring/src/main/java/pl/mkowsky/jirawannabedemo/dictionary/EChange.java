@@ -5,6 +5,7 @@ public enum EChange {
     TASK_CREATED,   
     TASK_STATUS_CHANGED,
     TASK_USERS,
-    TASK_DESCRIPITON,
-    TASK_DATE,
+    TASK_DEADLINE,
+    TASK_ISSUE,
+    TASK_COMMENT,
 }

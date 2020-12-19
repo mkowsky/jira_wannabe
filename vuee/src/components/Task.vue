@@ -48,16 +48,16 @@
         methods: {
             checkPriority() {
                 switch (this.priority) {
-                    case 1:
+                    case 'ABLE_TO_WAIT':
                         this.color = 'green';
                         break;
-                    case 2:
+                    case 'IMPORTANT':
                         this.color = 'orange'
                         break;
-                    case 3:
+                    case 'URGENT':
                         this.color = 'gold';
                         break;
-                    case 4:
+                    case 'IMMEDIATE':
                         this.color = '#AD1457';
                         break;
                 }

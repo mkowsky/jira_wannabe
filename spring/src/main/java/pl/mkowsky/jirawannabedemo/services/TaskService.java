@@ -5,6 +5,7 @@ import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TaskService {
@@ -19,7 +20,8 @@ public interface TaskService {
     void deleteTask(Long taskID);
 
     void changeTaskState(Long taskID, EState newState);
-    void changeTaskUser(Long taskID, Long newUserID);
+    void changeTaskUser(Long taskID, Long newUserID, Long previousTaskUser);
+    void changeTaskDeadline(Long taskID, String newDeadline);
 
     List<Task> getAllProjectTasks(Long projectID);
     List<BasicTaskInfoDTO> getBasicTaskInfo(Long userID);

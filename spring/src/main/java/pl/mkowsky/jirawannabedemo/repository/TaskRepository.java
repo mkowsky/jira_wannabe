@@ -17,7 +17,6 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     Task getTaskById(Long taskID);
 
-
     @Transactional
     @Query(value = "SELECT * FROM task where project_id = :projectID", nativeQuery = true)
     List<Task> getTasksForProject(@Param("projectID") Long projectID);

@@ -15,7 +15,6 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Project findProjectById(Long projectID);
-
     @Query(value = "SELECT user_id FROM  projects_users where project_id = :projectID", nativeQuery = true)
     List<Long> getAllProjectUsers(@Param("projectID") Long projectID);
 

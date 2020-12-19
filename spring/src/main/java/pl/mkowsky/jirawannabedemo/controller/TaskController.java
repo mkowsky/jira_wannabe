@@ -3,16 +3,17 @@ package pl.mkowsky.jirawannabedemo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
+import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
-import pl.mkowsky.jirawannabedemo.services.IssueService;
-import pl.mkowsky.jirawannabedemo.services.TaskService;
-import pl.mkowsky.jirawannabedemo.services.TaskStatusService;
-import pl.mkowsky.jirawannabedemo.services.UserService;
+import pl.mkowsky.jirawannabedemo.services.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,13 +25,15 @@ public class TaskController {
     private UserService userService;
     private IssueService issueService;
     private TaskStatusService taskStatusService;
+    private ProjectService projectService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, IssueService issueService, TaskStatusService taskStatusService) {
+    public TaskController(TaskService taskService, UserService userService, IssueService issueService, TaskStatusService taskStatusService, ProjectService projectService) {
         this.taskService = taskService;
         this.userService = userService;
         this.issueService = issueService;
         this.taskStatusService = taskStatusService;
+        this.projectService = projectService;
     }
 
     @GetMapping(value = "/list-all")
@@ -62,9 +65,6 @@ public class TaskController {
     }
 
 
-
-
-
     @GetMapping(value = "/user/{userID}/to-task/{taskID}")
     private void addUserToTask(@PathVariable("userID") Long userID,
                                @PathVariable("taskID") Long taskID) {
@@ -83,22 +83,30 @@ public class TaskController {
     @PostMapping(value = "/change-task-state")
     private ResponseEntity<?> changeTaskState(@RequestParam("taskID") Long taskID,
                                               @RequestParam("newState") EState newState) {
-        System.out.println(taskID);
-        System.out.println(newState);
         taskService.changeTaskState(taskID, newState);
-
         return ResponseEntity.ok("Status changed");
     }
 
     @PostMapping(value = "/change-task-person")
-    private ResponseEntity<?> changeTaskPerson(@RequestParam("taskID") Long taskID, @RequestParam("newTaskUser") Long newTaskUserID) {
-        taskService.changeTaskUser(taskID, newTaskUserID);
+    private ResponseEntity<?> changeTaskPerson(@RequestParam("taskID") Long taskID,
+                                               @RequestParam("newTaskUser") Long newTaskUserID,
+                                                @RequestParam("previousTaskUser") Long previousTaskUser) {
+        taskService.changeTaskUser(taskID, newTaskUserID, previousTaskUser);
         return ResponseEntity.ok("Task user changed");
     }
 
+    @PostMapping(value = "/change-task-deadline")
+    private ResponseEntity<?> changeTaskDeadline(@RequestParam("taskID") Long taskID,
+                                                 @RequestParam("newTaskDeadline")String newDeadline){
+        taskService.changeTaskDeadline(taskID, newDeadline);
+        return ResponseEntity.ok("Task deadline changed.");
+    }
+
     @PostMapping(value = "/report-new-issue-for-task")
-    private ResponseEntity<?> reportNewIssueForTask(@RequestParam("taskID") Long taskID, @RequestParam("issueDescription") String issueDescription) {
-        issueService.newIssueReported(taskID, issueDescription);
+    private ResponseEntity<?> reportNewIssueForTask(@RequestParam("taskID") Long taskID,
+                                                    @RequestParam("issueDescription") String issueDescription,
+                                                    @RequestParam("issueType") EIssue issueType) {
+        issueService.newIssueReported(taskID, issueDescription, issueType);
         return ResponseEntity.ok("Issue has been reported.");
     }
 
@@ -116,7 +124,7 @@ public class TaskController {
     @GetMapping(value = "/get-basic-tasks-info/{userID}")
     private List<BasicTaskInfoDTO> getBasicTaskInfo(@PathVariable("userID") Long userID) {
         User user = userService.getUserById(userID);
-        if(user.checkIfProjectManager()){
+        if (user.checkIfProjectManager()) {
             return taskService.getBasicTaskInfo();
         } else {
             return taskService.getBasicTaskInfo(userID);
@@ -147,15 +155,28 @@ public class TaskController {
         }
         return maxLength;
     }
+
     @GetMapping(value = "/get-number-of-tasks-by-their-status-for-project/{projectID}")
-    private int getNumberOfTasksByTheirStatusForProjectWitID(@PathVariable("projectID") Long projectID){
+    private int getNumberOfTasksByTheirStatusForProjectWitID(@PathVariable("projectID") Long projectID) {
         int maxLength = 0;
-        for(int i =0; i < taskService.getTasksLengthForProjectWithProjectID(projectID).get(0).length; i++){
-            if(taskService.getTasksLengthForProjectWithProjectID(projectID).get(0)[i] > maxLength){
+        for (int i = 0; i < taskService.getTasksLengthForProjectWithProjectID(projectID).get(0).length; i++) {
+            if (taskService.getTasksLengthForProjectWithProjectID(projectID).get(0)[i] > maxLength) {
                 maxLength = taskService.getTasksLengthForProjectWithProjectID(projectID).get(0)[i].intValue();
             }
         }
         return maxLength;
+    }
+
+    @GetMapping(value = "/get-all-project-members/{taskID}")
+    List<PersonalDataDTO> getAllProjectMembersBasedOnTaskID(@PathVariable("taskID") Long taskID) {
+        Task task = taskService.getTaskById(taskID);
+        List<User> users = task.getProject().getProjectUsers();
+        List<PersonalDataDTO> projectUsers = new ArrayList<>();
+        for (User user : users) {
+            projectUsers.add(new PersonalDataDTO(user.getId(), user.getFirstName() + " " + user.getLastName()));
+        }
+
+        return projectUsers;
     }
 
 

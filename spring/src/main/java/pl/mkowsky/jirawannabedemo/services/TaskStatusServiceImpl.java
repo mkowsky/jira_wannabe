@@ -8,9 +8,7 @@ import pl.mkowsky.jirawannabedemo.dictionary.EChange;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskStatusDTO;
-import pl.mkowsky.jirawannabedemo.model.Task;
-import pl.mkowsky.jirawannabedemo.model.TaskStatusChange;
-import pl.mkowsky.jirawannabedemo.model.User;
+import pl.mkowsky.jirawannabedemo.model.*;
 import pl.mkowsky.jirawannabedemo.repository.TaskStatusRepository;
 
 import javax.persistence.EntityManager;
@@ -57,9 +55,10 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public void taskUserChanged(User user, Task task) {
+    public void taskUserChanged(User user, Task task, User previousUser) {
         TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_USERS,
-                "Task has been passed to " + user.getFirstName() + " " + user.getLastName(),
+                "Task has been passed from " + previousUser.getFirstName() + " " + previousUser.getLastName()
+                        + " to "  + user.getFirstName() + " " + user.getLastName(),
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
                 task);
 
@@ -67,9 +66,29 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     }
 
     @Override
-    public void newTaskIssue(String issueDescription, Task task) {
-        TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_USERS,
-                "New issue has been reported with description: " + issueDescription,
+    public void newTaskIssue(Issue issue, Task task) {
+        TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_ISSUE,
+                "New issue has been reported with type " + issue.getIssueType() + " with description: " + issue.getDescription()
+                + " by " + task.getUser().getFirstName() + " " + task.getUser().getLastName(),
+                new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                task);
+
+        taskStatusRepository.save(taskStatusChange);
+    }
+
+    @Override
+    public void taskDeadlineChanged(Task task, LocalDateTime previousDeadline, String newDeadline) {
+        TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_DEADLINE,
+                "Task deadline has been changed from " + previousDeadline + " to " + newDeadline,
+                new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                task);
+        taskStatusRepository.save(taskStatusChange);
+    }
+
+    @Override
+    public void newCommentForTask(Task task, Comment comment) {
+        TaskStatusChange taskStatusChange = new TaskStatusChange(EChange.TASK_COMMENT,
+                "New comment by " + comment.getUser().getFirstName() + " " + comment.getUser().getLastName() + " has been added to this task.",
                 new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
                 task);
 

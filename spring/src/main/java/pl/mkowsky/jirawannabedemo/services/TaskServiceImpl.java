@@ -13,6 +13,10 @@ import pl.mkowsky.jirawannabedemo.repository.TaskRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 
 import javax.persistence.EntityManager;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,16 +105,33 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getTaskById(taskID);
         taskStatusService.taskStatusChanged(task.getState(), newState, task);
         task.setState(newState);
-        emailService.sendEmailTaskStatusChanged();
+        //TODO: delete comment
+        //emailService.sendEmailTaskStatusChanged();
         taskRepository.save(task);
     }
 
     @Override
-    public void changeTaskUser(Long taskID, Long newUserID) {
+    public void changeTaskUser(Long taskID, Long newUserID, Long previousTaskUserID) {
         Task task = taskRepository.getTaskById(taskID);
         User newTaskUser = userService.getUserById(newUserID);
-        taskStatusService.taskUserChanged(newTaskUser, task);
+        User previousTaskUser = userService.getUserById(previousTaskUserID);
+        taskStatusService.taskUserChanged(newTaskUser, task, previousTaskUser);
         task.setUser(newTaskUser);
+        taskRepository.save(task);
+    }
+
+    @Override
+    public void changeTaskDeadline(Long taskID, String newDeadline) {
+        Task task = taskRepository.getTaskById(taskID);
+       LocalDateTime previousDeadline = task.getExpireDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(newDeadline);
+            task.setExpireDate(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        taskStatusService.taskDeadlineChanged(task, previousDeadline, newDeadline);
         taskRepository.save(task);
     }
 
