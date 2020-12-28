@@ -5,7 +5,7 @@
     <v-card outlined shaped class="content">
         <v-card-subtitle style="font-size: 18px;"><v-avatar color="grey" size="30" style="margin-right: 10px;">
             <img :src="profilePicture" style="object-fit: cover">
-        </v-avatar>{{commentUsername}} <span style="position: absolute; left: 80%; font-size: 14px;">{{wysiwetlDate}}</span>  <font-awesome-icon @click="isDialogVisible = true" v-show="deleteIconVisible" class="icon" style="position: absolute; left: 95%" icon="window-close"></font-awesome-icon></v-card-subtitle>
+        </v-avatar>{{commentUsername}} <span style="position: absolute; left: 70%; font-size: 14px;">{{wysiwetlDate}}</span>  <font-awesome-icon @click="isDialogVisible = true" v-show="deleteIconVisible" class="icon" style="position: absolute; left: 95%" icon="window-close"></font-awesome-icon></v-card-subtitle>
 
         <v-card-text>{{commentContent}}</v-card-text>
     </v-card>
@@ -72,7 +72,8 @@
 
 <style scoped>
     .content{
-        width: 80%;
+        width:
+                600px;
     }
     .icon:hover{
         color: crimson;

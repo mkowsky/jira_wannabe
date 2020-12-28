@@ -3,11 +3,13 @@ package pl.mkowsky.jirawannabedemo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.mkowsky.jirawannabedemo.dto.BasicProjectDTO;
+import pl.mkowsky.jirawannabedemo.dto.IssueDTO;
 import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.dto.ProjectCreationDTO;
 import pl.mkowsky.jirawannabedemo.model.Project;
 import pl.mkowsky.jirawannabedemo.model.Task;
 import pl.mkowsky.jirawannabedemo.model.User;
+import pl.mkowsky.jirawannabedemo.services.IssueService;
 import pl.mkowsky.jirawannabedemo.services.ProjectService;
 import pl.mkowsky.jirawannabedemo.services.UserService;
 
@@ -21,12 +23,14 @@ public class ProjectController {
 
     private ProjectService projectService;
     private UserService userService;
+    private IssueService issueService;
 
 
     @Autowired
-    public ProjectController(ProjectService projectService, UserService userService) {
+    public ProjectController(ProjectService projectService, UserService userService, IssueService issueService) {
         this.projectService = projectService;
         this.userService = userService;
+        this.issueService = issueService;
     }
 
     @PostMapping(value = "/create-new-project")
@@ -97,9 +101,12 @@ public class ProjectController {
             }
             return userProjectsBasicInfo;
         }
-
-
     }
 
+
+    @GetMapping(value = "/get-all-issues-for-project/{projectID}")
+    List<IssueDTO> getAllIssuesForProject(@PathVariable("projectID") Long projectID){
+        return issueService.getAllIssuesForProjectWithProjectID(projectID);
+    }
 
 }

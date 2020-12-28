@@ -11,6 +11,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faCalendar} from "@fortawesome/free-solid-svg-icons";
 import {faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {faExchangeAlt} from "@fortawesome/free-solid-svg-icons";
+import {faCheckCircle} from "@fortawesome/free-solid-svg-icons";
 import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import { faWindowClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -37,7 +38,7 @@ Vue.use(VueHighlightJS);
 
 
 
-library.add(faUser, faLock, faWindowClose, faComments, faUsers, faCalendar, faTimesCircle, faExchangeAlt, faPencilAlt)
+library.add(faUser, faLock, faWindowClose, faComments, faUsers, faCalendar, faTimesCircle, faExchangeAlt, faPencilAlt, faCheckCircle)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

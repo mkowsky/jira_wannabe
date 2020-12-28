@@ -27,6 +27,7 @@ public interface TaskService {
     List<BasicTaskInfoDTO> getBasicTaskInfo(Long userID);
     List<BasicTaskInfoDTO> getBasicTaskInfoForProjectWithProjectID(Long projectID);
     List<BasicTaskInfoDTO> getBasicTaskInfo();
+    List<BasicTaskInfoDTO> getBasicTaskInfoForUserInProject(Long userID, Long projectID);
     List<Long[]> getTaksLength();
     List<Long[]> getTaksLength(Long userID);
     List<Long[]> getTasksLengthForProjectWithProjectID(Long projectID);

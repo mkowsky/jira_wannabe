@@ -1,27 +1,36 @@
 <template>
+    <body>
+
+
     <v-card
-            :loading="loading"
             width="240"
-            color="#424242"
-            style="display: flex; flex-direction: column; padding: 10px 0 0 0"
+
+            style="display: flex; flex-direction: column; padding: 10px 0 0 0; box-shadow: 0 0 5px black;"
     >
 
 
-
-            <v-avatar style="align-self: center; box-shadow: 0 0 10px 10px gray; width: 140px; height: 140px;">
-                <img :src="profilePicture" style="object-fit: cover">
+            <v-avatar style="align-self: center; width: 140px; height: 140px;">
+                <img :src="profilePicture" style="border-radius: 50%; object-fit: cover; border: 2px solid black;">
             </v-avatar>
 
 
-        <v-card-title class="center nickname" @click="navigateToUserProfile">{{nickname}}</v-card-title>
+        <div style="color: black; font-weight: 400; align-self: center; padding: 10px;" @click="navigateToUserProfile">{{nickname}} </div>
+        <div style="font-size: 14px; align-self: center">username@jira-wannabe.com</div>
+        <div style="align-self: center; padding: 10px;"><v-chip>POSITION</v-chip></div>
+
 
 
         <v-divider class="mx-4"></v-divider>
 
-        <v-card-title class="center template">{{position}}</v-card-title>
 
+        <v-card-actions style="display: flex; justify-content: space-between; padding: 10px;">
+            <span>action1</span>
+            <span>action1</span>
+            <span>action1</span>
+        </v-card-actions>
 
     </v-card>
+    </body>
 </template>
 
 <script>
@@ -58,22 +67,4 @@
 
 
 
-    .nickname {
-        cursor: pointer;
-        letter-spacing: 2px;
-        color: white;
-        font-weight: 300;
-        font-size: 16px;
-    }
-
-    .center {
-        align-self: center;
-    }
-
-    .template {
-        font-weight: 100;
-        letter-spacing: 3px;
-        color: white;
-
-    }
 </style>

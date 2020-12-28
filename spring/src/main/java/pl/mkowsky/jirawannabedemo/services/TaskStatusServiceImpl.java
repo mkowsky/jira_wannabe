@@ -124,7 +124,8 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 //        return templateDwa;
 
 //2
-        String searchQuery = "select tc.id, tc.change_description as changeDescription, tc.change_date as changeDate, tc.change_type as changeType, tc.task_id as taskID, task.name as taskName, task.taskid as taskKEY from tasks_changes as tc join task on task.id = tc.task_id where task.project_id = :projectID order by change_date desc LIMIT 6";
+        String searchQuery = "select tc.id, tc.change_description as changeDescription, tc.change_date as changeDate, tc.change_type as changeType, tc.task_id as taskID, task.name as taskName, task.taskid as taskKEY,\n" +
+                "user.pictureurl as pictureURL from tasks_changes as tc join task on task.id = tc.task_id join user on task.user_id = user.id where task.project_id = :projectID order by change_date desc LIMIT 10;";
 
         Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer( TaskStatusDTO.class));
 

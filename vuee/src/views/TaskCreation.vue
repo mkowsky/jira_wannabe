@@ -28,9 +28,10 @@
                         <div style="font-size:28px;font-weight:300;letter-spacing:2px;align-self: center; margin-bottom: 10px; ">
                             Live rendering
                         </div>
-                        <TaskComponent :title="task.taskTitle"
+                        <TaskComponent :task-name="task.taskTitle"
                                        :priority="task.taskPriority"
-                                       :description="task.taskDescription"></TaskComponent>
+
+                        ></TaskComponent>
                     </div>
 
                 </v-card>
@@ -82,8 +83,8 @@
                 tasks: [],
                 users: [],
                 projects: [],
-                task: new Task(null, null, null, "Title", "Description", "TO_DO", null, null, null),
-                taskCopy: new Task(null, null, null, "Title", "Description", "TO_DO", null, null, null),
+                task: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
+                taskCopy: new Task(null, null, null, "Title", "Description", "TO_DO", null, null),
 
             }
         },
@@ -118,7 +119,9 @@
                 TaskService.createNewTaks(this.task, value.user).then(this.displayModal());
             },
             test(value) {
+                console.log(value);
                 var change = value.changeValue;
+                console.log(change);
                 if (value.task[change] === "") this.task[change] = this.taskCopy[change];
                 else this.task[change] = value.task[change];
             },

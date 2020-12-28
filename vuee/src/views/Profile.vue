@@ -2,35 +2,60 @@
     <body>
     <side-navigation-bar></side-navigation-bar>
     <div class="profile-content-wrapper">
-
-        <v-card class="profile-info-box">
-
-            <div style="width: 100%; height:35%; display: flex; justify-content: center; padding: 10px;">
-                <div style="width: 40%; height: 100%;"><img :src="user.pictureURL"
-                                                            style="border-radius: 50%; width: 100%; height: 100%; object-fit: cover; box-shadow: 0 0 0 5px black;">
+            <div class="grid-display">
+                <div class="grid-img">
+                    <img :src="user.pictureURL" style="border-radius: 50%; height: 100%; width: 100%;">
                 </div>
+                <div class="grid-name">
+                    <span style="font-size: 30px; font-weight: 500;">
+                        {{user.firstName}}
+                    </span>
+                    <span style="font-size: 40px; font-weight: 800;">
+                        {{user.lastName}}
+                    </span>
+                </div>
+                <div class="grid-position">
+                   <span style="background: purple; border-radius: 25px; padding: 10px 40px 10px 40px; font-size: 22px; opacity: 0.9;">WEBDEVELOPER</span>
+                </div>
+                <div class="grid-tmp4">
+                    <span style="font-size: 36px; font-weight: 200">
+                        We
+                    </span>
+                    <span style="font-size: 24px; font-weight: 300">
+                        may encounter
+                    </span>
+                    <span  style="font-size: 24px;">
+                        many defeats
+                    </span>
+                    <span  style="font-size: 24px; font-weight: 600">
+                         but
+                    </span>
+                    <span  style="font-size: 24px; font-weight: 800">
+                            we must not be defeated.
+                    </span>
 
-            </div>
-
-            <div style="height: 50%; display: flex; flex-direction: column;">
-                <div class="fullname">{{user.firstName}} {{user.lastName}}</div>
-                <div class="country">Los Angeles, CA</div>
-                <div class="position">Webdeveloper</div>
-                <div class="description">David can develop any kind of software, he started learning to code at age of
+                </div>
+                <div class="grid-tmp5">
+                   <div style="text-transform: uppercase; font-size: 30px; font-weight: 800; background: purple; padding: 10px; border-radius: 25px;cursor: pointer">Message Me</div>
+                </div>
+                <div class="grid-description">
+                    <span style="font-weight: 600; font-size: 26px; text-align: center">
+                        David can develop any kind of software, he started learning to code at age of
                     10!
+                    </span>
+
                 </div>
+                <div class="grid-stats">
+                        <span style="font-size: 54px; ">10</span>
+                        <span style="font-size: 31px; align-self: flex-end; font-weight: 800">ACTIVE TASKS</span>
+                        <div style="font-size: 30px; font-weight: 300;">2 PROJECTS </div>
+                </div>
+                <div class="grid-tmp8"></div>
+                <div class="grid-tmp9"></div>
+
 
 
             </div>
-
-            <v-card-actions class="actions">
-                <div class="action action--one">ACTION1</div>
-                <div class="action action--two">ACTION2</div>
-                <div class="action action--three">ACITON3</div>
-            </v-card-actions>
-        </v-card>
-
-
     </div>
 
     </body>
@@ -78,124 +103,111 @@
 
 <style scoped lang="scss">
 
-    @import url("https://fonts.googleapis.com/css?family=Roboto:400,400i,700");
-
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
 
     body {
         height: 100%;
-
+        font-family: 'Montserrat', sans-serif;
     }
 
     .profile-content-wrapper {
-
         margin-left: 10%;
         height: 100%;
         width: 100%;
+
+        display: flex;
+        justify-content: center;
+
+
+
+
+    }
+    .grid-display{
+        align-self: center;
+        width: 60%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto;
+        grid-gap: 20px;
+        grid-template-areas: "tmp1 name img"
+                            "tmp4 tmp5 description"
+                            "stats stats description";
+    }
+    .grid-img{
+        grid-area: img;
+        background: white;
+        box-shadow: 0 0 10px black;
+        max-height: 300px;
+
+
+    }
+    .grid-name{
+        grid-area: name;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 100px;
+        align-self: end;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .grid-position{
+        grid-area: tmp1;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .grid-tmp4{
+        grid-area: tmp4;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+    }
+    .grid-tmp5{
+        grid-area: tmp5;
+        background: white;
+        box-shadow: 0 0 10px black;
         display: flex;
         justify-content: center;
         align-items: center;
 
     }
-
-    .profile-info-box {
-        width: 20%;
-        height: 55%;
+    .grid-description{
+        grid-area: description;
+        background: white;
+        box-shadow: 0 0 10px black;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        font-family: Calibri;
+        padding: 20px;
+
 
     }
-
-    .fullname {
-        font-size: 32px;
-        font-weight: 300;
-        align-self: center
-    }
-
-    .country {
-        font-size: 20px;
-        font-weight: 200;
-        align-self: center;
-        margin-bottom: 15px;
-    }
-
-    .position {
-        letter-spacing: 2px;
-        border-radius: 25px;
-        background: rgba(225, 182, 193, 1);
-        text-align: center;
-        max-width: 80%;
-        align-self: center;
-        padding: 10px;
-        border: 1px solid black;
-        margin-bottom: 15px;
-        transition: 400ms;
-
-        &:hover {
-            cursor: pointer;
-            transform: scale(1.1);
-            box-shadow: 0 0 20px lightpink;
-        }
-    }
-
-    .description {
-        font-weight: 300;
-        font-size: 20px;
-        max-width: 75%;
-        align-self: center;
-        text-align: center;
-        font-style: italic
-    }
-
-    .actions {
-        background: rgba(225, 182, 193, 1);
-        width: 100%;
-        align-self: flex-end;
-        height: 15%;
+    .grid-stats{
+        grid-area: stats;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 100px;
         display: flex;
-        justify-content: space-around;
+        padding: 5px;
     }
-
-    .action {
-        border-radius: 25px;
-        padding: 10px;
-        transition: 400ms;
-        letter-spacing: 1px;
-
-        &:hover {
-            cursor: pointer;
-            transform: scale(1.1);
-
-        }
-
-        &--one {
-
-
-            &:hover {
-                background: white;
-                box-shadow: 0 0 20px white;
-            }
-        }
-
-        &--two {
-
-            &:hover {
-                background: #bababa;
-
-                box-shadow: 0 0 20px #bababa;
-            }
-        }
-
-        &--three {
-
-
-            &:hover {
-                background: #424242;
-                box-shadow: 0 0 20px #424242;
-            }
-        }
-
+    .grid-tmp8{
+        grid-area: tmp8;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 100px;
+    }
+    .grid-tmp9{
+        grid-area: tmp9;
+        background: white;
+        box-shadow: 0 0 10px black;
+        height: 100px;
     }
 
 

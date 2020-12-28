@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
+import pl.mkowsky.jirawannabedemo.dictionary.EPriority;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
 import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
@@ -105,8 +106,10 @@ public class TaskController {
     @PostMapping(value = "/report-new-issue-for-task")
     private ResponseEntity<?> reportNewIssueForTask(@RequestParam("taskID") Long taskID,
                                                     @RequestParam("issueDescription") String issueDescription,
-                                                    @RequestParam("issueType") EIssue issueType) {
-        issueService.newIssueReported(taskID, issueDescription, issueType);
+                                                    @RequestParam("issueType") EIssue issueType,
+                                                    @RequestParam("issuePriority")EPriority issuePriority,
+                                                    @RequestParam("reportingUserID") Long reportingUserID) {
+        issueService.newIssueReported(taskID, issueDescription, issueType, issuePriority, reportingUserID);
         return ResponseEntity.ok("Issue has been reported.");
     }
 
@@ -115,10 +118,7 @@ public class TaskController {
 //        return taskStatusService.getAllTaskChangesForProject(projectID);
 //    }
 
-    @GetMapping(value = "/get-all-task-changes-for-project/{projectID}")
-    private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID) {
-        return taskStatusService.testQuery(projectID);
-    }
+
 
 
     @GetMapping(value = "/get-basic-tasks-info/{userID}")
@@ -130,7 +130,10 @@ public class TaskController {
             return taskService.getBasicTaskInfo(userID);
         }
     }
-
+    @GetMapping(value = "/test/{userID}/{projectID}")
+    private List<BasicTaskInfoDTO> getBasicTasksInfoForUserInProject(@PathVariable("userID") Long userID, @PathVariable("projectID") Long projectID){
+        return taskService.getBasicTaskInfoForUserInProject(userID, projectID);
+    }
     @GetMapping(value = "/list-all-tasks-in-project/{projectID}")
     List<BasicTaskInfoDTO> getAllProjectTasks(@PathVariable("projectID") Long projectID) {
         return taskService.getBasicTaskInfoForProjectWithProjectID(projectID);
@@ -179,5 +182,13 @@ public class TaskController {
         return projectUsers;
     }
 
+    @GetMapping(value = "/get-basic-info-for-all-users-tasks/{userID}")
+    List<BasicTaskInfoDTO> getBasicInfoForAllUsersTasks(@PathVariable ("userID") Long userID){
+        return null;
+    }
 
+    @GetMapping(value = "/get-all-task-changes-for-project/{projectID}")
+    private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID) {
+        return taskStatusService.testQuery(projectID);
+    }
 }

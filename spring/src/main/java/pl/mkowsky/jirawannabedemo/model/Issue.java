@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
+import pl.mkowsky.jirawannabedemo.dictionary.EPriority;
+import pl.mkowsky.jirawannabedemo.dictionary.EStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,14 @@ public class Issue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String issueKEY;
+
+    @Enumerated(EnumType.STRING)
+    private EStatus issueStatus;
+
+    @Enumerated(EnumType.STRING)
+    private EPriority issuePriority;
+
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -24,6 +34,9 @@ public class Issue {
     @ManyToOne
     @JsonIgnore
     private Task task;
+
+    @ManyToOne
+    private User reportedBy;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
@@ -37,6 +50,17 @@ public class Issue {
         this.issueType = issueType;
         this.task = task;
         this.issueDate = issueDate;
+    }
+
+    public Issue(String issueKEY, EStatus issueStatus, EPriority issuePriority, String description, EIssue issueType, Task task, LocalDateTime issueDate, User reportedBy) {
+        this.issueKEY = issueKEY;
+        this.issueStatus = issueStatus;
+        this.issuePriority = issuePriority;
+        this.description = description;
+        this.issueType = issueType;
+        this.task = task;
+        this.issueDate = issueDate;
+        this.reportedBy = reportedBy;
     }
 
     public Long getId() {
@@ -77,5 +101,37 @@ public class Issue {
 
     public void setIssueType(EIssue issueType) {
         this.issueType = issueType;
+    }
+
+    public String getIssueKEY() {
+        return issueKEY;
+    }
+
+    public void setIssueKEY(String issueKEY) {
+        this.issueKEY = issueKEY;
+    }
+
+    public EStatus getIssueStatus() {
+        return issueStatus;
+    }
+
+    public void setIssueStatus(EStatus issueStatus) {
+        this.issueStatus = issueStatus;
+    }
+
+    public EPriority getIssuePriority() {
+        return issuePriority;
+    }
+
+    public void setIssuePriority(EPriority issuePriority) {
+        this.issuePriority = issuePriority;
+    }
+
+    public User getReportedBy() {
+        return reportedBy;
+    }
+
+    public void setReportedBy(User reportedBy) {
+        this.reportedBy = reportedBy;
     }
 }

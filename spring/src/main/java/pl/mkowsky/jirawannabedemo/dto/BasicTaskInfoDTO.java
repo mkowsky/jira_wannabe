@@ -13,6 +13,7 @@ public class BasicTaskInfoDTO {
     private String taskPriority;
     private String userPictureURL;
 
+
     public Long getTaskID() {
         return taskID;
     }

@@ -68,7 +68,7 @@
 
 
         <div class="taskboard-container">
-            <v-card class="column" color="#424242" style="display: flex; flex-direction: column; min-height: 700px;">
+            <v-card class="column" color="#424242" style="display: flex; flex-direction: column; height: 680px;">
                 <v-card-title
                         style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
                     TO
@@ -85,7 +85,7 @@
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 700px;" color="#424242">
+            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
                 <v-card-title
                         style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
                     IN
@@ -103,7 +103,7 @@
             </v-card>
 
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
                 <v-card-title
                         style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
                     CODE REVIEW
@@ -119,7 +119,7 @@
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; min-height: 750px;" color="#424242">
+            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
                 <v-card-title
                         style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
                     DONE
@@ -139,8 +139,8 @@
 
 
         <div v-if="pages > 1">
-
             <v-pagination
+
                     v-model="page"
                     :length="pages"
                     @input="pageChanged($event)"
@@ -355,6 +355,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
+        margin-bottom: 10px;
     }
 
     .taskboard-filters {

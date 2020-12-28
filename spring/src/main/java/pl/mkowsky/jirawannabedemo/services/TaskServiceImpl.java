@@ -82,7 +82,7 @@ public class TaskServiceImpl implements TaskService {
                 projectService.findProjectByID(taskDTO.getProjectID())
         );
 
-        emailService.sendEmaiLTaskCraeted();
+        //emailService.sendEmaiLTaskCraeted();
         save(newTask);
         taskStatusService.newTaskCreated(newTask);
         taskUser.getUserTasks().add(newTask);
@@ -196,6 +196,23 @@ public class TaskServiceImpl implements TaskService {
                         "                         join project on task.project_id = project.id where project.id = :projectID";
 
         Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
+        query.setParameter("projectID", projectID);
+        List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
+        return result;
+    }
+
+    @Override
+    public List<BasicTaskInfoDTO> getBasicTaskInfoForUserInProject(Long userID, Long projectID) {
+        String searchQuery =
+                "SELECT name as taskName, state as taskState, task_priority as taskPriority," +
+                        " CONCAT(first_name, \" \", last_name) AS userFullName, task.id as taskID," +
+                        " user.id as userID, pictureurl as userPictureURL, project_name as projectName" +
+                        " from" +
+                        " task join user on task.user_id = user.id" +
+                        " join project on task.project_id = project.id where user.id = :userID and project.id = :projectID";
+
+        Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(BasicTaskInfoDTO.class));
+        query.setParameter("userID", userID);
         query.setParameter("projectID", projectID);
         List<BasicTaskInfoDTO> result = (List<BasicTaskInfoDTO>) query.list();
         return result;

@@ -19,24 +19,22 @@
         name: "Task",
         props: {
             taskName: {
-                type: String,
                 default: "Task Title",
 
             },
             projectName: {
-                type: String,
+
                 default: "Project Name",
 
             },
             taskUser: {
-                type: String,
+
 
             },
             profilePicture:{
-                type: String,
+
             },
             priority: {
-                type: Number,
             }
 
         },

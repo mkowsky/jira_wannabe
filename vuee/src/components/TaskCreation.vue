@@ -26,6 +26,7 @@
                           v-model="task.taskProject"
                           color="rgba(225, 182, 193)"
                           @change="getProjectTeamMembers()"
+                          @input="liveRenderChange('taskProject')"
                 ></v-select>
 
                 <v-btn
@@ -74,7 +75,7 @@
                           dense
                           label="Chose Priority"
                           :items="priorities"
-                          item-text="value"
+                          item-text="name"
                           item-value="value"
                           class="select"
                           color="rgba(225, 182, 193)"
@@ -227,10 +228,10 @@
                 //
                 // ],
                 priorities: [
-                    {value: 1},
-                    {value: 2},
-                    {value: 3},
-                    {value: 4},
+                    {value: "ABLE_TO_WAIT", name: "ABLE TO WAIT"},
+                    {value: "IMPORTANT", name: "IMPORTANT"},
+                    {value: "URGENT", name: "URGENT"},
+                    {value: "IMMEDIATE", name: 'IMMEDIATE'},
                 ],
 
 

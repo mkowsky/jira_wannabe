@@ -18,13 +18,15 @@ public class TaskStatusDTO {
     private  BigInteger taskID;
     private String taskName;
     private String taskKEY;
+    private String pictureURL;
 
 
     public TaskStatusDTO(){
 
     }
 
-    public TaskStatusDTO(BigInteger id, String changeDescription, Timestamp changeDate, String changeType, BigInteger taskID, String taskName, String taskKEY) {
+    public TaskStatusDTO(BigInteger id, String changeDescription, Timestamp changeDate, String changeType, BigInteger taskID, String taskName, String taskKEY,
+                         String pictureURL) {
         this.id = id;
         this.changeDescription = changeDescription;
         this.changeDate =   changeDate.toLocalDateTime();
@@ -32,6 +34,7 @@ public class TaskStatusDTO {
         this.taskID = taskID;
         this.taskName = taskName;
         this.taskKEY =  taskKEY;
+        this.pictureURL = pictureURL;
     }
 
     public String getTaskKEY() {
@@ -40,6 +43,14 @@ public class TaskStatusDTO {
 
     public void setTaskKEY(String taskKEY) {
         this.taskKEY = taskKEY;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 
     public LocalDateTime getChangeDate() {
