@@ -232,4 +232,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Long[]> getTasksLengthForProjectWithProjectID(Long projectID) {
         return taskRepository.getTasksLengthForProjectWithProjectID(projectID);
     }
+
+    @Override
+    public Task getTaskByTaskKey(String taskKEY) {
+        return taskRepository.findTaskByTaskID(taskKEY);
+    }
 }

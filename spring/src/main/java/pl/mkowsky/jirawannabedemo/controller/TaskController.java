@@ -7,6 +7,7 @@ import pl.mkowsky.jirawannabedemo.dictionary.EIssue;
 import pl.mkowsky.jirawannabedemo.dictionary.EPriority;
 import pl.mkowsky.jirawannabedemo.dictionary.EState;
 import pl.mkowsky.jirawannabedemo.dto.BasicTaskInfoDTO;
+import pl.mkowsky.jirawannabedemo.dto.IssueDTO;
 import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.dto.TaskDTO;
 import pl.mkowsky.jirawannabedemo.model.Task;
@@ -190,5 +191,17 @@ public class TaskController {
     @GetMapping(value = "/get-all-task-changes-for-project/{projectID}")
     private List<?> getAllTaskChangesForProject(@PathVariable("projectID") Long projectID) {
         return taskStatusService.testQuery(projectID);
+    }
+
+    @GetMapping(value = "/get-task-id-with-task-key/{taskKEY}")
+    private Long getTaskIDByTaskKey(@PathVariable("taskKEY") String taskKEY){
+        Task task = taskService.getTaskByTaskKey(taskKEY);
+        return task.getId();
+    }
+
+    @GetMapping(value = "/get-all-issues-for-task/{taskID}")
+    private List<IssueDTO> getAllIssuesForTask(@PathVariable("taskID") Long taskID){
+
+        return issueService.getAllIssuesForTaskWithTaskID(taskID);
     }
 }

@@ -16,6 +16,7 @@ public interface TaskService {
 
 
     Task getTaskById(Long id);
+    Task getTaskByTaskKey(String taskKEY);
     void createNewTask(TaskDTO taskDTO);
     void deleteTask(Long taskID);
 

@@ -55,6 +55,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "where task.project_id = :projectID", nativeQuery = true)
     List<Long[]> getTasksLengthForProjectWithProjectID(@Param("projectID") Long projectID);
 
+    Task findTaskByTaskID(String taskID);
+
 
 
 

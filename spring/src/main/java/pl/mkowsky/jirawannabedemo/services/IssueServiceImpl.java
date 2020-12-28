@@ -69,6 +69,19 @@ public class IssueServiceImpl implements IssueService {
         return result;
     }
 
+    @Override
+    public List<IssueDTO> getAllIssuesForTaskWithTaskID(Long taskID) {
+        String searchQuery = "SELECT issue.id as issueID, issue.description as issueDescription, issue.issue_date as issueDate, issue.issue_type as issueType,\n" +
+                " task.taskid as taskKEY,  issue.issueKEY as issueKEY, issue.reported_by_id as reportedByID,\n" +
+                " issue.issue_priority as issuePriority, issue.issue_status as issueStatus,  CONCAT(user.first_name,\" \", user.last_name) AS userFullName,\n" +
+                " user.pictureURL as pictureURL\n" +
+                " from issue join task on issue.task_id = task.id  join user on user.id = issue.reported_by_id where task.id = :taskID";
+        Query query = this.entityManager.createNativeQuery(searchQuery).unwrap(org.hibernate.query.Query.class).setResultTransformer(new AliasToBeanResultTransformer(IssueDTO.class));
+        query.setParameter("taskID", taskID);
+        List<IssueDTO> result = (List<IssueDTO>) query.list();
+        return result;
+    }
+
     public String generateIssueKey(){
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 + "0123456789"

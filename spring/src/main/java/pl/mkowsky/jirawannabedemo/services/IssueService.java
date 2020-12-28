@@ -11,4 +11,5 @@ import java.util.List;
 public interface IssueService {
     void newIssueReported(Long taskID, String issueDescription, EIssue issueType, EPriority issuePriority, Long reportingUserID);
     List<IssueDTO>getAllIssuesForProjectWithProjectID(Long projectID);
+    List<IssueDTO> getAllIssuesForTaskWithTaskID(Long taskID);
 }
