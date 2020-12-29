@@ -10,6 +10,7 @@ import ProjectDetails from "@/views/ProjectDetails";
 import TaskDetails from "@/views/TaskDetails";
 import ProjectCreation from "@/views/ProjectCreation";
 import Home from "@/views/Home";
+import Register from "@/views/Register";
 
 
 Vue.use(Router);
@@ -66,6 +67,13 @@ const routes = [
     {
         path: '',
         component: Home
+    },
+    {
+        path: '/signup',
+        component: Register,
+        meta: {
+            guest: true
+        }
     },
     {
         path: '/login',

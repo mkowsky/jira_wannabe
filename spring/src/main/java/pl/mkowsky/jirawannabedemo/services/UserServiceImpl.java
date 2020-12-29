@@ -31,20 +31,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    @Override
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
-    }
+
 
     @Override
     public User getUserById(Long userID) {
         return userRepository.findUserById(userID);
     }
 
-    @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+
 
     @Override
     public void save(User user) {

@@ -1,6 +1,8 @@
 <template>
     <body style="display: flex; flex-direction: column; justify-content: space-between; height: 100vh; background: #f8f8f8">
-    <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 70%; color: white; font-size: 16px; font-weight: 900; opacity: 0.9">LET'S MAKE THE WORLD MORE PRODUCTIVE, TOGETHER.</div>
+    <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 70%; color: white; font-size: 16px; font-weight: 900; opacity: 0.9">
+        LET'S MAKE THE WORLD MORE PRODUCTIVE, TOGETHER.
+    </div>
     <div class="header">
         <ul>
             <li>
@@ -15,34 +17,52 @@
         </ul>
     </div>
 
-    <div class="login-box">
-        <div class="login-claim">Welcome back!</div>
+    <div class="register-box">
+        <div class="register-claim">Let's go!</div>
+
+        <div style="width: 90%; align-self: center">
+            <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">First Name</span>
+            <v-text-field solo label="Enter First Name" v-model="firstName" prepend-inner-icon="mdi-account"
+                          :rules="[rules.required]" style="margin-top: 5px;"></v-text-field>
+        </div>
+
+        <div style="width: 90%; align-self: center">
+            <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">Last Name</span>
+            <v-text-field solo label="Enter First Name" v-model="lastName" prepend-inner-icon="mdi-account"
+                          :rules="[rules.required]" style="margin-top: 5px;"></v-text-field>
+        </div>
 
 
         <div style="width: 90%; align-self: center">
             <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">Email</span>
-            <v-text-field solo label="Enter email" v-model="email" prepend-inner-icon="mdi-email" :rules="[rules.required]" :error-messages="emailError" style="margin-top: 5px;"></v-text-field>
+            <v-text-field solo label="Enter email" v-model="email" prepend-inner-icon="mdi-email"
+                          :rules="[rules.required, rules.email]" :error-messages="emailError"
+                          style="margin-top: 5px;"></v-text-field>
         </div>
 
         <div style="width: 90%; align-self: center">
             <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">Password</span>
-            <v-text-field solo label="Password" v-model="password" type="password" prepend-inner-icon="mdi-lock" :rules="[rules.required]" :error-messages="passwordError"  style="margin-top: 5px;"></v-text-field>
+            <v-text-field solo label="Password" v-model="password" type="password" prepend-inner-icon="mdi-lock"
+                          :rules="[rules.required]" :error-messages="passwordError"
+                          style="margin-top: 5px;"></v-text-field>
         </div>
 
-        <button class="login-button"
+        <button class="register-button"
                 v-bind:disabled="allFieldsFilled"
-                @click="startLoginProcedure()"
-                v-bind:class="{'login-button': !allFieldsFilled, 'login-button-disabled': allFieldsFilled}">LOG IN
+                @click="registerNewUser()"
+                v-bind:class="{'register-button': !allFieldsFilled, 'register-button-disabled': allFieldsFilled}">Play
+            with Jira-Wannabe
         </button>
-        <div class="password-renew">Forgot password?</div>
+
     </div>
+
 
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <defs>
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:rgba(108,99,255,1);stop-opacity:1"></stop>
-                <stop offset="60%" style="stop-color:rgba(125,120,221,1);stop-opacity:1"></stop>
-                <stop offset="100%" style="stop-color:rgba(92,184,236,1);stop-opacity:1"></stop>
+                <stop offset="0%" style="stop-color:rgba(135,50,252,1);stop-opacity:1"></stop>
+                <stop offset="38%" style="stop-color:rgba(106,122,249,0.8410714627647934);stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:rgba(73,204,249,1);stop-opacity:1"></stop>
             </linearGradient>
         </defs>
         <path fill="url(#grad1)" fill-opacity="1"
@@ -55,27 +75,21 @@
 
 <script>
 
-    //import axios from 'axios';
-    import User from '../model/user';
+    import axios from 'axios';
 
 
     export default {
-        name: "Login",
+        name: "Register",
         components: {},
         data() {
             return {
                 emailError: '',
                 passwordError: '',
-                disabled: true,
-                successful: false,
 
-                message: "",
-
-
-                email: '',
+                firstName: '',
+                lastName: '',
                 password: '',
-
-
+                email: '',
 
 
                 rules: {
@@ -92,28 +106,16 @@
             navigateTo(value) {
                 this.$router.push('/' + value);
             },
-            startLoginProcedure: function () {
-                this.sendRequestToBackend()
+            registerNewUser() {
+                axios.post('http://localhost:8080/api/auth/signup', {
+                    firstName: this.firstName,
+                    lastName: this.lastName,
+                    password: this.password,
+                    email: this.email,
+                }).then(response => {
+                    console.log(response.status);
+                });
             },
-            sendRequestToBackend: function () {
-                console.log(this.email);
-                let user = new User(this.email, this.password);
-                this.$store.dispatch('auth/login', user).then(
-                    response => {
-                        console.log(response.status);
-                        this.$router.push('/board');
-                    },
-                    error => {
-                        this.message = error.response.data.message;
-                        if (this.message.includes('Username')) this.emailError = 'This email is not registered.';
-                        else this.emailError = "";
-
-                        if (this.message.includes('password')) this.passwordError = this.message
-                        else this.passwordError = "";
-                        this.successful = false;
-                    }
-                )
-            }
         },
         watch: {
             email: function () {
@@ -121,22 +123,17 @@
             },
             password: function () {
                 if (this.allFieldsFilled) this.passwordError = "";
-            }
+            },
         },
         computed: {
             loggedIn() {
                 return this.$store.state.auth.status.loggedIn;
             },
             allFieldsFilled() {
-                if ((this.email) && (this.password)) return false;
+                if ((this.email) && (this.password) && (this.firstName) && (this.lastName)) return false;
                 else return true;
             }
         },
-        created() {
-            if (this.loggedIn) {
-                //this.$router.push('/home');
-            }
-        }
     }
 </script>
 
@@ -203,7 +200,7 @@
     }
 
     .logo-wrapper-small {
-        background: linear-gradient(90deg, rgba(108,99,255,1) 0%, rgba(125,120,221,1) 60%, rgba(92,184,236,1) 100%);
+        background: linear-gradient(90deg, rgba(108, 99, 255, 1) 0%, rgba(125, 120, 221, 1) 60%, rgba(92, 184, 236, 1) 100%);
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -229,31 +226,30 @@
         font-weight: 600
     }
 
-    .login-box {
+    .register-box {
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         box-shadow: 0 0 10px black;
         width: 500px;
-        height: 400px;
-        top: 25%;
+        height: 600px;
+        top: 15%;
         background: white;
         display: flex;
         flex-direction: column;
         padding: 20px;
-        justify-content: space-between;
+
         border-radius: 10px;
     }
 
-    .login-claim {
+    .register-claim {
         font-size: 30px;
         font-weight: 700;
         align-self: center;
     }
 
 
-    .login-button {
-
+    .register-button {
         background: $color-secondary-accent;
         outline: none;
         align-self: center;
@@ -265,7 +261,7 @@
         margin-bottom: 10px;
     }
 
-    .login-button-disabled {
+    .register-button-disabled {
         background: $color-secondary-accent;
         outline: none;
         align-self: center;
@@ -275,24 +271,6 @@
         color: white;
         font-weight: 800;
     }
-
-    .password-renew {
-
-        align-self: center;
-        font-weight: 400;
-        font-size: 18px;
-        letter-spacing: 2px;
-
-
-
-    }
-
-    .password-renew:hover {
-        color: $color-secondary-accent;
-        cursor: pointer;
-
-    }
-
 
 
 </style>

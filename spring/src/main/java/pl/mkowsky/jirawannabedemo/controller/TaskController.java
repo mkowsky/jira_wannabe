@@ -73,7 +73,7 @@ public class TaskController {
         User user = userService.getUserById(userID);
         Task task = taskService.getTaskById(taskID);
 
-        System.out.println("User --->" + user.getUsername());
+
         System.out.println("Task --->" + task.getDescription());
 
         System.out.println("Procedura dodawania rozpoczeta: ");

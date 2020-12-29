@@ -53,25 +53,23 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-            System.out.println(loginRequest.getUsername());
+            System.out.println(loginRequest.getEmail());
 
-        if(!(userRepository.existsByUsername(loginRequest.getUsername()))){
+        if(!(userRepository.existsByEmail(loginRequest.getEmail()))){
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Username is invalid."));
 
-        } else {
-            User user = userRepository.findByUsername(loginRequest.getUsername());
+        } else {User user = userRepository.findUserByEmail(loginRequest.getEmail());
             System.out.println(user.getEmail());
-
-
             if(!(encoder.matches(loginRequest.getPassword(), user.getPassword()))){
                 return ResponseEntity
                         .badRequest()
                         .body(new MessageResponse("Bad password."));
-            } else {
+            }
+            else {
                 Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 String jwt = jwtUtils.generateJwtToken(authentication);
@@ -96,13 +94,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
-        }
-
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -110,12 +102,12 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
+        User user = new User(
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
-                userService.generateRandomName(),
-                userService.generateRandomSurname());
-
+                signUpRequest.getFirstName(),
+                signUpRequest.getLastName());
+//
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -148,7 +140,6 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
-
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }

@@ -9,9 +9,9 @@
                 </div>
                 <div class="logo-slogan-small">JIRA-WANNABE</div>
             </li>
-            <li>ABOUT</li>
+            <li @click="navigateTo('')">ABOUT</li>
             <li @click="navigateTo('login')">LOGIN</li>
-            <li>SIGN UP</li>
+            <li @click="navigateTo('signup')">SIGN UP</li>
         </ul>
     </div>
 
@@ -327,7 +327,7 @@
     }
 
     .logo-wrapper-small {
-        background: $color-secondary-accent;
+        background: linear-gradient(90deg, rgba(108,99,255,1) 0%, rgba(125,120,221,1) 60%, rgba(92,184,236,1) 100%);
         width: 60px;
         height: 60px;
         border-radius: 50%;
@@ -338,7 +338,7 @@
     }
 
     .logo-wrapper-big {
-        background: $color-secondary-accent;
+        background: linear-gradient(90deg, rgba(108,99,255,1) 0%, rgba(125,120,221,1) 60%, rgba(92,184,236,1) 100%);
         width: 400px;
         height: 400px;
         border-radius: 50%;
