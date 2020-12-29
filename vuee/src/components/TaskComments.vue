@@ -1,38 +1,27 @@
 <template>
     <body>
-    <div style="width: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; height: 900px; justify-content: center">
-        <div v-if="comments.length > 0">
-            <div style="display: flex;">
-                <v-textarea
-                        label="Write a comment"
-                        solo
-                        v-model="commentValue"
-                        style="width: 400px;"></v-textarea>
-                <v-btn
-                        elevation="2"
-                        rounded
-                        x-large
-                        @click="postComment">SUBMIT
-                </v-btn>
+    <div style="width: 100%; padding: 20px; height: 900px;">
+        <div v-if="comments.length > 0" style="display: flex; width: 100%; height: 100%;">
+            <div style="width: 50%; background: crimson">
+                <div>COMMENTS</div>
+                <div style="width: 40%; display: flex; flex-direction: column; align-self: center">
+                    <v-textarea solo
+                                v-model="commentValue"
+                                label="Write comment"
+                                style="opacity: 0.8"></v-textarea>
+
+                    <v-btn x-large color="#6C63FF" @click="postComment" style="width: 200px; align-self: center" >POST</v-btn>
+                </div>
             </div>
 
-            <div>
-                <v-timeline dense>
-                    <v-timeline-item
-                            v-for="comment in comments" :key="comment.id"
-                            small
-                    >
-                        <comment
-                                :comment-date="comment.commentDate"
-                                :comment-content="comment.comment"
-                                :comment-username="comment.user.firstName + ' ' + comment.user.lastName"
-                                :profile-picture="comment.user.pictureURL"
-                                :delete-icon-visible="checkIfThisIsLoggedUserComment(comment.user.id)"
-                                @delete-comment="deleteComment(comment.id)"/>
-
-                    </v-timeline-item>
-                </v-timeline>
-
+            <div style="width: 50%; background: purple; display: flex; flex-direction: column; align-items: center;">
+                <comment  v-for="comment in comments" :key="comment.id"
+                          :comment-date="comment.commentDate"
+                          :comment-content="comment.comment"
+                          :comment-username="comment.user.firstName + ' ' + comment.user.lastName"
+                          :profile-picture="comment.user.pictureURL"
+                          :delete-icon-visible="checkIfThisIsLoggedUserComment(comment.user.id)"
+                          @delete-comment="deleteComment(comment.id)"/>
             </div>
 
         </div>
@@ -98,6 +87,8 @@
         font-size: 50px;
         margin-bottom: 20px;
         text-align: center;
+        width: 650px;
+
 
     }
 

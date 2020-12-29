@@ -145,7 +145,7 @@
                 <div style="height: 90vh; display: flex; justify-content: center">
 
                         <div style="display: flex; flex-direction: column; width: 30%;">
-                            <div class="sample" @click="changeText(1)"><span id="1" class="span-inactive">01.</span>Slash Commands</div>
+                            <div class="sample-active" @click="changeText(1)"><span id="1" class="span-inactive">01.</span>Slash Commands</div>
                             <div class="sample" @click="changeText(2)"><span id="2" class="span-inactive">02.</span>Real-time Chat</div>
                             <div class="sample" @click="changeText(3)"><span id="3" class="span-inactive">03.</span>Task Tray</div>
                             <div class="sample" @click="changeText(4)"><span id="4" class="span-inactive">04.</span>Assign Comments</div>
@@ -161,12 +161,23 @@
             </div>
 
             <div v-show="teamContentVisible">
-                <div id="section1" style="background: #424242; height: 90vh;">
+                <div id="section1" style=" height: 95vh; display: flex; justify-content: center; align-items: center ">
+                        <div style="height: 60%; background: purple; width: 100px;"></div>
+                        <div style="display: flex; flex-direction: column; height: 60%;   justify-content: flex-end">
+                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -80px">Meet</span>
+                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -80px">Our</span>
+                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -20px;">Team</span>
+                        </div>
+                    <div style="height: 60%;">
+                        <img src="../assets/teasm.svg" style="width: 100%; height: 100%;">
+                    </div>
 
                 </div>
-                <div id="section2" style="display: flex; flex-wrap: wrap; height: 90vh;">
+                <div style="height: 90vh; display: flex; justify-content: center; align-items: center">
+
+                <div id="section2" style="display: flex; flex-wrap: wrap;  padding: 50px; height: 75%;">
                     <div v-for="user in projectUsers" :key="user.id"
-                         style="flex: 1 0 20%; margin-bottom: 20px;">
+                         style="flex: 1 0 20%; ">
                         <UserCard
                                 :nickname="user.firstName + ' ' + user.lastName"
                                 :position="'Developer'"
@@ -175,7 +186,7 @@
                                 @navigate-to-profile="navigateTo($event)"></UserCard>
                     </div>
                 </div>
-
+                </div>
             </div>
         </div>
 

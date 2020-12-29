@@ -1,6 +1,6 @@
 <template>
-
-    <div id="container">
+    <body>
+    <div class="container">
 
         <Logo id="outer-circle"></Logo>
 
@@ -34,6 +34,7 @@
 
         </div>
     </div>
+    </body>
 </template>
 
 

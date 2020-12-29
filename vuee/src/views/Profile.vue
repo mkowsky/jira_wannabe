@@ -1,62 +1,40 @@
 <template>
     <body>
     <side-navigation-bar></side-navigation-bar>
-    <div class="profile-content-wrapper">
-            <div class="grid-display">
-                <div class="grid-img">
-                    <img :src="user.pictureURL" style="border-radius: 50%; height: 100%; width: 100%;">
-                </div>
-                <div class="grid-name">
-                    <span style="font-size: 30px; font-weight: 500;">
-                        {{user.firstName}}
-                    </span>
-                    <span style="font-size: 40px; font-weight: 800;">
-                        {{user.lastName}}
-                    </span>
-                </div>
-                <div class="grid-position">
-                   <span style="background: purple; border-radius: 25px; padding: 10px 40px 10px 40px; font-size: 22px; opacity: 0.9;">WEBDEVELOPER</span>
-                </div>
-                <div class="grid-tmp4">
-                    <span style="font-size: 36px; font-weight: 200">
-                        We
-                    </span>
-                    <span style="font-size: 24px; font-weight: 300">
-                        may encounter
-                    </span>
-                    <span  style="font-size: 24px;">
-                        many defeats
-                    </span>
-                    <span  style="font-size: 24px; font-weight: 600">
-                         but
-                    </span>
-                    <span  style="font-size: 24px; font-weight: 800">
-                            we must not be defeated.
-                    </span>
+            <div class="profile-container">
+                    <div class="profile-wrapper">
+                        <div class="profile-photo">
+                            <img :src="user.pictureURL" style="border-radius: 50%;  width: 250px; height: 250px; object-fit: cover; align-self: center; margin-bottom: 50px;">
 
-                </div>
-                <div class="grid-tmp5">
-                   <div style="text-transform: uppercase; font-size: 30px; font-weight: 800; background: purple; padding: 10px; border-radius: 25px;cursor: pointer">Message Me</div>
-                </div>
-                <div class="grid-description">
-                    <span style="font-weight: 600; font-size: 26px; text-align: center">
-                        David can develop any kind of software, he started learning to code at age of
-                    10!
-                    </span>
-
-                </div>
-                <div class="grid-stats">
-                        <span style="font-size: 54px; ">10</span>
-                        <span style="font-size: 31px; align-self: flex-end; font-weight: 800">ACTIVE TASKS</span>
-                        <div style="font-size: 30px; font-weight: 300;">2 PROJECTS </div>
-                </div>
-                <div class="grid-tmp8"></div>
-                <div class="grid-tmp9"></div>
+                                <div style="display: flex; flex-direction: column">
+                                    <div class="profile-stats"><span class="profile-span">32</span>ACTIVE TASKS</div>
+                                    <div class="profile-stats"><span class="profile-span">11</span>REPORTED ISSUES</div>
+                                    <div class="profile-stats"><span class="profile-span">2</span>PROJECTS</div>
+                            </div>
+                        </div>
+                        <div class="profile-data">
+                            <div class="position">DEVELOPER</div>
+                            <div class="full-name">{{user.fullName}}</div>
+                            <div class="about-claim">ABOUT</div>
+                            <div class="about-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,</div>
+                            <div class="details-info">
+                                <div style="display: flex; flex-direction: column">
+                                    <span class="subclaim">EMAIL</span>
+                                    <div class="contact">pietrzykowski@jira-wannabe.com</div>
+                                </div>
+                                <div style="display: flex; flex-direction: column">
+                                    <span class="subclaim">TEAM</span>
+                                    <div class="contact">BACKEND-I13</div>
+                                </div>
+                            </div>
+                            <v-btn v-if="!ownProfile" class="profile-btn" x-large>MESSAGE ME</v-btn>
+                            <v-btn v-if="ownProfile" class="profile-btn" x-large>EDIT PROFILE</v-btn>
+                        </div>
 
 
-
+                    </div>
             </div>
-    </div>
+
 
     </body>
 
@@ -74,6 +52,7 @@
             return {
 
                 user: "",
+                ownProfile: true,
             }
         },
         methods: {},
@@ -86,6 +65,7 @@
                     axios.get('http://localhost:8080/users/get-user-personal-data/' + this.$route.params.userID).then(response => {
                         this.user = response.data;
                         console.log(response.data);
+                        this.ownProfile = false;
                     })
                 }
             } else {
@@ -93,6 +73,7 @@
                 axios.get('http://localhost:8080/users/get-user-personal-data/' + this.user.id).then(response => {
                     this.user = response.data;
                     console.log(response.data);
+                    this.ownProfile = true;
                 })
             }
 
@@ -102,6 +83,9 @@
 </script>
 
 <style scoped lang="scss">
+    $color-primary: white;
+    $color-main-accent: #424242;
+    $color-secondary-accent: #6C63FF;
 
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
 
@@ -110,105 +94,108 @@
         font-family: 'Montserrat', sans-serif;
     }
 
-    .profile-content-wrapper {
-        margin-left: 10%;
-        height: 100%;
+    .profile-container{
+
         width: 100%;
-
+        height: 100%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
-
-
-
-
     }
-    .grid-display{
+    .profile-wrapper{
+        width: 1000px;
+        height: 600px;
+        background: white;
         align-self: center;
-        width: 60%;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: auto;
-        grid-gap: 20px;
-        grid-template-areas: "tmp1 name img"
-                            "tmp4 tmp5 description"
-                            "stats stats description";
+        display: flex;
+        box-shadow: 0 0 20px black;
     }
-    .grid-img{
-        grid-area: img;
-        background: white;
-        box-shadow: 0 0 10px black;
-        max-height: 300px;
 
-
-    }
-    .grid-name{
-        grid-area: name;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 100px;
-        align-self: end;
+    .profile-photo{
+        /*background: #424242;*/
+        width: 30%;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        padding: 20px 0 0 20px;
+
+
     }
-    .grid-position{
-        grid-area: tmp1;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .grid-tmp4{
-        grid-area: tmp4;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 200px;
+
+    .profile-data{
+        /*background: #676767;*/
+        width: 70%;
         display: flex;
         flex-direction: column;
-        padding: 5px;
+        padding: 50px;
+        border-left: 15px solid white;
+
     }
-    .grid-tmp5{
-        grid-area: tmp5;
-        background: white;
-        box-shadow: 0 0 10px black;
+
+    .position{
+        background: $color-secondary-accent;
+        font-size: 28px;
+        width: 200px;
+        text-align: center;
+        align-self: center;
+        border-radius: 25px;
+        margin-bottom: 20px;
+    }
+
+
+    .full-name{
+        font-size: 42px;
+        font-weight: 600;
+        align-self: center;
+        margin-bottom: 20px;
+    }
+
+
+    .about-claim{
+        font-size: 28px;
+        font-weight: 500;
+        text-transform: uppercase;
+        opacity: 0.8;
+        margin-bottom: 20px;
+    }
+    .about-desc{
+        font-size: 20px;
+        font-style: italic;
+        color: black;
+        margin-bottom: 20px;
+    }
+    .details-info{
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-between;
 
     }
-    .grid-description{
-        grid-area: description;
-        background: white;
-        box-shadow: 0 0 10px black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
 
-
-    }
-    .grid-stats{
-        grid-area: stats;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 100px;
-        display: flex;
-        padding: 5px;
-    }
-    .grid-tmp8{
-        grid-area: tmp8;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 100px;
-    }
-    .grid-tmp9{
-        grid-area: tmp9;
-        background: white;
-        box-shadow: 0 0 10px black;
-        height: 100px;
+    .subclaim{
+        text-align: center;
+        font-weight: 600;
+        font-size: 24px;
     }
 
+    .contact{
+        font-size: 18px;
+        font-weight: 500;
+    }
+    .profile-stats{
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 22px;
+        padding-left: 10px;
+        border-left: 12px solid $color-secondary-accent;
+    }
+    .profile-span{
+        margin-right: 20px;
+        font-size: 30px;
+        font-weight: 600;
+    }
+
+    .profile-btn{
+        margin-top: 50px;
+        width: 200px;
+        align-self: center;
+    }
 
 </style>

@@ -14,19 +14,16 @@
             </v-avatar>
 
 
-        <div style="color: black; font-weight: 400; align-self: center; padding: 10px;" @click="navigateToUserProfile">{{nickname}} </div>
-        <div style="font-size: 14px; align-self: center">username@jira-wannabe.com</div>
-        <div style="align-self: center; padding: 10px;"><v-chip>POSITION</v-chip></div>
+        <div style="color: black; font-weight: 600; align-self: center; padding: 10px;" >{{nickname}} </div>
+
 
 
 
         <v-divider class="mx-4"></v-divider>
 
 
-        <v-card-actions style="display: flex; justify-content: space-between; padding: 10px;">
-            <span>action1</span>
-            <span>action1</span>
-            <span>action1</span>
+        <v-card-actions style="display: flex; justify-content: center; padding: 10px;">
+            <v-btn @click="navigateToUserProfile">VIEW PROFILE</v-btn>
         </v-card-actions>
 
     </v-card>

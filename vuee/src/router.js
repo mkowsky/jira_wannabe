@@ -9,6 +9,7 @@ import Projects from "@/views/Projects";
 import ProjectDetails from "@/views/ProjectDetails";
 import TaskDetails from "@/views/TaskDetails";
 import ProjectCreation from "@/views/ProjectCreation";
+import Home from "@/views/Home";
 
 
 Vue.use(Router);
@@ -62,7 +63,10 @@ function checkIfModerator(to, from, next) {
 
 const routes = [
 
-
+    {
+        path: '',
+        component: Home
+    },
     {
         path: '/login',
         component: Login,
