@@ -1,19 +1,23 @@
 <template>
 
-    <v-card class="card">
+    <v-card class="-project-card">
 
 
-        <div class="img-wrapper" style=" align-self: center; width: 80%; height: 130px; ">
-            <img :src="require(`../assets/undraw/` + projectIconID+ `.svg`)" style="height: 100%; width: 100%;">
+        <img :src="require(`../assets/undraw/` + projectIconID+ `.svg`)" class="-project-image">
+
+
+        <v-card-subtitle class="-project-title">{{projectTitle}}</v-card-subtitle>
+
+        <div class="-project-details-wrapper">
+            <div class="box">
+                <span class="box-upper">98</span>
+                <span class="box-bottom">tasks</span>
+            </div>
+            <div class="box"><span class="box-upper">12</span><span
+                    class="box-bottom">members</span></div>
+            <div class="box"><span class="box-upper">32%</span><span
+                    class="box-bottom">progress</span></div>
         </div>
-
-        <v-card-subtitle style="align-self: center; font-size: 15px;">{{projectTitle}}</v-card-subtitle>
-
-        <v-card-actions style="background: rgba(225, 182, 193, 1); display: flex; flex-direction: row; justify-content: space-evenly; padding: 2px; height: 80px;">
-            <div class="box"><span style="display: flex; flex-direction: column; align-self: center; font-size: 22px;">98</span><span style="font-size: 13px;">tasks</span></div>
-            <div class="box"><span style="display: flex; flex-direction: column; align-self: center; font-size: 22px;">12</span><span style="font-size: 13px;">members</span></div>
-            <div class="box"><span style="display: flex; flex-direction: column; align-self: center; font-size: 22px;">32%</span><span style="font-size: 13px;">progress</span></div>
-        </v-card-actions>
     </v-card>
 
 </template>
@@ -23,8 +27,8 @@
     export default {
         name: "ProjectCard",
         props: ['projectTitle', 'projectID', 'projectIconID'],
-        methods:{
-            cardClicked(){
+        methods: {
+            cardClicked() {
                 this.$emit('card-clicked', {id: this.projectID});
             }
         }
@@ -33,35 +37,63 @@
 
 <style scoped lang="scss">
 
-    .box{
 
-        height: 100%;
-        max-width: 33.3%;
+    @import "../assets/css/main";
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-
-    .card {
+    .-project-card {
         border-radius: 30px;
         height: 320px;
-        width: 240px;
+        width: 260px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         transition: 0.4s;
         padding: 10px 0 0 0;
+        font-family: 'Montserrat', sans-serif;
     }
 
-    .circle {
-        display: flex;
-        justify-content: center;
-        background: rgba(225, 182, 193, 1);
-        height: 120px;
-        border-radius: 50%;
+    .-project-image {
+        align-self: center;
+        width: 80%;
+        height: 130px;
     }
+
+    .-project-title {
+        color: black;
+        align-self: center;
+        font-size: 15px;
+        font-weight: 700;
+
+    }
+
+    .-project-details-wrapper {
+        background: $color-secondary-accent;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        padding: 2px;
+        height: 80px;
+    }
+
+    .box {
+        height: 100%;
+        max-width: 33.3%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .box-bottom {
+        font-size: 13px;
+    }
+
+    .box-upper {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        font-size: 22px;
+    }
+
 
     .project-card-title {
         font-weight: 300;

@@ -1,14 +1,14 @@
 <template>
     <body>
-    <div style="width: 100%; height: 80vh; display: flex; align-items: center; padding: 30px;">
+    <div style="width: 100%; height: 80vh; display: flex; flex-direction: column; align-items: center; padding: 30px;">
 
         <div style="width: 30%; height: 70%; display: flex; flex-direction: column;">
             <div class="section-title">ACTIONS</div>
             <div class="claim">MANAGE YOUR TASKS</div>
-            <div class="subclaim">All the changes will be implemented immediately and visible in task timeline.</div>
+
         </div>
 
-        <div style="width:70%; display: flex; flex-direction: row; justify-content: center">
+        <div style="width:70%; display: flex; flex-direction: row; justify-content: center;">
             <div class="actions-box">
                 <p class="actions-box-title">CHANGE STATE</p>
                 <font-awesome-icon icon="exchange-alt" class="actions-box-icon"></font-awesome-icon>
@@ -36,6 +36,8 @@
                 <v-btn class="actions-box-button" color="#AC474C" @click="changeDeadline">CHANGE</v-btn>
             </div>
         </div>
+
+        <div class="subclaim">All the changes will be implemented immediately and visible in task timeline.</div>
     </div>
     </body>
 </template>
@@ -62,11 +64,10 @@
     }
 </script>
 
-<style scoped>
-
-
+<style scoped lang="scss">
+    @import "../assets/css/main";
     .actions-box {
-        width: 260px;
+        width: 240px;
         height: 340px;
         background: white;
         box-shadow: 0 0 10px black;
@@ -75,6 +76,7 @@
         justify-content: space-between;
         padding: 15px;
         margin-right: 20px;
+
     }
 
     .actions-box-title {
@@ -105,7 +107,7 @@
     }
 
     .section-title {
-        background: #6C63FF;
+        background: $color-secondary-accent;
         padding: 10px;
         font-size: 50px;
         margin-bottom: 20px;
@@ -118,13 +120,17 @@
         font-weight: 800;
         text-align: center;
         margin-bottom: 30px;
+
     }
 
     .subclaim {
-        font-size: 36px;
+        font-size: 46px;
         text-align: center;
-        font-style: italic;
-        opacity: 0.8;
-        margin-bottom: 80px;
+
+        opacity: 0.9;
+        font-weight: 300;
+        margin-top: 20px;
+        width: 800px;
+
     }
 </style>

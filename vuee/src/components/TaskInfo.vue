@@ -12,9 +12,7 @@
             <div class="--claim">
                 TASK DESCRIPTION
             </div>
-            <div class="--subclaim">
-                TASK SUBCLAIM
-            </div>
+
             <div class="--content">
                 Lorem Ipsum is simply dummy
                 text of the printing and typesetting industry. Lorem Ipsum has been the industry's
@@ -40,8 +38,8 @@
             <div class="small-box-title">STATUS</div>
             <div class="small-box-content"> {{currentTask.state}}</div>
         </div>
-        <div class="template-grid" style="display: flex; justify-content: center; align-items: center">
-            <div style="font-weight: 600; text-transform: uppercase; font-size: 40px;">{{currentTask.name}}</div>
+        <div class="template-grid">
+            <div class="task-name">{{currentTask.name}}</div>
         </div>
         <div class="image-grid">
 
@@ -87,8 +85,8 @@
         data() {
             return {}
         },
-        methods:{
-            navigateToUserProfile(){
+        methods: {
+            navigateToUserProfile() {
 
                 this.$emit('navigate-to-user-profile', {userID: this.currentTask.user.id})
             }
@@ -97,6 +95,9 @@
 </script>
 
 <style scoped lang="scss">
+    @import "../assets/css/main";
+
+
     .grid-wrapper {
         display: grid;
         grid-template-columns: 200px 300px 700px 400px;
@@ -133,13 +134,13 @@
             font-size: 26px;
             font-weight: 500;
             color: black;
+            margin-bottom: 20px;
         }
 
         .--subclaim {
             font-size: 20px;
             font-weight: 400;
-            color: #424242;
-            margin-bottom: 10px;
+
         }
 
         .--content {
@@ -151,7 +152,8 @@
 
     .small-box-title {
         font-size: 28px;
-        font-weight: 500;
+        font-weight: 700;
+        color: $color-secondary-accent;
     }
 
     .small-box-content {
@@ -209,11 +211,19 @@
         background: white;
         box-shadow: 0 0 10px black;
         padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
+    .task-name {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 40px;
     }
 
     .section-title {
-        background: #6C63FF;
+        background: $color-secondary-accent;
         padding: 10px;
         font-size: 50px;
         margin-bottom: 20px;

@@ -83,7 +83,12 @@ public class ProjectController {
 
     @GetMapping(value = "/get-all-user-projects/{userID}")
     List<Project> getAllUserProjects(@PathVariable("userID") Long userID) {
-        return userService.getUserById(userID).getProjects();
+        User user = userService.getUserById(userID);
+                if(user.checkIfProjectManager()){
+                    return projectService.getAllProjcets();
+                } else {
+                    return user.getProjects();
+                }
     }
 
     @GetMapping(value = "/get-project-name-and-id")

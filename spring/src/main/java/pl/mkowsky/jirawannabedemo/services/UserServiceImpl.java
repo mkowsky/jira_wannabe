@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mkowsky.jirawannabedemo.dto.PersonalDataDTO;
 import pl.mkowsky.jirawannabedemo.model.User;
+import pl.mkowsky.jirawannabedemo.model.VerificationToken;
+import pl.mkowsky.jirawannabedemo.repository.TokenRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 import org.hibernate.query.Query;
 
@@ -19,11 +21,13 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private EntityManager entityManager;
+    private TokenRepository tokenRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, EntityManager entityManager) {
+    public UserServiceImpl(UserRepository userRepository, EntityManager entityManager, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.entityManager = entityManager;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -73,5 +77,16 @@ public class UserServiceImpl implements UserService {
         int random = (int) (Math.random() * (18 - 0)) + 0;
         return surnames[random];
 
+    }
+
+    @Override
+    public void createVerificationToken(User user, String token) {
+        VerificationToken newUserToken = new VerificationToken(token, user);
+        tokenRepository.save(newUserToken);
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(String verificationToken) {
+        return tokenRepository.findByToken(verificationToken);
     }
 }

@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 import Login from "@/views/Login";
 import Board from "@/views/Board";
-import TaskCreation from "@/views/TaskCreation";
+import TaskCreation from "@/views/CreateTask";
 import Profile from "@/views/Profile";
 import Projects from "@/views/Projects";
 import ProjectDetails from "@/views/ProjectDetails";
@@ -11,6 +11,8 @@ import TaskDetails from "@/views/TaskDetails";
 import ProjectCreation from "@/views/ProjectCreation";
 import Home from "@/views/Home";
 import Register from "@/views/Register";
+import AdminDashboard from "@/views/AdminDashboard";
+import TokenValidation from "@/views/TokenValidation";
 
 
 Vue.use(Router);
@@ -102,6 +104,11 @@ const routes = [
         component: ProjectCreation,
         beforeEnter: checkIfModerator
     },
+    {
+        path: '/admin-dashboard',
+        component: AdminDashboard   ,
+        beforeEnter: checkIfModerator
+    },
 
     {
         path: '/profile',
@@ -128,6 +135,13 @@ const routes = [
         name: 'taskDetails',
         path: '/task/task-:taskID',
         component: TaskDetails,
+        props: true,
+    },
+    {
+        name: 'token-confirmation',
+        path: '/token-confirmation/isValid-:isValid',
+        component: TokenValidation,
+        params: true,
         props: true,
     }
 

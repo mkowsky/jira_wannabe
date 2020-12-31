@@ -1,112 +1,116 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-    <div class="project-creation-container">
-        <side-navigation-bar></side-navigation-bar>
-        <div class="project-creation-content">
+    <body>
 
-            <div class="project-creation-box">
-                <img src="../assets/creation.svg"
-                     style="position:absolute; width: 50%; height: 50%; top: 50%; transform: translateY(-50%); left: -5%;">
-                <p class="project-title">PROJECT CREATOR</p>
-                <p class="project-info">In this project-creator
-                    you can only choose your team members and set
-                    title for your new project. To add tasks you should head to
-                    task creation view.
-                </p>
 
-                <div style="background: white; width: 40%; height: 60%; position: absolute; left: 55%; top: 30%; border-radius: 35px; display: flex; flex-direction: column; padding: 20px;">
-                    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                        <v-btn style="margin-right: 20px;" @click="modalVisible = true">Choose icon</v-btn>
+    <side-navigation-bar></side-navigation-bar>
+    <div class="project-creation-content">
 
-                        <div style="border: 2px solid black; width: 150px; height: 150px; padding: 5px;">
-                            <v-img
-                                    style="object-fit: cover; "
-                                    :src="currentSRC"
-                                    class="image"
-                            ></v-img>
-                        </div>
+        <div class="project-creation-box">
+            <img src="../assets/images/creation.svg" class="project-image">
+            <p class="project-title">PROJECT CREATOR</p>
+            <p class="project-info">In this project-creator
+                you can only choose your team members and set
+                title for your new project. To add tasks you should head to
+                task creation view.
+            </p>
+
+            <div class="box">
+                <div class="box-flex">
+                    <v-btn style="margin-right: 20px;" @click="modalVisible = true">Choose icon</v-btn>
+
+                    <div style="border: 2px solid black; width: 150px; height: 150px; padding: 5px;">
+                        <v-img
+                                style="object-fit: cover; "
+                                :src="currentSRC"
+                                class="image"
+                        ></v-img>
                     </div>
-                    <v-text-field solo label="Enter project title" v-model="projectTitle" style=""></v-text-field>
-
-                    <v-autocomplete
-                            solo
-                            label="Search for user"
-                            :items="users"
-                            item-text="name"
-                            item-value="id"
-                            hide-selected
-                            multiple
-                            chips
-                            small-chips
-                            v-model="chosenPeople"
-                            color="rgba(225, 182, 193)"
-                            style=""
-                    >
-                        <template v-slot:selection="data">
-                            <v-chip
-                                    close
-                                    @click:close="remove(data.item.id)"
-                                    color="#bababa"
-                            >
-                                {{ data.item.name }}
-                            </v-chip>
-                        </template>
-                    </v-autocomplete>
-
-                    <v-btn @click="createNewProject()" style="">CREATE
-                        PROJECT
-                    </v-btn>
                 </div>
+                <v-text-field solo label="Enter project title" v-model="projectTitle"></v-text-field>
+
+                <v-autocomplete
+                        solo
+                        label="Search for user"
+                        :items="users"
+                        item-text="name"
+                        item-value="id"
+                        hide-selected
+                        multiple
+                        chips
+                        small-chips
+                        v-model="chosenPeople"
+                        :color="colorAccent"
+
+                >
+                    <template v-slot:selection="data">
+                        <v-chip
+                                close
+                                @click:close="remove(data.item.id)"
+                                color="#bababa"
+                        >
+                            {{ data.item.name }}
+                        </v-chip>
+                    </template>
+                </v-autocomplete>
+
+                <v-btn @click="createNewProject()" >CREATE
+                    PROJECT
+                </v-btn>
+            </div>
+        </div>
+    </div>
+
+    <Dialog :dialog="modalVisible"
+           :dialog-content="'Pick icon for you new project.'"
+           :dialog-title="'Pick icon'"
+           @modal-cancel="modalVisible=false"
+           @modal-agree="pickIcon()">
+        <template slot="body">
+            <div style="display: flex; flex-direction: column; padding: 10px;">
+                <div style="display: flex; flex-direction: row; margin-bottom: 20px;"
+                     v-for="(icon, index) in iconImages" :key="index">
+                    <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'0'"
+                                                                                                     :src="icon.src1"
+                                                                                                     style="height: 100%; width: 100%; "
+                                                                                                     @click="makeHover($event, icon.src1)"
+                    >
+                    </div>
+                    <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'1'"
+                                                                                                     :src="icon.src2"
+                                                                                                     style="height: 100%; width: 100%; "
+                                                                                                     @click="makeHover($event,icon.src2 )">
+                    </div>
+                    <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'2'"
+                                                                                                     :src="icon.src3"
+                                                                                                     style="height: 100%; width: 100%; "
+                                                                                                     @click="makeHover($event, icon.src3)"
+                    >
+                    </div>
+                </div>
+
 
             </div>
 
-
-        </div>
-        <Modal :dialog="modalVisible"
-               :dialog-content="'Pick icon for you new project.'"
-               :dialog-title="'Pick icon'"
-               @modal-cancel="modalVisible=false"
-               @modal-agree="pickIcon()">
-            <template slot="body">
-                <div style="display: flex; flex-direction: column; padding: 10px;">
-                    <div style="display: flex; flex-direction: row; margin-bottom: 20px;"
-                         v-for="(icon, index) in iconImages" :key="index">
-                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'0'"
-                                                                                                         :src="icon.src1"
-                                                                                                         style="height: 100%; width: 100%; "
-                                                                                                         @click="makeHover($event, icon.src1)"
-                        >
-                        </div>
-                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'1'"
-                                                                                                         :src="icon.src2"
-                                                                                                         style="height: 100%; width: 100%; "
-                                                                                                         @click="makeHover($event,icon.src2 )">
-                        </div>
-                        <div style="width: 150px; height: 150px; margin-right: 20px; padding: 5px;"><img :id="index+'2'"
-                                                                                                         :src="icon.src3"
-                                                                                                         style="height: 100%; width: 100%; "
-                                                                                                         @click="makeHover($event, icon.src3)"
-                        >
-                        </div>
-                    </div>
+        </template>
+    </Dialog>
 
 
-                </div>
-
-            </template>
-        </Modal>
-    </div>
+    </body>
 </template>
 
 <script>
     import SideNavigationBar from "@/components/SideNavigationBar";
     import axios from "axios";
-    import Modal from "@/components/Modal";
+    import Dialog from "@/components/Dialog";
+    import colors from "@/assets/css/colors"
+
 
     export default {
         name: "ProjectCreation",
-        components: {Modal, SideNavigationBar},
+        components: {Dialog, SideNavigationBar},
         data() {
             return {
+                colorAccent: colors.ACCENT,
                 users: [],
                 chosenPeople: [],
                 projectTitle: '',
@@ -233,16 +237,20 @@
     }
 </script>
 
-<style scoped>
-    .project-creation-container {
-        height: 100%;
+<style scoped lang="scss">
+    @import "../assets/css/main";
 
+
+
+    body {
+        height: 100%;
+        font-family: 'Montserrat', sans-serif;
     }
+
 
     .project-creation-content {
         height: 100%;
-        margin-left: 10%;
-
+        margin-left: 12%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -254,24 +262,30 @@
         max-height: 90vh;
         width: 80%;
         align-self: center;
-        background: #424242;
+        background: $color-primary-dark;
         box-shadow: 0 0 15px black;
         overflow: hidden;
 
 
+        &:before {
+            content: '';
+            position: absolute;
+            background: $color-primary-white;
+            border-radius: 50%;
+            width: 100%;
+            height: 180%;
+            transform: translate3d(-50%, -36%, 0);
+        }
+
     }
 
-    .project-creation-box:before {
-        content: '';
+    .project-image {
         position: absolute;
-        background: white;
-        border-radius: 50%;
-        /*width: 1400px;*/
-        /*height: 1400px;*/
-        width: 100%;
-        height: 180%;
-        transform: translate3d(-50%, -36%, 0);
-
+        width: 50%;
+        height: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -5%;
     }
 
     .project-title {
@@ -280,7 +294,6 @@
         left: 25%;
         top: 10%;
         transform: translateX(-50%);
-
         letter-spacing: 3px;
         font-weight: 200;
         font-size: 36px;
@@ -296,6 +309,12 @@
         bottom: 20px;
         font-weight: 300;
 
+    }
+    .box{
+        background: white; width: 40%; height: 60%; position: absolute; left: 55%; top: 30%; border-radius: 35px; display: flex; flex-direction: column; padding: 20px;
+    }
+    .box-flex{
+        display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
     }
 
 

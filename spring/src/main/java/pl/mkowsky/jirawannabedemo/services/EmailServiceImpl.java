@@ -35,4 +35,15 @@ public class EmailServiceImpl implements EmailService {
         mail.setText("Hello "  + templateUsername + ",one of tasks, that you're involved in has changed its status.");
         javaMailSender.send(mail);
     }
+
+    @Override
+    public void sendConfirmationEmail(String odbiorca, String tytul, String zawartosc) {
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("noreply@jira-wannabe.com");
+        mail.setTo(odbiorca);
+        mail.setSubject(tytul);
+        mail.setText(zawartosc);
+        javaMailSender.send(mail);
+    }
 }

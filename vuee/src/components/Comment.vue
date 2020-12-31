@@ -10,17 +10,18 @@
         <v-card-text>{{commentContent}}</v-card-text>
     </v-card>
 
-    <Modal :dialog="isDialogVisible" @modal-cancel="isDialogVisible = false" @modal-agree="deleteComment" :dialog-content="'Czy jestes pewny ze chcesz usunac komentarz?'"
+    <Dialog :dialog="isDialogVisible" @modal-cancel="isDialogVisible = false" @modal-agree="deleteComment" :dialog-content="'Czy jestes pewny ze chcesz usunac komentarz?'"
     :dialog-title="'Usun komentarz'"
-    ></Modal>
+    ></Dialog>
 </div>
 </template>
 
 <script>
-    import Modal from "@/components/Modal"
+
+    import Dialog from "@/components/Dialog";
     export default {
         name: "Comment",
-        components:{Modal,},
+        components:{Dialog},
         props: {
             commentDate: {},
             commentContent: {

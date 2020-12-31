@@ -6,7 +6,7 @@
             <div class="grid-item-claim">Upcoming Events</div>
             <div>ITEM SUBCLAIM</div>
             <div style="width: 180px; height: 180px; align-self: center">
-                <img src="../assets/001-calendar.svg" style="width: 100%; height: 100%; opacity: 0.4; ">
+                <img src="../assets/images/001-calendar.svg" style="width: 100%; height: 100%; opacity: 0.4; ">
             </div>
             <div class="grid-item-description">You have no upcoming events</div>
         </div>
@@ -14,7 +14,7 @@
             <div class="grid-item-claim">Daily Stats</div>
             <div class="grid-item-subclaim">ITEM SUBCLAIM</div>
             <div style="width: 180px; height: 180px; align-self: center">
-                <img src="../assets/001-bar-chart.svg" style="width: 100%; height: 100%; opacity: 0.4; ">
+                <img src="../assets/images/001-bar-chart.svg" style="width: 100%; height: 100%; opacity: 0.4; ">
             </div>
             <div class="grid-item-description">There is no data to display at this moment</div>
         </div>
@@ -56,7 +56,7 @@
             <template v-if="actualShowing === 'Activity'">
                 <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center">
                     <div style="width: 220px; height: 220px; align-self: center; margin-bottom: 30px; ">
-                        <img src="../assets/002-warning.svg"
+                        <img src="../assets/images/002-warning.svg"
                              style="width: 100%; height: 100%; opacity: 0.4; ">
                     </div>
                     <div class="grid-item-subclaim" style="align-self: center">No recent activity was
@@ -92,8 +92,8 @@
 </template>
 
 <script>
-    import Task from "@/components/Task"
-    import RecentActivityItem from "@/components/RecentActivityItem";
+    import Task from "./Task"
+    import RecentActivityItem from "./RecentActivityItem";
     export default {
         name: "ProjectBacklog",
         components:{Task, RecentActivityItem},
@@ -125,7 +125,7 @@
 </script>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+
 
     body {
         font-family: 'Montserrat', sans-serif;
@@ -193,7 +193,6 @@
 
     .grid-item-subclaim {
         font-size: 20px;
-        color: #424242;
         margin-bottom: 10px;
     }
 

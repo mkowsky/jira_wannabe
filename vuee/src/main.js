@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueMoment from 'vue-moment';
 
 
+
 import Vuetify from 'vuetify';
 Vue.use(Vuetify);
 import vuetify from './plugins/vuetify';
@@ -48,6 +49,7 @@ Vue.use(VueMoment);
 
 var router = new VueRouter({
   routes: routes,
+  mode: 'history',
 })
 
 new Vue({

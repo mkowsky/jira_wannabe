@@ -1,51 +1,52 @@
 <template>
-    <div class="task-board-wrapper">
+    <div class="task-board-container">
 
         <div class="taskboard-filters">
 
-            <div v-if="filtrsActive" style=" display: flex;">
+            <div  style=" display: flex; align-items: center">
 
-                     <p class="ma-2" style="font-size: 20px;">Aktywne filtry</p>
-
+                <p  class="ma-2 filters-text" >Active filters: <span v-if="!filtrsActive"> none</span></p>
+                <template v-if="filtrsActive" style="display: flex; ">
 
 
                 <v-chip
                         v-if="query"
-                        class="ma-2"
                         close
-                        color="grey"
+                        :color="colorAccent"
                         text-color="white"
                         @click:close="clearFilters('query')"
+                        style="margin-right: 15px;"
                 >
                     Task name: {{query}}
                 </v-chip>
                 <v-chip
                         v-if="queryPriority"
-                        class="ma-2"
                         close
-                        color="grey"
+                        :color="colorAccent"
                         text-color="white"
                         @click:close="clearFilters('priority')"
+                        style="margin-right: 15px;"
                 >
                     Task priority: {{queryPriorityName}}
                 </v-chip>
                 <v-chip
                         v-if="queryProject"
-                        class="ma-2"
                         close
-                        color="grey"
+                        :color="colorAccent"
                         text-color="white"
                         @click:close="clearFilters('project')"
+                        style="margin-right: 15px;"
                 >
                     Project: {{queryProject}}
                 </v-chip>
+                </template>
             </div>
 
-            <div class="filters-wrapper" >
-                <div style="width: 20%" class="margin-right">
+            <div class="filters-wrapper">
+                <div  class="filter">
                     <v-text-field solo label="Search by task name" v-model="queryCopy"></v-text-field>
                 </div>
-                <div style="width: 20%" class="margin-right">
+                <div  class="filter">
                     <v-select solo
                               :items="priorities"
                               item-text="name"
@@ -53,13 +54,16 @@
                               label="Task priority"
                               v-model="queryPriorityCopy"></v-select>
                 </div>
-                <div v-if="projects" style="width: 20%" class="margin-right">
-                    <v-select solo label="Only from project" :items="projects" item-text="projectName" item-value="projectName"
-                              v-model="queryProjectCopy" ></v-select>
+                <div v-if="projects" class="filter">
+                    <v-select solo label="Only from project" :items="projects" item-text="projectName"
+                              item-value="projectName"
+                              v-model="queryProjectCopy"></v-select>
                 </div>
 
 
-                    <v-btn solo @click="applyFilters()" :disabled="applyFiltersButtonEnabled" style="height: 60%" >APPLY FILTERS</v-btn>
+                <v-btn solo @click="applyFilters()" :disabled="applyFiltersButtonEnabled" style="height: 45px;">APPLY
+                    FILTERS
+                </v-btn>
 
             </div>
 
@@ -67,12 +71,12 @@
         </div>
 
 
-        <div class="taskboard-container">
-            <v-card class="column" color="#424242" style="display: flex; flex-direction: column; height: 680px;">
+        <div class="task-board-wrapper">
+            <v-card class="column">
                 <v-card-title
-                        style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
-                    TO
-                    DO
+                        class="column-title">
+                        TO
+                        DO
                 </v-card-title>
                 <Task v-for="task in toDo"
                       :key="task.taskID"
@@ -85,9 +89,9 @@
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
+            <v-card class="column">
                 <v-card-title
-                        style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
+                        class="column-title">
                     IN
                     PROGRESS
                 </v-card-title>
@@ -102,10 +106,9 @@
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
 
-
-            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
+            <v-card class="column">
                 <v-card-title
-                        style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
+                        class="column-title">
                     CODE REVIEW
                 </v-card-title>
                 <Task v-for="task in codeReview"
@@ -119,9 +122,9 @@
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
 
-            <v-card class="column" style="display: flex; flex-direction: column; height: 680px;" color="#424242">
+            <v-card class="column">
                 <v-card-title
-                        style="color: white; font-weight: 100; letter-spacing: 3px; font-size: 26px; align-self: center">
+                        class="column-title">
                     DONE
                 </v-card-title>
                 <Task v-for="task in done"
@@ -134,7 +137,6 @@
                       class="gap"
                       @task-item-clicked="navigateToTask(task.taskID)"/>
             </v-card>
-
         </div>
 
 
@@ -144,9 +146,8 @@
                     v-model="page"
                     :length="pages"
                     @input="pageChanged($event)"
-                    color="rgba(235, 182, 193, 1)"
-                    circle
-
+                    :color="colorAccent"
+                    class="pagination-style"
             ></v-pagination>
         </div>
 
@@ -154,7 +155,8 @@
 </template>
 
 <script>
-    import Task from '@/components/Task'
+    import Task from './Task'
+    import col from "@/assets/css/colors";
 
 
     export default {
@@ -163,10 +165,13 @@
         props: {
             tasks: {},
             projects: {},
-            pages:{},
+            pages: {},
+
         },
         data() {
             return {
+                colorAccent: col.ACCENT,
+                colorDark: col.DARK,
                 filtrsActive: false,
                 page: 1,
                 query: '',
@@ -187,7 +192,7 @@
         },
         methods: {
             paginate(array, pageSize, pageNumber) {
-                return array.slice((pageNumber-1) * pageSize, (pageNumber) * pageSize);
+                return array.slice((pageNumber - 1) * pageSize, (pageNumber) * pageSize);
             },
             pageChanged(value) {
                 this.page = value;
@@ -199,15 +204,14 @@
                 this.query = this.queryCopy;
                 this.queryPriority = this.queryPriorityCopy;
                 this.queryProject = this.queryProjectCopy;
-                for(let i = 0; i < this.priorities.length; i++){
-                    if(this.priorities[i].value === this.queryPriorityCopy) this.queryPriorityName = this.priorities[i].name;
+                for (let i = 0; i < this.priorities.length; i++) {
+                    if (this.priorities[i].value === this.queryPriorityCopy) this.queryPriorityName = this.priorities[i].name;
                 }
                 this.filtrsActive = true;
                 this.page = 1;
             },
             clearFilters(value) {
-
-                switch(value){
+                switch (value) {
                     case 'query':
                         this.queryCopy = '';
                         this.query = '';
@@ -217,13 +221,12 @@
                         this.queryProject = '';
                         break;
                     case 'priority':
-                        console.log('3');
                         this.queryPriorityCopy = '';
                         this.queryPriority = '';
                         break;
                 }
 
-                if((this.query) || (this.queryPriority) || (this.queryProject)) this.filtrsActive = true;
+                if ((this.query) || (this.queryPriority) || (this.queryProject)) this.filtrsActive = true;
                 else this.filtrsActive = false;
             }
         },
@@ -335,56 +338,82 @@
                 return null;
             },
             applyFiltersButtonEnabled() {
-                if((this.queryCopy) || (this.queryPriorityCopy) || (this.queryProjectCopy)) return false;
+                if ((this.queryCopy) || (this.queryPriorityCopy) || (this.queryProjectCopy)) return false;
                 else return true;
             }
         },
     }
 </script>
 
-<style scoped>
-    .task-board-wrapper {
+<style scoped lang="scss">
+    @import "../assets/css/main";
+
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .task-board-container {
         display: flex;
         flex-direction: column;
-
+        padding: 30px;
 
     }
 
-    .taskboard-container {
+
+    .task-board-wrapper {
         width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
-        margin-bottom: 10px;
+        justify-content: space-between;
+        margin-bottom: 15px;
     }
 
     .taskboard-filters {
-        margin-left: 4%;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        height: 15%;
+        height: 100px;
     }
 
     .filters-wrapper {
         display: flex;
         flex-direction: row;
-
-
+    }
+    .filters-text{
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 26px;
+        opacity: 0.87;
     }
 
     .column {
-
+        background: $color-primary-dark;
         width: 20%;
-        padding: 15px;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        height: 680px;
+        padding: 0 0 0 20px;
 
+    }
+
+    .column-title {
+        color: $color-primary-white;
+        font-weight: 600;
+        font-size: 30px;
+        align-self: center
     }
 
     .gap {
         margin-bottom: 20px;
         cursor: pointer;
     }
-    .margin-right{
+
+    .filter {
+        width: 300px;
         margin-right: 20px;
     }
+
 </style>

@@ -10,7 +10,7 @@
                     :complete="e6 > 1"
                     step="1"
                     editable
-                    color="rgba(225, 182, 193)">
+                    :color="colorAccent">
                 Chose project
 
             </v-stepper-step>
@@ -24,7 +24,7 @@
                           item-value="id"
                           class="select"
                           v-model="task.taskProject"
-                          color="rgba(225, 182, 193)"
+                          :color="colorAccent"
                           @change="getProjectTeamMembers()"
                           @input="liveRenderChange('taskProject')"
                 ></v-select>
@@ -32,7 +32,7 @@
                 <v-btn
 
                         @click="e6 = 2;"
-                        color="rgba(225, 182, 193)"
+                        :color="colorAccent"
                 >CONFIRM
                 </v-btn>
             </v-stepper-content>
@@ -42,7 +42,7 @@
                     :complete="e6 > 2"
                     step="2"
                     editable
-                    color="rgba(225, 182, 193)"
+                    :color="colorAccent"
             >
                 Set title
             </v-stepper-step>
@@ -55,7 +55,7 @@
                               @input="liveRenderChange('taskTitle')"></v-text-field>
 
                 <v-btn
-                        color="rgba(225, 182, 193)"
+                        :color="colorAccent"
                         @click="e6 = 3;"
                 >CONFIRM
                 </v-btn>
@@ -66,7 +66,7 @@
                     :complete="e6 > 3"
                     step="3"
                     editable
-                    color="rgba(225, 182, 193)">
+                    :color="colorAccent">
                 Pick priority
             </v-stepper-step>
 
@@ -78,14 +78,14 @@
                           item-text="name"
                           item-value="value"
                           class="select"
-                          color="rgba(225, 182, 193)"
+                          :color="colorAccent"
                           v-model="task.taskPriority"
                           @input="liveRenderChange('taskPriority')"
 
                 ></v-select>
 
                 <v-btn
-                        color="rgba(225, 182, 193)"
+                        :color="colorAccent"
                         @click="e6 = 4; "
                 >CONFIRM
                 </v-btn>
@@ -96,7 +96,7 @@
                     :complete="e6 > 4"
                     step="4"
                     editable
-                    color="rgba(225, 182, 193)">
+                    :color="colorAccent">
                 Task description
 
             </v-stepper-step>
@@ -107,7 +107,7 @@
                             v-model="task.taskDescription"
                             @input="liveRenderChange('taskDescription')"></v-textarea>
                 <v-btn
-                        color="rgba(225, 182, 193)"
+                        :color="colorAccent"
                         @click="e6 = 5; "
                 >CONFIRM
                 </v-btn>
@@ -118,15 +118,15 @@
                     :complete="e6 > 5"
                     step="5"
                     editable
-                    color="rgba(225, 182, 193)">
+                    :color="colorAccent">
                 Pick deadline
             </v-stepper-step>
 
             <v-stepper-content step="5">
                 <v-date-picker v-model="task.taskDeadline"
-                               color="rgba(225, 182, 193)"
+                               :color="colorAccent"
                                :min="currentDate"></v-date-picker>
-                <v-btn color="rgba(225, 182, 193)" @click="e6 = 6;">CONFIRM</v-btn>
+                <v-btn :color="colorAccent" @click="e6 = 6;">CONFIRM</v-btn>
             </v-stepper-content>
 
 
@@ -134,7 +134,7 @@
                     :complete="e6 > 6"
                     step="6"
                     editable
-                    color="rgba(225, 182, 193)">
+                    :color="colorAccent">
                 Select users
             </v-stepper-step>
 
@@ -151,38 +151,15 @@
                             item-text="fullName"
                             item-value="id"
                             class="select"
-                            color="rgba(225, 182, 193)"
+                            :color="colorAccent"
                             v-model="chosenUser"
                             @input="liveRenderChange('taskPriority')"
 
                     ></v-select>
                 </template>
 
-                <!--<v-autocomplete-->
-                <!--solo-->
-                <!--label="Search for user"-->
-                <!--:items="autocompleteData"-->
-                <!--item-text="name"-->
-                <!--item-value="id"-->
-                <!--hide-selected-->
-                <!--multiple-->
-                <!--chips-->
-                <!--small-chips-->
-                <!--v-model="chosenPeople"-->
-                <!--color="rgba(225, 182, 193)"-->
-                <!--&gt;-->
-                <!--<template v-slot:selection="data">-->
-                <!--<v-chip-->
-                <!--close-->
-                <!--@click:close="remove(data.item.id)"-->
-                <!--color="rgba(225, 182, 193)"-->
-                <!--&gt;-->
-                <!--{{ data.item.name }}-->
-                <!--</v-chip>-->
-                <!--</template>-->
-                <!--</v-autocomplete>-->
                 <v-btn
-                        color="rgba(225, 182, 193)"
+                        :color="colorAccent"
                         @click="e6 = 7"
                 >CONFIRM
                 </v-btn>
@@ -200,8 +177,8 @@
 </template>
 
 <script>
-    import Task from "@/model/task";
-
+    import Task from "../model/task";
+    import colors from "@/assets/css/colors";
 
     export default {
         name: "TaskCreation",
@@ -217,16 +194,10 @@
         },
         data() {
             return {
+                colorAccent: colors.ACCENT,
                 e6: 1,
-                task: new Task(null, null, 'BACKEND', null, null, "TO_DO", null, null, null),
+                task: new Task(null, null, 'BACKEND', null, null, "TO_DO", null, null),
                 currentDate: this.$moment().format("YYYY-MM-DD"),
-
-                // projects: [
-                //     {value: 1},
-                //     {value: 4},
-                //     {value: 5},
-                //
-                // ],
                 priorities: [
                     {value: "ABLE_TO_WAIT", name: "ABLE TO WAIT"},
                     {value: "IMPORTANT", name: "IMPORTANT"},
@@ -252,7 +223,7 @@
             },
             clearData() {
                 this.e6 = 1;
-                this.task = new Task(null, null, null, null, null, "TO_DO", null, null, null)
+                this.task = new Task(null, null, null, null, null, "TO_DO", null, null)
                 this.chosenUser = '';
             },
         },

@@ -1,5 +1,5 @@
 <template>
-    <v-card @click="taskItemClicked">
+    <v-card @click="taskItemClicked" style="width: 300px;">
         <v-card-title>{{taskName}}</v-card-title>
         <v-card-subtitle>{{projectName}}</v-card-subtitle>
         <v-card-text></v-card-text>
@@ -20,23 +20,13 @@
         props: {
             taskName: {
                 default: "Task Title",
-
             },
             projectName: {
-
                 default: "Project Name",
-
             },
-            taskUser: {
-
-
-            },
-            profilePicture:{
-
-            },
-            priority: {
-            }
-
+            taskUser: {},
+            profilePicture:{},
+            priority: {},
         },
         data() {
             return {

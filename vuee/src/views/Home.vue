@@ -5,7 +5,7 @@
         <ul>
             <li>
                 <div class="logo-wrapper-small">
-                    <img src="../assets/logo.png" class="logo-content">
+                    <img src="../assets/images/logo.png" class="logo-content">
                 </div>
                 <div class="logo-slogan-small">JIRA-WANNABE</div>
             </li>
@@ -21,11 +21,11 @@
             <div class="subclaim">Jira-Wannabe is collaborative project management app that streamline and refines your
                 workflow. Managing your tasks and projects never been easier.
             </div>
-            <v-btn x-large rounded class="trial-button" color="#6C63FF">START FREE TRIAL</v-btn>
+            <v-btn x-large rounded class="trial-button" :color="colorAccent">START FREE TRIAL</v-btn>
         </div>
         <div class="header2-logo-content">
             <div class="logo-wrapper-big">
-                <img src="../assets/logo.png" class="logo-content">
+                <img src="../assets/images/logo.png" class="logo-content">
             </div>
             <div class="logo-slogan-big">JIRA-WANNABE</div>
         </div>
@@ -90,12 +90,14 @@
 </template>
 
 <script>
+    import colors from "@/assets/css/colors";
 
     export default {
         name: "Home",
         components: {},
         data() {
             return {
+                colorAccent: colors.ACCENT,
                 textDescription: '',
                 previousBar: 1,
                 model: 0,
@@ -142,13 +144,12 @@
 </script>
 
 <style scoped lang="scss">
-    $color-primary: white;
-    $color-main-accent: #424242;
-    $color-secondary-accent: #6C63FF;
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+    @import "../assets/css/main";
+
 
     body {
         font-family: 'Montserrat', sans-serif;
+        height: 100%;
     }
 
     .header {
@@ -203,7 +204,7 @@
 
     .header2 {
         width: 100%;
-        height: 80vh;
+        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -247,7 +248,7 @@
     .footer {
         width: 100%;
         height: 20vh;
-        background: purple;
+        background: $color-primary-dark;
     }
 
     .sample {
@@ -255,7 +256,7 @@
         padding: 15px 0 15px 20px;
         font-size: 32px;
         font-weight: 800;
-        color: #424242;
+        color: $color-primary-dark;
         opacity: 0.4;
         cursor: pointer;
 
@@ -270,8 +271,8 @@
         padding: 15px 0 15px 20px;
         font-size: 32px;
         font-weight: 800;
-        color: #424242;
-        border-left: 10px solid purple;
+        color: $color-primary-dark;
+        border-left: 10px solid $color-secondary-accent;
         opacity: 1;
         cursor: pointer;
         transition: 0.3s;
@@ -283,7 +284,7 @@
     }
 
     .span-active {
-        color: purple;
+        color: $color-secondary-accent;
         margin-right: 20px;
         transition: 0.3s;
     }
@@ -301,7 +302,7 @@
         font-weight: 500;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 
@@ -322,7 +323,7 @@
         font-weight: 800;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 
@@ -338,7 +339,7 @@
     }
 
     .logo-wrapper-big {
-        background: linear-gradient(90deg, rgba(108,99,255,1) 0%, rgba(125,120,221,1) 60%, rgba(92,184,236,1) 100%);
+        background: linear-gradient(90deg, rgba(255,111,145,1) 0%, rgba(125,120,221,1) 60%, rgba(110,149,228,1) 78%, rgba(230,84,153,1) 100%);
         width: 400px;
         height: 400px;
         border-radius: 50%;
@@ -381,7 +382,7 @@
     }
 
     .-bar-active {
-        background: purple;
+        background: $color-secondary-accent;
         transition: 0.3s;
     }
 

@@ -23,7 +23,7 @@
                     text
                     @click="agree"
             >
-               {{agreeButton}}
+                {{agreeButton}}
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -34,7 +34,7 @@
 
 <script>
     export default {
-        name: "Modal",
+        name: "Dialog",
         props:{
             oneButton:{
                 default: false,

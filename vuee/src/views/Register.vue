@@ -1,5 +1,17 @@
 <template>
     <body style="display: flex; flex-direction: column; justify-content: space-between; height: 100vh; background: #f8f8f8">
+    <template v-if="registerSuccess">
+        <div class="mailsent-wrapper">
+            <div class="mailsent-claim">JIRA-WANNABE</div>
+            <div class="mailsent-subclaim">Dear {{firstName}}, check your email! </div>
+            <div class="mailsent-img">
+                <img src="../assets/images/undraw_Mail_sent_re_0ofv.svg" style="width: 100%; height: 100%">
+            </div>
+            <div class="mailsent-description">We just send you a verification link. That link will expire shortly, so be sure to click on it soon to get started! </div>
+            <v-btn x-large :color="colorAccent" style="width: 200px;" @click="navigateTo('login')">LOG IN</v-btn>
+        </div>
+    </template>
+    <template v-if="!registerSuccess">
     <div style="position: absolute; left: 50%; transform: translateX(-50%); top: 70%; color: white; font-size: 16px; font-weight: 900; opacity: 0.9">
         LET'S MAKE THE WORLD MORE PRODUCTIVE, TOGETHER.
     </div>
@@ -7,7 +19,7 @@
         <ul>
             <li>
                 <div class="logo-wrapper-small">
-                    <img src="../assets/logo.png" class="logo-content">
+                    <img src="../assets/images/logo.png" class="logo-content">
                 </div>
                 <div class="logo-slogan-small">JIRA-WANNABE</div>
             </li>
@@ -60,15 +72,17 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <defs>
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:rgba(135,50,252,1);stop-opacity:1"></stop>
-                <stop offset="38%" style="stop-color:rgba(106,122,249,0.8410714627647934);stop-opacity:1"></stop>
-                <stop offset="100%" style="stop-color:rgba(73,204,249,1);stop-opacity:1"></stop>
+                <stop offset="0%" style="stop-color:#FF6F91;stop-opacity:1"></stop>
+                <stop offset="60%" style="stop-color:rgba(125,120,221,1);stop-opacity:1"></stop>
+                <stop offset="78%" style="stop-color: rgba(110,149,228,1);stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:rgba(230,84,153,1);stop-opacity:1"></stop>
             </linearGradient>
         </defs>
         <path fill="url(#grad1)" fill-opacity="1"
               d="M0,256L34.3,224C68.6,192,137,128,206,106.7C274.3,85,343,107,411,101.3C480,96,549,64,617,42.7C685.7,21,754,11,823,21.3C891.4,32,960,64,1029,96C1097.1,128,1166,160,1234,149.3C1302.9,139,1371,85,1406,58.7L1440,32L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path>
 
     </svg>
+    </template>
     </body>
 </template>
 
@@ -76,6 +90,7 @@
 <script>
 
     import axios from 'axios';
+    import colors from "@/assets/css/colors"
 
 
     export default {
@@ -83,8 +98,11 @@
         components: {},
         data() {
             return {
+                colorAccent: colors.ACCENT,
+                registerSuccess: false,
                 emailError: '',
                 passwordError: '',
+                message: '',
 
                 firstName: '',
                 lastName: '',
@@ -114,6 +132,14 @@
                     email: this.email,
                 }).then(response => {
                     console.log(response.status);
+                    this.registerSuccess = true;
+                },
+                error => {
+                    this.message = error.response.data.message;
+                    if (this.message.includes('Email')) this.emailError = this.message;
+                    else this.emailError = "";
+
+                    this.registerSuccess = false;
                 });
             },
         },
@@ -138,11 +164,9 @@
 </script>
 
 <style scoped lang="scss">
-    $color-primary: white;
-    $color-main-accent: #424242;
-    $color-secondary-accent: #6C63FF;
+    @import "../assets/css/main";
 
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+
 
     body {
         font-family: 'Montserrat', sans-serif;
@@ -174,7 +198,7 @@
         font-weight: 500;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 
@@ -195,7 +219,7 @@
         font-weight: 800;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 
@@ -272,5 +296,36 @@
         font-weight: 800;
     }
 
+    .mailsent-wrapper{
+        height: 100vh;
+        background: white;
+        box-shadow: 0 0 10px black;
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        align-items: center;
+        justify-content: center;
+    }
+    .mailsent-claim{
+        font-size: 50px;
+        font-weight: 800;
+        color: #6C63FF;
+    }
+    .mailsent-subclaim{
+        font-size: 40px;
+        opacity: 0.8;
 
+    }
+
+    .mailsent-img{
+        width: 400px;
+        height: 400px;
+    }
+
+    .mailsent-description{
+        font-size: 34px;
+        width: 600px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 </style>

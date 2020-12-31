@@ -1,179 +1,190 @@
 <template>
     <body>
-    <div class="project-details-container">
-        <side-navigation-bar></side-navigation-bar>
-        <div class="project-details-content">
 
-            <v-tabs @change="changeContent($event)" grow height="80">
-                <v-tab style="font-size: 24px;">BACKLOG</v-tab>
-                <v-tab style="font-size: 24px;">BOARD</v-tab>
-                <v-tab style="font-size: 24px;">WORKFLOW</v-tab>
-                <v-tab style="font-size: 24px;">TEAM</v-tab>
-                <v-tab style="margin-left: 10%" @click="closeProjectDetails">
-                    <font-awesome-icon icon="window-close" class="icon-nav"/>
-                </v-tab>
-            </v-tabs>
+    <side-navigation-bar></side-navigation-bar>
+    <div class="project-details-content">
 
-            <div v-show="backlogContentVisible" style="padding: 20px;">
-                <ProjectBacklog :user-tasks="userTasks" :recent-project-changes="recentTaskChanges"></ProjectBacklog>
+        <v-tabs @change="changeContent($event)" grow height="80" :color="colorAccent">
+            <v-tab style="font-size: 24px;">BACKLOG</v-tab>
+            <v-tab style="font-size: 24px;">BOARD</v-tab>
+            <v-tab style="font-size: 24px;">WORKFLOW</v-tab>
+            <v-tab style="font-size: 24px;">TEAM</v-tab>
+            <v-tab style="margin-left: 10%" @click="closeProjectDetails">
+                <font-awesome-icon icon="window-close" class="icon-nav"/>
+            </v-tab>
+        </v-tabs>
+
+        <div v-show="backlogContentVisible" style="padding: 20px;">
+            <ProjectBacklog :user-tasks="userTasks" :recent-project-changes="recentTaskChanges"></ProjectBacklog>
+        </div>
+
+        <div v-show="boardContentVisible">
+
+
+
+            <TaskBoard
+                    :tasks="tasks"
+                    :pages="pages"
+                    ></TaskBoard>
+
+        </div>
+
+        <div v-show="workflowContentVisible">
+
+
+            <div style="height: 90vh; padding: 20px; display: flex; justify-content: center ">
+
+                <div style="align-self: center; display: flex; flex-direction: column; width: 600px;">
+                    <div style="font-size: 42px; font-weight: 700; align-self: center">Project Issues</div>
+                    <div style="font-size: 26px; font-weight: 500; align-self: center; margin-bottom: 20px;">
+                        Currently we have {{projectIssues.length}} issues in this project
+                    </div>
+                    <div style="align-self: center; display: flex; margin-bottom: 20px;">
+                        <div class="issue-box">
+                            <div style="opacity: 0.7; font-size: 30px;">OPEN</div>
+                            <font-awesome-icon icon="times-circle" color="#424242" style="opacity: 0.7"
+                                               class="fa-4x"></font-awesome-icon>
+                            <span style="font-size: 60px; opacity: 0.8; font-weight: 800">{{openIssues}}</span>
+                            <span style="font-style: italic; opacity: 0.7; color: black; font-size: 15px; text-align: center">Open issues are issues that are currently still worked on</span>
+
+                        </div>
+                        <div class="issue-box">
+                            <div style="opacity: 0.7; font-size: 30px;">DONE</div>
+                            <font-awesome-icon icon="check-circle" color="#FFB6C1" style="opacity: 0.8;"
+                                               class="fa-4x"></font-awesome-icon>
+                            <span style="font-size: 60px; opacity: 0.8; font-weight: 800">{{closedIssues}}</span>
+                            <span style="font-style: italic; opacity: 0.7; color: black; font-size: 15px; text-align: center">Done issues are issues that have been overcame.</span>
+                        </div>
+                    </div>
+                    <div style="font-weight: 400; font-size: 21px; opacity: 0.8; text-align: center; align-self: center">
+                        Some random text which you are not even lookin at just for design purposes of this page to
+                        make it looks better.
+                    </div>
+                </div>
             </div>
 
-            <div v-show="boardContentVisible">
-                <TaskBoard
-                        :tasks="tasks"
-                        :pages="pages"
-                        style="margin-top: 15px;"></TaskBoard>
+
+            <div class="issues-section">
+                <div class="issues-table">
+                    <div style="font-size: 22px; font-weight: 600; ">Issues in project</div>
+                    <div style="display: flex; align-items: center">
+
+                        <div>
+                            <v-checkbox label="Show only OPEN" v-model="onlyOpen"
+                                        @change="showOnlyOpen()"></v-checkbox>
+                        </div>
+
+                    </div>
+                    <v-data-table
+                            :headers="headers"
+                            :items="showFilteredIssues"
+                            class="elevation-1"
+                            @click:row="handleClick"
+
+                    ></v-data-table>
+                </div>
+                <div class="issues-description">
+                    <template v-if="!issuePicked"
+                              style="display: flex; flex-direction: column; justify-content: space-between">
+                        <div style="font-weight: 400; font-size: 32px; color: #424242;">
+                            Issue Details
+                        </div>
+                        <div style="height: 210px; width: 210px; align-self: center">
+                            <img src="../assets/images/minion3.svg"
+                                 style="width: 100%; height: 100%; opacity: 0.6">
+                        </div>
+                        <div style="font-size: 20px; opacity: 0.8; align-self: center; margin-bottom: 10px;">No
+                            data available
+                        </div>
+                        <div style="font-style: italic; font-size: 16px; color: black; opacity: 0.6; align-self: center">
+                            Pick item form issue table to see its details
+                        </div>
+                    </template>
+
+                    <template v-if="issuePicked">
+                        <div style="font-size: 26px; opacity: 0.8; font-weight: 400;">ISSUE
+                            <span style="color: blue; opacity: 0.8">{{currentIssue.issueKEY}}</span>
+                        </div>
+
+                        <div style="font-size: 22px; opacity: 0.8; font-weight: 400; margin-bottom: 10px;">Details
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
+                                <span style="font-weight: 600;">Type</span>
+                                <span>{{currentIssue.issueType}}</span>
+                            </div>
+                            <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
+                                <span style="font-weight: 600;">Status</span>
+                                <span>{{currentIssue.issueStatus}}</span>
+                            </div>
+                            <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
+                                <span style="font-weight: 600;">Date</span>
+                                <span>{{currentIssue.issueDate}}</span>
+                            </div>
+                            <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
+                                <span style="font-weight: 600;">Priority</span>
+                                <span>{{currentIssue.issuePriority}}</span>
+                            </div>
+
+                        </div>
+                        <div style="font-size: 22px; opacity: 0.8; font-weight: 400; margin-bottom: 10px;">
+                            Descripiton
+                        </div>
+                        <div style="margin-bottom: 10px;">{{currentIssue.issueDescription}}</div>
+                        <div style="font-size: 22px; opacity: 0.8; font-weight: 400;">Reported by</div>
+                        <div style="font-size: 18px; display: flex; align-items: center">
+                            <v-avatar style="height: 50px; width: 50px; margin-right: 10px;">
+                                <img :src="currentIssue.pictureURL" style="object-fit: cover">
+                            </v-avatar>
+                            {{currentIssue.userFullName}} for task
+                            <span style="color: blue; opacity: 0.8; margin-left: 10px; cursor: pointer"
+                                  @click="navigateToTask(currentIssue.taskKEY)">{{currentIssue.taskKEY}}</span>
+
+                        </div>
+
+                    </template>
+
+                </div>
             </div>
+            <div style="height: 90vh; display: flex; justify-content: center">
 
-            <div v-show="workflowContentVisible">
-
-
-                <div style="height: 90vh; padding: 20px; display: flex; justify-content: center ">
-
-                    <div style="align-self: center; display: flex; flex-direction: column; width: 600px;">
-                        <div style="font-size: 42px; font-weight: 700; align-self: center">Project Issues</div>
-                        <div style="font-size: 26px; font-weight: 500; align-self: center; margin-bottom: 20px;">
-                            Currently we have {{projectIssues.length}} issues in this project
-                        </div>
-                        <div style="align-self: center; display: flex; margin-bottom: 20px;">
-                            <div class="issue-box">
-                                <div style="opacity: 0.7; font-size: 30px;">OPEN</div>
-                                <font-awesome-icon icon="times-circle" color="#424242" style="opacity: 0.7"
-                                                   class="fa-4x"></font-awesome-icon>
-                                <span style="font-size: 60px; opacity: 0.8; font-weight: 800">{{openIssues}}</span>
-                                <span style="font-style: italic; opacity: 0.7; color: black; font-size: 15px; text-align: center">Open issues are issues that are currently still worked on</span>
-
-                            </div>
-                            <div class="issue-box">
-                                <div style="opacity: 0.7; font-size: 30px;">DONE</div>
-                                <font-awesome-icon icon="check-circle" color="#FFB6C1" style="opacity: 0.8;"
-                                                   class="fa-4x"></font-awesome-icon>
-                                <span style="font-size: 60px; opacity: 0.8; font-weight: 800">{{closedIssues}}</span>
-                                <span style="font-style: italic; opacity: 0.7; color: black; font-size: 15px; text-align: center">Done issues are issues that have been overcame.</span>
-                            </div>
-                        </div>
-                        <div style="font-weight: 400; font-size: 21px; opacity: 0.8; text-align: center; align-self: center">
-                            Some random text which you are not even lookin at just for design purposes of this page to
-                            make it looks better.
-                        </div>
+                <div style="display: flex; flex-direction: column; width: 30%;">
+                    <div class="sample-active" @click="changeText(1)"><span id="1" class="span-inactive">01.</span>Slash
+                        Commands
                     </div>
+                    <div class="sample" @click="changeText(2)"><span id="2" class="span-inactive">02.</span>Real-time
+                        Chat
+                    </div>
+                    <div class="sample" @click="changeText(3)"><span id="3" class="span-inactive">03.</span>Task Tray
+                    </div>
+                    <div class="sample" @click="changeText(4)"><span id="4" class="span-inactive">04.</span>Assign
+                        Comments
+                    </div>
+                    <div class="sample" @click="changeText(5)"><span id="5" class="span-inactive">05.</span>Inbox</div>
                 </div>
 
-
-                <div class="issues-section">
-                    <div class="issues-table">
-                        <div style="font-size: 22px; font-weight: 600; ">Issues in project</div>
-                        <div style="display: flex; align-items: center">
-
-                            <div>
-                                <v-checkbox label="Show only OPEN" v-model="onlyOpen"
-                                            @change="showOnlyOpen()"></v-checkbox>
-                            </div>
-
-                        </div>
-                        <v-data-table
-                                :headers="headers"
-                                :items="showFilteredIssues"
-                                class="elevation-1"
-                                @click:row="handleClick"
-
-                        ></v-data-table>
-                    </div>
-                    <div class="issues-description">
-                        <template v-if="!issuePicked"
-                                  style="display: flex; flex-direction: column; justify-content: space-between">
-                            <div style="font-weight: 400; font-size: 32px; color: #424242;">
-                                Issue Details
-                            </div>
-                            <div style="height: 210px; width: 210px; align-self: center">
-                                <img src="../assets/minion3.svg"
-                                     style="width: 100%; height: 100%; opacity: 0.6">
-                            </div>
-                            <div style="font-size: 20px; opacity: 0.8; align-self: center; margin-bottom: 10px;">No
-                                data available
-                            </div>
-                            <div style="font-style: italic; font-size: 16px; color: black; opacity: 0.6; align-self: center">
-                                Pick item form issue table to see its details
-                            </div>
-                        </template>
-
-                        <template v-if="issuePicked">
-                            <div style="font-size: 26px; opacity: 0.8; font-weight: 400;">ISSUE
-                                <span style="color: blue; opacity: 0.8">{{currentIssue.issueKEY}}</span>
-                            </div>
-
-                            <div style="font-size: 22px; opacity: 0.8; font-weight: 400; margin-bottom: 10px;">Details
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
-                                    <span style="font-weight: 600;">Type</span>
-                                    <span>{{currentIssue.issueType}}</span>
-                                </div>
-                                <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
-                                    <span style="font-weight: 600;">Status</span>
-                                    <span>{{currentIssue.issueStatus}}</span>
-                                </div>
-                                <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
-                                    <span style="font-weight: 600;">Date</span>
-                                    <span>{{currentIssue.issueDate}}</span>
-                                </div>
-                                <div style="margin-right: 15px; display: flex; flex-direction: column; align-items: center">
-                                    <span style="font-weight: 600;">Priority</span>
-                                    <span>{{currentIssue.issuePriority}}</span>
-                                </div>
-
-                            </div>
-                            <div style="font-size: 22px; opacity: 0.8; font-weight: 400; margin-bottom: 10px;">
-                                Descripiton
-                            </div>
-                            <div style="margin-bottom: 10px;">{{currentIssue.issueDescription}}</div>
-                            <div style="font-size: 22px; opacity: 0.8; font-weight: 400;">Reported by</div>
-                            <div style="font-size: 18px; display: flex; align-items: center">
-                                <v-avatar style="height: 50px; width: 50px; margin-right: 10px;">
-                                    <img :src="currentIssue.pictureURL" style="object-fit: cover">
-                                </v-avatar>
-                                {{currentIssue.userFullName}} for task
-                                <span style="color: blue; opacity: 0.8; margin-left: 10px; cursor: pointer"
-                                      @click="navigateToTask(currentIssue.taskKEY)">{{currentIssue.taskKEY}}</span>
-
-                            </div>
-
-                        </template>
-
-                    </div>
-                </div>
-                <div style="height: 90vh; display: flex; justify-content: center">
-
-                        <div style="display: flex; flex-direction: column; width: 30%;">
-                            <div class="sample-active" @click="changeText(1)"><span id="1" class="span-inactive">01.</span>Slash Commands</div>
-                            <div class="sample" @click="changeText(2)"><span id="2" class="span-inactive">02.</span>Real-time Chat</div>
-                            <div class="sample" @click="changeText(3)"><span id="3" class="span-inactive">03.</span>Task Tray</div>
-                            <div class="sample" @click="changeText(4)"><span id="4" class="span-inactive">04.</span>Assign Comments</div>
-                            <div class="sample" @click="changeText(5)"><span id="5" class="span-inactive">05.</span>Inbox</div>
-                        </div>
-
-                    <div style=" height: 500px; box-shadow: 0 0 10px black; width: 50%;">
-
-                    </div>
+                <div style=" height: 500px; box-shadow: 0 0 10px black; width: 50%;">
 
                 </div>
 
             </div>
 
-            <div v-show="teamContentVisible">
-                <div id="section1" style=" height: 95vh; display: flex; justify-content: center; align-items: center ">
-                        <div style="height: 60%; background: purple; width: 100px;"></div>
-                        <div style="display: flex; flex-direction: column; height: 60%;   justify-content: flex-end">
-                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -80px">Meet</span>
-                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -80px">Our</span>
-                            <span style="font-size: 120px; font-weight: 800; margin-bottom: -20px;">Team</span>
-                        </div>
-                    <div style="height: 60%;">
-                        <img src="../assets/teasm.svg" style="width: 100%; height: 100%;">
-                    </div>
+        </div>
 
+        <div v-show="teamContentVisible">
+            <div id="section1" style=" height: 95vh; display: flex; justify-content: center; align-items: center ">
+                <div class="--box"></div>
+                <div style="display: flex; flex-direction: column; height: 60%;   justify-content: flex-end">
+                    <span class="team-text">Meet</span>
+                    <span class="team-text">Our</span>
+                    <span style="font-size: 120px; font-weight: 800; margin-bottom: -20px;">Team</span>
                 </div>
-                <div style="height: 90vh; display: flex; justify-content: center; align-items: center">
+                <div style="height: 60%;">
+                    <img src="../assets/images/teasm.svg" style="width: 100%; height: 100%;">
+                </div>
+
+            </div>
+            <div style="height: 90vh; display: flex; justify-content: center; align-items: center">
 
                 <div id="section2" style="display: flex; flex-wrap: wrap;  padding: 50px; height: 75%;">
                     <div v-for="user in projectUsers" :key="user.id"
@@ -186,11 +197,8 @@
                                 @navigate-to-profile="navigateTo($event)"></UserCard>
                     </div>
                 </div>
-                </div>
             </div>
         </div>
-
-
     </div>
 
 
@@ -200,7 +208,7 @@
 <script>
     import TaskBoard from "../components/TaskBoard";
     import axios from 'axios';
-
+    import colors from "@/assets/css/colors"
     import SideNavigationBar from "@/components/SideNavigationBar";
 
 
@@ -217,7 +225,7 @@
         data() {
             return {
 
-
+                colorAccent: colors.ACCENT,
 
                 teamContentVisible: false,
                 boardContentVisible: false,
@@ -251,9 +259,9 @@
             }
         },
         methods: {
-            changeText(value){
+            changeText(value) {
 
-                for(let i = 1; i < 6; i++){
+                for (let i = 1; i < 6; i++) {
                     document.getElementById(i).classList.remove('span-active');
                     document.getElementById(i).parentElement.classList.remove('sample-active');
                     document.getElementById(i).parentElement.classList.add('sample');
@@ -363,23 +371,18 @@
     }
 </script>
 
-<style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+<style scoped lang="scss">
 
-    body {
-        font-family: 'Montserrat', sans-serif;
-    }
+    @import "../assets/css/main";
+
 
     * {
         box-sizing: border-box;
     }
 
-    .project-details-container {
-        height: 100%;
-    }
 
     .project-details-content {
-        margin-left: 10%;
+        margin-left: 12%;
     }
 
     .icon-nav {
@@ -462,20 +465,22 @@
         margin-right: 15px;
     }
 
-    .sample{
+    .sample {
         width: 450px;
         padding: 15px 0 15px 20px;
         font-size: 32px;
         font-weight: 800;
-        color: #424242;
+        color: $color-primary-dark;
         opacity: 0.4;
         cursor: pointer;
 
     }
-    .sample:hover{
+
+    .sample:hover {
         opacity: 0.8;
     }
-    .sample-active{
+
+    .sample-active {
         width: 450px;
         padding: 15px 0 15px 20px;
         font-size: 32px;
@@ -485,12 +490,26 @@
         opacity: 1;
         cursor: pointer;
     }
-    .span-inactive{
+
+    .span-inactive {
         margin-right: 20px;
     }
-    .span-active{
+
+    .span-active {
         color: purple;
         margin-right: 20px;
+    }
+
+    .team-text {
+        font-size: 120px;
+        font-weight: 800;
+        margin-bottom: -80px;
+    }
+
+    .--box {
+        height: 60%;
+        background: $color-secondary-accent;
+        width: 100px;
     }
 
 </style>

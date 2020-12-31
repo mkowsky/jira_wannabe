@@ -67,6 +67,15 @@ public class User {
 
     private String pictureURL;
 
+    private boolean activated;
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 
     public User() {
 

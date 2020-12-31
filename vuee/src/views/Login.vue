@@ -5,7 +5,7 @@
         <ul>
             <li>
                 <div class="logo-wrapper-small">
-                    <img src="../assets/logo.png" class="logo-content">
+                    <img src="../assets/images/logo.png" class="logo-content">
                 </div>
                 <div class="logo-slogan-small">JIRA-WANNABE</div>
             </li>
@@ -40,9 +40,10 @@
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <defs>
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:rgba(108,99,255,1);stop-opacity:1"></stop>
+                <stop offset="0%" style="stop-color:#FF6F91;stop-opacity:1"></stop>
                 <stop offset="60%" style="stop-color:rgba(125,120,221,1);stop-opacity:1"></stop>
-                <stop offset="100%" style="stop-color:rgba(92,184,236,1);stop-opacity:1"></stop>
+                <stop offset="78%" style="stop-color: rgba(110,149,228,1);stop-opacity:1"></stop>
+                <stop offset="100%" style="stop-color:rgba(230,84,153,1);stop-opacity:1"></stop>
             </linearGradient>
         </defs>
         <path fill="url(#grad1)" fill-opacity="1"
@@ -105,11 +106,15 @@
                     },
                     error => {
                         this.message = error.response.data.message;
-                        if (this.message.includes('Username')) this.emailError = 'This email is not registered.';
+                        if (this.message.includes('Email')) this.emailError = 'This email is not registered.';
                         else this.emailError = "";
 
                         if (this.message.includes('password')) this.passwordError = this.message
                         else this.passwordError = "";
+
+                        if (this.message.includes('Account')) this.emailError = this.message
+                        else this.passwordError = "";
+
                         this.successful = false;
                     }
                 )
@@ -141,11 +146,9 @@
 </script>
 
 <style scoped lang="scss">
-    $color-primary: white;
-    $color-main-accent: #424242;
-    $color-secondary-accent: #6C63FF;
+    @import "../assets/css/main";
 
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+
 
     body {
         font-family: 'Montserrat', sans-serif;
@@ -177,7 +180,7 @@
         font-weight: 500;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 
@@ -198,7 +201,7 @@
         font-weight: 800;
 
         &:hover {
-            color: $color-main-accent;
+            color: $color-primary-dark;
         }
     }
 

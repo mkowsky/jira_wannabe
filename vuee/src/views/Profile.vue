@@ -20,7 +20,7 @@
                             <div class="details-info">
                                 <div style="display: flex; flex-direction: column">
                                     <span class="subclaim">EMAIL</span>
-                                    <div class="contact">pietrzykowski@jira-wannabe.com</div>
+                                    <div class="contact">{{user.email}}</div>
                                 </div>
                                 <div style="display: flex; flex-direction: column">
                                     <span class="subclaim">TEAM</span>
@@ -55,7 +55,6 @@
                 ownProfile: true,
             }
         },
-        methods: {},
         created() {
             this.user = JSON.parse(localStorage.getItem('user'));
             if (this.$route.params.userID) {
@@ -76,18 +75,14 @@
                     this.ownProfile = true;
                 })
             }
-
-
         }
     }
 </script>
 
 <style scoped lang="scss">
-    $color-primary: white;
-    $color-main-accent: #424242;
-    $color-secondary-accent: #6C63FF;
+    @import "../assets/css/main";
 
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+
 
     body {
         height: 100%;
@@ -105,14 +100,13 @@
     .profile-wrapper{
         width: 1000px;
         height: 600px;
-        background: white;
+        background: $color-primary-white;
         align-self: center;
         display: flex;
         box-shadow: 0 0 20px black;
     }
 
     .profile-photo{
-        /*background: #424242;*/
         width: 30%;
         display: flex;
         flex-direction: column;

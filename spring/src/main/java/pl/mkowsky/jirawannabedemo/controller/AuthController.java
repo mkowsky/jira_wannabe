@@ -1,6 +1,8 @@
 package pl.mkowsky.jirawannabedemo.controller;
 
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,20 +10,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import pl.mkowsky.jirawannabedemo.JwtResponse;
-import pl.mkowsky.jirawannabedemo.LoginRequest;
-import pl.mkowsky.jirawannabedemo.MessageResponse;
-import pl.mkowsky.jirawannabedemo.SignupRequest;
+import org.springframework.web.context.request.WebRequest;
+import pl.mkowsky.jirawannabedemo.*;
 import pl.mkowsky.jirawannabedemo.dictionary.ERole;
 import pl.mkowsky.jirawannabedemo.model.Role;
 import pl.mkowsky.jirawannabedemo.model.User;
+import pl.mkowsky.jirawannabedemo.model.VerificationToken;
 import pl.mkowsky.jirawannabedemo.repository.RoleRepository;
 import pl.mkowsky.jirawannabedemo.repository.UserRepository;
 import pl.mkowsky.jirawannabedemo.security.jwt.JwtUtils;
 import pl.mkowsky.jirawannabedemo.security.services.UserDetailsImpl;
 import pl.mkowsky.jirawannabedemo.services.UserService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +35,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
 
     @Autowired
@@ -58,7 +65,7 @@ public class AuthController {
         if(!(userRepository.existsByEmail(loginRequest.getEmail()))){
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Username is invalid."));
+                    .body(new MessageResponse("Email is invalid."));
 
         } else {User user = userRepository.findUserByEmail(loginRequest.getEmail());
             System.out.println(user.getEmail());
@@ -68,37 +75,45 @@ public class AuthController {
                         .body(new MessageResponse("Bad password."));
             }
             else {
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                String jwt = jwtUtils.generateJwtToken(authentication);
+                if(user.isActivated()){
+                    Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-                List<String> roles = userDetails.getAuthorities().stream()
-                        .map(item -> item.getAuthority())
-                        .collect(Collectors.toList());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    String jwt = jwtUtils.generateJwtToken(authentication);
 
-                System.out.println(userDetails.getUsername());
-                System.out.println(userDetails.getEmail());
-                System.out.println(userDetails.getPassword());
-                return ResponseEntity.ok(new JwtResponse(jwt,
-                        userDetails.getId(),
-                        userDetails.getUsername(),
-                        userDetails.getEmail(),
-                        roles,
-                        user.getFirstName(),
-                        user.getLastName()));
+                    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+                    List<String> roles = userDetails.getAuthorities().stream()
+                            .map(item -> item.getAuthority())
+                            .collect(Collectors.toList());
+
+                    System.out.println(userDetails.getUsername());
+                    System.out.println(userDetails.getEmail());
+                    System.out.println(userDetails.getPassword());
+                    return ResponseEntity.ok(new JwtResponse(jwt,
+                            userDetails.getId(),
+                            userDetails.getUsername(),
+                            userDetails.getEmail(),
+                            roles,
+                            user.getFirstName(),
+                            user.getLastName()));
+                } else {
+                    return ResponseEntity
+                            .badRequest()
+                            .body(new MessageResponse("Account is not active."));
+                }
+
             }
         }
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest,  WebRequest request) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse("Email is already in use!"));
         }
 
         // Create new user's account
@@ -140,6 +155,35 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
+
+        try {
+            String appUrl = request.getContextPath();
+            eventPublisher.publishEvent(new OnRegistrationSuccessEvent(user, request.getLocale(), appUrl));
+        } catch(Exception exc) {
+            exc.printStackTrace();
+        }
+
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+
+    @GetMapping("/confirmRegistration")
+    public void confirmRegistration(HttpServletResponse httpServletResponse, @RequestParam("token") String token) throws IOException {
+        VerificationToken verificationToken = userService.getVerificationToken(token);
+        if(verificationToken == null) {
+            httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-false");
+        } else {
+            User user = verificationToken.getUser();
+            Calendar calendar = Calendar.getInstance();
+            if((verificationToken.getExpiryDate().getTime()-calendar.getTime().getTime())<=0) {
+                httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-false");
+            } else {
+                user.setActivated(true);
+                userService.save(user);
+                httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-true");
+            }
+
+        }
+
     }
 }

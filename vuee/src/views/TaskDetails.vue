@@ -1,9 +1,9 @@
 <template>
     <body>
-    <div class="task-details-container">
-        <side-navigation-bar></side-navigation-bar>
+    <side-navigation-bar></side-navigation-bar>
+
         <div class="task-details-content">
-            <v-tabs @change="changeContent($event)" grow height="80">
+            <v-tabs @change="changeContent($event)" grow height="80" :color="colorAccent">
                 <v-tab style="font-size: 24px;">General</v-tab>
                 <v-tab style="font-size: 24px;">Task timeline</v-tab>
             </v-tabs>
@@ -11,68 +11,36 @@
 
             <div class="task-details-flex-container" v-show="generalInfoVisible">
 
-                <task-info :current-task="currentTask" style="height: 80vh; top: 50%; margin-top: 100px; padding: 30px;" @navigate-to-user-profile="navigateToUserProfile($event)"></task-info>
+                <task-info :current-task="currentTask"
+                           style="height: 85vh; margin-top: 150px; padding: 10px;"
+                           @navigate-to-user-profile="navigateToUserProfile($event)"/>
 
                <task-actions @report-issue="issueReportVisible = true"
                             @change-deadline="changeDeadlineVisible=true"
-               @pass-task="startPassTaskProcess"
-               @change-state="changeStateVisible=true"> </task-actions>
-
+                            @pass-task="startPassTaskProcess"
+                            @change-state="changeStateVisible=true"
+                             style="height: 100vh; margin-top: 150px; padding: 10px;"/>
 
 
                <task-issues :task-issues="taskIssues"
-                            @report-issue="issueReportVisible = true" style="height: 100vh"></task-issues>
+                            @report-issue="issueReportVisible = true"
+                            style="height: 100vh; margin-top: 200px;"/>
+
                 <task-comments :comments="comments"
                                @new-comment="submitNewComment($event)"
-                @delete-comment="deleteComment($event)" style="height: 100vh;"></task-comments>
-
-
-
+                               @delete-comment="deleteComment($event)"
+                               style="height: 100vh; margin-top: 200px;"/>
             </div>
 
-            <div style="height: 95%;" v-show="timelineVisible">
+            <div  v-show="timelineVisible">
 
-                <div style="width: 100%; height: 100%;display: flex;">
-
-
-                    <div style="display: flex; flex-direction: column; justify-content: flex-end; width: 60%; padding: 20px;">
-                        <div class="task-timeline-item">
-                            <v-timeline>
-                                <status-change-item v-for="change in taskChanges"
-                                                    :key="change.id"
-                                                    :change-date="change.changeDate"
-                                                    :change-description="change.changeDescription"
-                                                    :change-type="change.changeType">
-                                </status-change-item>
-                            </v-timeline>
-                        </div>
-                    </div>
-
-                    <div style="width: 40%; padding: 10px; display: flex; flex-direction: column; margin-top: 50px; ">
-                        <div class="claim"
-                             style="font-size: 44px; font-weight: 800; align-self: center; font-family: Roboto, monospace">
-                            Track task changes!
-                        </div>
-
-                        <div class="subclaim"
-                             style="font-size: 26px; font-weight: 200; width: 400px; align-self: center">
-                            <span style="font-weight: 400">Task timeline</span> is a palce where you can check <span
-                                style="font-weight: 400">all previous</span> task <span
-                                style="font-weight: 400">changes</span>
-                            with their exact dates and time. This helps you to <span style="font-weight: 400">track all the proces</span>
-                            from
-                            task creation to its end!
-                        </div>
-
-                        <img src="../assets/timeline.svg" style="width: 90%; margin-top: 40px; align-self: flex-end">
-                    </div>
-                </div>
+                <TaskTimeline :task-changes="taskChanges"></TaskTimeline>
 
             </div>
         </div>
 
 
-        <Modal :dialog="passTaskVisible"
+        <Dialog :dialog="passTaskVisible"
                :dialog-title="'Pass task to someone else'"
                :dialog-content="'Chose person from your team to which you want to pass this task. After you press confirm this task will no longer be assigned to you.'"
                @modal-cancel="cancelPass()"
@@ -90,8 +58,8 @@
 
                 </v-select>
             </template>
-        </Modal>
-        <Modal :dialog="changeStateVisible"
+        </Dialog>
+        <Dialog :dialog="changeStateVisible"
                :dialog-title="'Change task status'"
                :dialog-content="'Change current task status. All changes will be visible in task timeline tab.'"
                @modal-cancel="cancelStateChange()"
@@ -101,8 +69,8 @@
                 <label>TASK STATE</label>
                 <v-select solo dense label="CHOSE STATE" :items="states" v-model="newState"></v-select>
             </template>
-        </Modal>
-        <Modal :dialog="issueReportVisible"
+        </Dialog>
+        <Dialog :dialog="issueReportVisible"
                :dialog-title="'Issue report'"
                :dialog-content="'Please provide us with issue type and short descripiton for issue you have faced.'"
                @modal-agree="reportIssue()"
@@ -114,8 +82,8 @@
                           item-value="value"></v-select>
                 <v-textarea solo label="Issue description" v-model="issueDescription"></v-textarea>
             </template>
-        </Modal>
-        <Modal :dialog="changeDeadlineVisible"
+        </Dialog>
+        <Dialog :dialog="changeDeadlineVisible"
                :dialog-title="'Change task deadline'"
                :dialog-content="'Choose new task deadline from calendar below.'"
                @modal-cancel="cancelDeadlineChange()"
@@ -126,7 +94,7 @@
                                color="rgba(225, 182, 193)"
                                :min="currentDate"></v-date-picker>
             </template>
-        </Modal>
+        </Dialog>
 
         <v-overlay v-show="showOverlay">
             <v-progress-circular
@@ -136,16 +104,16 @@
             </v-progress-circular>
         </v-overlay>
 
-        <Modal :dialog="taskStatusChanged"
+        <Dialog :dialog="taskStatusChanged"
                :dialog-title="'Task status changed.'"
                :dialog-content="'Task status has been changed succesfully. All changes are now visible in task timeline tab.'"
                @modal-agree="taskStatusChanged = false"
                :one-button="true"
                :agree-button="'Okey'"
         >
-        </Modal>
+        </Dialog>
 
-    </div>
+
 
     </body>
 </template>
@@ -153,20 +121,24 @@
 <script>
 
     import axios from "axios";
+    import colors from "@/assets/css/colors"
 
 
-    import StatusChangeItem from "@/components/StatusChangeItem";
-    import Modal from "@/components/Modal";
+
     import SideNavigationBar from "@/components/SideNavigationBar";
     import TaskIssues from "@/components/TaskIssues";
     import TaskComments from "@/components/TaskComments";
     import TaskInfo from "@/components/TaskInfo";
     import TaskActions from "@/components/TaskActions";
+    import Dialog from "@/components/Dialog";
+    import TaskTimeline from "@/components/TaskTimeline";
 
 
     export default {
         name: "TaskDetails",
-        components: {TaskActions, TaskInfo, TaskComments, TaskIssues, SideNavigationBar, Modal, StatusChangeItem},
+        components: {
+            TaskTimeline,
+            Dialog, TaskActions, TaskInfo, TaskComments, TaskIssues, SideNavigationBar,},
         props: {
             taskID: {
                 required: true,
@@ -175,6 +147,7 @@
         },
         data() {
             return {
+                colorAccent: colors.ACCENT,
                 generalInfoVisible: true,
                 timelineVisible: false,
 
@@ -420,7 +393,8 @@
 </script>
 
 <style scoped lang="scss">
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap');
+    @import "../assets/css/main";
+
 
     body {
         font-family: 'Montserrat', sans-serif;
@@ -430,7 +404,7 @@
 
 
     .task-details-content {
-        margin-left: 10%;
+        margin-left: 12%;
         height: 100%;
     }
 
