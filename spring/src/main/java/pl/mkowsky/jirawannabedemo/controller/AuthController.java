@@ -84,6 +84,7 @@ public class AuthController {
                     String jwt = jwtUtils.generateJwtToken(authentication);
 
                     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
                     List<String> roles = userDetails.getAuthorities().stream()
                             .map(item -> item.getAuthority())
                             .collect(Collectors.toList());
@@ -97,7 +98,8 @@ public class AuthController {
                             userDetails.getEmail(),
                             roles,
                             user.getFirstName(),
-                            user.getLastName()));
+                            user.getLastName(),
+                            user.getPictureURL()));
                 } else {
                     return ResponseEntity
                             .badRequest()
@@ -171,16 +173,16 @@ public class AuthController {
     public void confirmRegistration(HttpServletResponse httpServletResponse, @RequestParam("token") String token) throws IOException {
         VerificationToken verificationToken = userService.getVerificationToken(token);
         if(verificationToken == null) {
-            httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-false");
+            httpServletResponse.sendRedirect("http://localhost:8081/token-confirmation/isValid-false");
         } else {
             User user = verificationToken.getUser();
             Calendar calendar = Calendar.getInstance();
             if((verificationToken.getExpiryDate().getTime()-calendar.getTime().getTime())<=0) {
-                httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-false");
+                httpServletResponse.sendRedirect("http://localhost:8081/token-confirmation/isValid-false");
             } else {
                 user.setActivated(true);
                 userService.save(user);
-                httpServletResponse.sendRedirect("http://localhost:8081/#/token-confirmation/isValid-true");
+                httpServletResponse.sendRedirect("http://localhost:8081/token-confirmation/isValid-true");
             }
 
         }

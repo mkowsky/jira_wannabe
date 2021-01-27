@@ -349,71 +349,75 @@
     @import "../assets/css/main";
 
 
-
-    * {
-        box-sizing: border-box;
-    }
-
-    .task-board-container {
-        display: flex;
-        flex-direction: column;
-        padding: 30px;
-
-    }
+        * {
+            box-sizing: border-box;
+        }
 
 
-    .task-board-wrapper {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
+        .task-board-container {
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
 
-    .taskboard-filters {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        height: 100px;
-    }
+        }
 
-    .filters-wrapper {
-        display: flex;
-        flex-direction: row;
-    }
-    .filters-text{
-        text-transform: uppercase;
-        font-weight: 600;
-        font-size: 26px;
-        opacity: 0.87;
-    }
 
-    .column {
-        background: $color-primary-dark;
-        width: 20%;
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        height: 680px;
-        padding: 0 0 0 20px;
+        .task-board-wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
 
-    }
+        .taskboard-filters {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100px;
+        }
 
-    .column-title {
-        color: $color-primary-white;
-        font-weight: 600;
-        font-size: 30px;
-        align-self: center
-    }
+        .filters-wrapper {
+            display: flex;
+            flex-direction: row;
+        }
+        .filters-text{
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 26px;
+            opacity: 0.87;
+        }
 
-    .gap {
-        margin-bottom: 20px;
-        cursor: pointer;
-    }
+        .column {
+            background: $color-primary-dark;
+            width: 20%;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 680px;
+            padding: 0 0 0 20px;
 
-    .filter {
-        width: 300px;
-        margin-right: 20px;
-    }
+        }
+
+        .column-title {
+            color: $color-primary-white;
+            font-weight: 600;
+            font-size: 30px;
+            align-self: center
+        }
+
+        .gap {
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .filter {
+            width: 300px;
+            margin-right: 20px;
+        }
+    
+
+
+
 
 </style>

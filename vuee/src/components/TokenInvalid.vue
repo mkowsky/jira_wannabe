@@ -53,9 +53,11 @@
         color: #6C63FF;
     }
     .-inv-subclaim{
+        text-align: center;
         font-size: 44px;
         opacity: 0.8;
         font-weight: 600;
+        margin-bottom: 20px;
     }
     .-inv-img{
         width: 700px;

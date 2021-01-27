@@ -76,7 +76,7 @@ public class Task {
 
     }
 
-    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, User users
+    public Task(String taskID, String name, Date createdDate, Date expireDate, String description, EState state, User taskManager, User user
             , EDepartment department, EPriority taskPriority, Project project) {
         this.taskID = taskID;
         this.name = name;
@@ -85,7 +85,7 @@ public class Task {
         this.description = description;
         this.state = state;
         this.taskManager = taskManager;
-        this.user = users;
+        this.user = user;
         this.department = department;
         this.taskPriority = taskPriority;
         this.project = project;

@@ -47,7 +47,7 @@ public class RegistrationEmailListener implements ApplicationListener<OnRegistra
         //String message = messages.getMessage("message.registrationSuccessConfimationLink", null, event.getLocale());
 
         //TODO: zmienic tutaj na email uzytkownika
-        emailService.sendConfirmationEmail(user.getEmail(), subject, "http://localhost:8080/api/auth" + url);
+        emailService.sendConfirmationEmail("201816@edu.p.lodz.pl", subject, "http://localhost:8080/api/auth" + url);
 
     }
 }

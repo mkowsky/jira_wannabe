@@ -8,14 +8,14 @@
 
         <div class="task-create-box">
 
-            <div class="left">
-                <div class="left-claim">Task creator</div>
+            <!--<div class="left">-->
+                <!--<div class="left-claim">Task creator</div>-->
 
-                <div class="left-subclaim">SUBCLAIM</div>
-                <img src="../assets/images/undraw_Taking_notes_re_bnaf.svg" style="width: 100%; ">
-                <div class="left-dsc">DESCRIPTION</div>
+                <!--<div class="left-subclaim">SUBCLAIM</div>-->
+                <!--<img src="../assets/images/undraw_Taking_notes_re_bnaf.svg" style="width: 100%; ">-->
+                <!--<div class="left-dsc">DESCRIPTION</div>-->
 
-            </div>
+            <!--</div>-->
 
             <v-card class="center" outlined>
                 <task-creation style="height: 100%;"

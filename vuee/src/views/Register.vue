@@ -34,13 +34,13 @@
 
         <div style="width: 90%; align-self: center">
             <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">First Name</span>
-            <v-text-field solo label="Enter First Name" v-model="firstName" prepend-inner-icon="mdi-account"
+            <v-text-field solo label="Enter first name" v-model="firstName" prepend-inner-icon="mdi-account"
                           :rules="[rules.required]" style="margin-top: 5px;"></v-text-field>
         </div>
 
         <div style="width: 90%; align-self: center">
             <span style="font-size: 15px; font-weight: 600; opacity: 0.8;">Last Name</span>
-            <v-text-field solo label="Enter First Name" v-model="lastName" prepend-inner-icon="mdi-account"
+            <v-text-field solo label="Enter last name" v-model="lastName" prepend-inner-icon="mdi-account"
                           :rules="[rules.required]" style="margin-top: 5px;"></v-text-field>
         </div>
 

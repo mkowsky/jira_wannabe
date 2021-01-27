@@ -69,6 +69,17 @@ public class User {
 
     private boolean activated;
 
+    public User(String email, String password, Set<Role> roles, String firstName, String lastName, boolean activated, String pictureURL){
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.activated = activated;
+        this.pictureURL = pictureURL;
+    }
+
+
     public boolean isActivated() {
         return activated;
     }

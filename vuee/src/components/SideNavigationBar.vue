@@ -28,6 +28,9 @@
                         <v-list-item-title
                                 style="font-size: 16px; display: flex; flex-direction: column; font-weight: 500"><span>{{showUserFirstName}}</span><span>{{showUserLastName}}</span>
                         </v-list-item-title>
+                        <v-list-item-title>
+                            {{showUserRole}}
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -85,7 +88,7 @@
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-list-item link v-show="showModeratorBoard" @click="navigate('/admin-dashboard')">
+                    <v-list-item link v-show="showAdminBoard" @click="navigate('/admin-dashboard')">
                         <v-list-item-icon>
                             <v-icon>mdi-lock</v-icon>
                         </v-list-item-icon>
@@ -147,8 +150,10 @@
         },
         computed: {
             showModeratorBoard() {
-
                 return this.user.roles.includes('ROLE_PROJECT_MANAGER');
+            },
+            showAdminBoard(){
+                return this.user.roles.includes('ROLE_ADMIN');
             },
             showUserFirstName() {
                 return this.user.firstName;
@@ -157,7 +162,13 @@
                 return this.user.lastName;
             },
             showUserPicture() {
+                console.log(this.user);
                 return this.user.pictureURL;
+            },
+            showUserRole(){
+                if ((this.user.roles.includes('ROLE_PROJECT_MANAGER')) && (this.user.roles.includes('ROLE_ADMIN'))) return 'ADMIN';
+                if (this.user.roles.includes('ROLE_PROJECT_MANAGER')) return 'PM';
+                else return 'USER'
             }
         },
         created() {
